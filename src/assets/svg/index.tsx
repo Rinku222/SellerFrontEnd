@@ -9,6 +9,10 @@ import Course from './courses.svg';
 import Lock from './lock.svg';
 import Email from './email.svg';
 import Phone from './phone.svg';
+import PlayVideo from './playVideo.svg';
+import Achievement from './achievement.svg';
+import PrevArrow from './prevArrow.svg';
+import NextArrow from './nextArrow.svg';
 
 export interface ISVGProps {
   color?: string;
@@ -42,4 +46,16 @@ export function EmailIcon(props: ISVGProps) {
 }
 export function PhoneIcon(props: ISVGProps) {
   return <Phone {...props} name="phone" />;
+}
+export function PlayVideoIcon(props: ISVGProps) {
+  return <PlayVideo {...props} name="playVideo" />;
+}
+export function AchievementIcon(props: ISVGProps) {
+  return <Achievement {...props} name="achievement" />;
+}
+export function NextArrowIcon(props: ISVGProps) {
+  return <NextArrow {...props} name="nextArrow" />;
+}
+export function PrevArrowIcon(props: ISVGProps) {
+  return <PrevArrow {...props} name="prevArrow" />;
 }

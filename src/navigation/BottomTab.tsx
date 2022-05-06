@@ -65,11 +65,13 @@ function BottomTab({state, descriptors, navigation}) {
   });
 
   const floatingTab = (
-    <View style={styles.floatingTabContainer}>
+    <TouchableOpacity
+      style={styles.floatingTabContainer}
+      onPress={() => console.log('----->floating button presed')}>
       <View style={styles.floatingTabIcon}>
         <Ionicons color={colors.white} name="ios-play" size={30} />
       </View>
-    </View>
+    </TouchableOpacity>
   );
 
   tabItems.splice(2, 0, floatingTab);

@@ -16,6 +16,9 @@ import EditEmail from '../screens/Profile/EditEmail';
 import EditPhone from '../screens/Profile/EditPhone';
 import EditPassword from '../screens/Profile/EditPassword';
 import UpdateSuccess from '../screens/Profile/UpdateSuccess';
+import MyCourses from '../screens/Profile/MyCourses';
+import MyCertificates from '../screens/Profile/MyCertificates';
+import Quiz from '../screens/Profile/Quiz';
 
 const AppContainer = createNativeStackNavigator();
 const AuthStack = createNativeStackNavigator();
@@ -73,6 +76,13 @@ function ProfileStackScreens() {
         options={{gestureEnabled: false}}
       />
       <HomeStack.Screen component={About} name="About" options={{gestureEnabled: false}} />
+      <HomeStack.Screen component={MyCourses} name="MyCourses" options={{gestureEnabled: false}} />
+      <HomeStack.Screen component={Quiz} name="Quiz" options={{gestureEnabled: false}} />
+      <HomeStack.Screen
+        component={MyCertificates}
+        name="MyCertificates"
+        options={{gestureEnabled: false}}
+      />
       <HomeStack.Screen
         component={EditEmail}
         name="change_email"

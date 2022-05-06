@@ -13,5 +13,9 @@ export const colors = {
 
   themeVeryLightPink: '#FEE5FD',
   themeYellow: '#08d2ea',
+  themeSkyBlue: '#15BAC4',
   black: '#000',
+  themeBlue: '#08D2EA79',
+
+  primaryGreen: '#289C5E',
 };

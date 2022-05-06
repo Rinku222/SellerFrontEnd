@@ -38,13 +38,7 @@ function WishList() {
       <View style={styles.heading}>
         <Text style={styles.colorBlack}>All Saved Program</Text>
       </View>
-      <ScrollView showsVerticalScrollIndicator={false}>
-        <RenderRow />
-        <RenderRow />
-        <RenderRow />
-        <RenderRow />
-        <RenderRow />
-        <RenderRow />
+      <ScrollView showsVerticalScrollIndicator={false} style={styles.scrollView}>
         <RenderRow />
         <RenderRow />
         <RenderRow />
@@ -58,6 +52,9 @@ function WishList() {
 const styles = StyleSheet.create({
   mainContainer: {
     padding: 10,
+  },
+  scrollView: {
+    marginBottom: 50,
   },
   heading: {
     display: 'flex',

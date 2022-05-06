@@ -1,126 +1,198 @@
-import React from 'react'
-import { TouchableOpacity,View,Image, Text, StyleSheet } from 'react-native'
-import { colors } from '../../config/colors';
+import React from 'react';
+import {TouchableOpacity, View, Image, Text, StyleSheet} from 'react-native';
+import {AboutIcon, PlayVideoIcon, AchievementIcon} from '../../assets/svg';
+import {colors} from '../../config/colors';
+// import UserImage from '../../../assets/images/laps.png';
+import UserImage from '../../assets/images/laps.png';
+
+function SingleCertificateBar(props) {
+  const {icon, text, background} = props;
+
+  return (
+    <View style={[styles.singleBarContainer, {backgroundColor: background}]}>
+      {icon}
+      <Text style={styles.singleBarText}>{text}</Text>
+    </View>
+  );
+}
+
+function RenderCertificateBar(props) {
+  const {type = 'pending'} = props;
+  switch (type) {
+    case 'pending':
+      return (
+        <SingleCertificateBar
+          background={colors.primary}
+          icon={<AboutIcon color={colors.white} width={20} />}
+          text="Pending"
+        />
+      );
+    case 'get':
+      return <SingleCertificateBar background={colors.themeSkyBlue} text="Get Certificate" />;
+    case 'view':
+      return (
+        <SingleCertificateBar
+          background={colors.themeYellow}
+          icon={<AchievementIcon color={colors.white} width={20} />}
+          text="View Certificate"
+        />
+      );
+    default:
+      return null;
+  }
+}
+
+function RenderCourseBar() {
+  const percentage = '100%';
+
+  return (
+    <View style={styles.courseMainContainer}>
+      <View style={styles.courseText}>
+        {percentage === '100%' ? (
+          <Text style={[styles.bold, styles.whiteColor]}>Completed</Text>
+        ) : (
+          <Text style={styles.bold}>{percentage} Completed</Text>
+        )}
+      </View>
+
+      <View
+        style={[
+          styles.percentageFillBar,
+          {
+            backgroundColor: percentage === '100%' ? colors.primaryGreen : colors.themeYellow,
+            width: percentage,
+          },
+        ]}
+      />
+    </View>
+  );
+}
 
 function CourseCard(props) {
+  const {course} = props;
 
-    return(
-        <View style={styles.recommendedCards}>
-            <View style={styles.cardPhoto}>
-                <Image
-                source={{ uri: 'https://thumbs.dreamstime.com/z/stethoscope-red-heart-medical-concept-stethoscope-red-heart-medical-concept-159774880.jpg' }}
-                style={styles.imageRecomended} />
-            </View>
-            <View style={{paddingHorizontal:4}}>
-                <Text style={styles.RecomendedCardTitle}>Program Name Will </Text>
-
-                <View style={styles.mentor}>
-                    <Image source={require('../../assets/images/laps.png')} style={{width:22,height:22,borderRadius:11}}/>
-                    {/* <IconB name="user" size={28} color='gray' style={{marginLeft:'1%'}} /> */}
-                    <Text style={styles.mentorName}>Hugo First</Text>
-                </View>
-
-                <View style={styles.cardPrice}>
-                    <Text style={{fontSize:14,color:colors.placeholderGray}}> Advance </Text>
-                    <Text style={{fontSize:14, fontWeight:'bold'}}> $8000 </Text>
-                </View>
-
-                <View style={styles.sessionDetails}>
-                    <Text style={{fontSize:14,color:colors.placeholderGray}}> 14 Hr </Text>
-                    <Text style={{fontSize:14,color:colors.themeDarkBlackText, fontWeight:'bold'}}> 20 Lessons </Text>
-                </View>
-            </View>
+  return (
+    <View style={styles.cardMainContainer}>
+      <View style={styles.topImageView}>
+        <Image source={UserImage} style={styles.profileImage} />
+        {course ? (
+          <View style={styles.videoIcon}>
+            <PlayVideoIcon height={30} width={30} />
+          </View>
+        ) : null}
+      </View>
+      <View style={styles.content}>
+        <Text style={styles.heading}>Nursing</Text>
+        <View style={styles.subheading}>
+          <Image source={UserImage} style={styles.image} />
+          <Text>Hugo First</Text>
         </View>
-    )
+        <View style={styles.bottomRow}>
+          <Text style={styles.colorBlack}>Advance</Text>
+          <Text style={styles.fontSize}>16hr</Text>
+          <Text style={styles.fontSize}>20 Lessons</Text>
+        </View>
+      </View>
+      {course ? <RenderCourseBar /> : <RenderCertificateBar />}
+    </View>
+  );
 }
 
 const styles = StyleSheet.create({
-    
-  recommendedCards: { 
-    borderRadius:12,
-    shadowColor: '#F1894E33',
-    shadowOpacity: 0.26,
-    shadowOffset: { width: 0, height: 2},
-    shadowRadius: 10,
-    elevation: 5,
-    height: 280,
-    width: 200,
-    backgroundColor: "#FFFFFF",
-    margin: 10
-  },
-  cardPhoto : {
-    height:120,
-    margin:5,
-    borderRadius:12,
-  },
-  imageRecomended : {
-    resizeMode: 'cover',
+  profileImage: {
     width: '100%',
+    height: 100,
+    borderRadius: 20,
+  },
+  content: {
+    padding: 10,
+  },
+  cardMainContainer: {
+    padding: 8,
+    backgroundColor: colors.white,
+    margin: 5,
+    borderRadius: 20,
+    flex: 0.5,
+  },
+  videoIcon: {
     position: 'absolute',
-    height: '100%', 
-    borderRadius:12
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
-  cardTitle:{
-      fontSize:18,
-      padding:15,
+  heading: {
+    fontWeight: 'bold',
+    color: colors.black,
+    marginBottom: 20,
+    marginTop: 12,
   },
-  RecomendedCardTitle:{
-      color:colors.themeDarkBlackText,
-      fontSize:15,
-      fontWeight:'bold',
-      paddingLeft:10,
-      paddingTop:10
+  subheading: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 10,
   },
-  discount:{
-      fontSize:25,
-      padding:15,
+  topImageView: {
+    position: 'relative',
   },
-  viewCourse:{
-      backgroundColor:'#F3894D',
-      width:'40%',
-      paddingTop:7,
-      paddingBottom:7,
-      paddingLeft:'9%',
-      borderRadius:6,
-      marginLeft:'4%',
-      marginTop:20
+  bottomRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
   },
-  checkIcon : {
-    position:'absolute',
-    top:15,
-    right:20
+  colorBlack: {
+    color: colors.black,
+    fontSize: 10,
   },
-  onGoingCourse:{
-    color:'black',
-    fontSize:18,
-    marginLeft:25
+  image: {
+    width: 30,
+    height: 30,
+    borderRadius: 15,
+    marginRight: 10,
   },
-  mentor:{
-      height:36,
-      marginTop:5,
-      padding:5,
-      display:'flex',
-      flexDirection:'row',
-      alignItems:'center'
+  fontSize: {
+    fontSize: 10,
   },
-  mentorName:{
-      fontSize:14,
-      color:colors.placeholderGray,
-      // fontWeight:'bold',
-      opacity:1,
-      marginLeft:8
+  singleBarText: {
+    fontSize: 14,
+    marginLeft: 10,
+    color: colors.white,
   },
-  cardPrice:{
-      height:35,
-      flexDirection:'row',
-      padding:5,
-      justifyContent:'space-between'
+  singleBarContainer: {
+    width: '100%',
+    alignItems: 'center',
+    padding: 10,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    borderRadius: 5,
   },
-  sessionDetails:{
-      height:35,
-      flexDirection:'row',
-      padding:3,
+  courseText: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    zIndex: 3,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
-})
+  bold: {
+    fontWeight: 'bold',
+  },
+  whiteColor: {
+    color: colors.white,
+  },
+  courseMainContainer: {
+    backgroundColor: colors.themeBlue,
+    borderRadius: 5,
+    height: 30,
+    position: 'relative',
+  },
+  percentageFillBar: {
+    borderRadius: 5,
+    height: 30,
+  },
+});
 
-export default CourseCard
+export default CourseCard;

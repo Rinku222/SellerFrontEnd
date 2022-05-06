@@ -15,14 +15,14 @@ const List = [
   {
     name: 'My Certificate',
     icon: <CertificateIcon width={15} />,
-    path: 'About',
+    path: 'MyCertificates',
   },
   {
     name: 'My Course',
     icon: <CourseIcon width={15} />,
-    path: 'About',
+    path: 'MyCourses',
   },
-  {name: 'Share the App', icon: <ShareIcon width={15} />, path: 'update_success'},
+  {name: 'Share the App', icon: <ShareIcon width={15} />, path: 'Quiz'},
   {name: 'About', icon: <AboutIcon width={15} />, path: 'About'},
 ];
 
