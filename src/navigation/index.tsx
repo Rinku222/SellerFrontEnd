@@ -19,6 +19,7 @@ import UpdateSuccess from '../screens/Profile/UpdateSuccess';
 import MyCourses from '../screens/Profile/MyCourses';
 import MyCertificates from '../screens/Profile/MyCertificates';
 import Quiz from '../screens/Profile/Quiz';
+import MainScreen from '../screens/Main';
 
 const AppContainer = createNativeStackNavigator();
 const AuthStack = createNativeStackNavigator();
@@ -69,7 +70,11 @@ function ProfileStackScreens() {
       screenOptions={{
         headerShown: false,
       }}>
-      <HomeStack.Screen component={HomeProfile} name="Profile" options={{gestureEnabled: false}} />
+      <HomeStack.Screen
+        component={HomeProfile}
+        name="HomeProfile"
+        options={{gestureEnabled: false}}
+      />
       <HomeStack.Screen
         component={PersonalInfo}
         name="PersonalInfo"
@@ -138,6 +143,8 @@ export default function AppNavigator() {
     <NavigationContainer>
       <AppContainer.Navigator screenOptions={{headerShown: false}}>
         <AppContainer.Screen component={AppScreens} name="App" options={{gestureEnabled: false}} />
+        <AppContainer.Screen component={MainScreen} name="VideosScreen" />
+        {/* <AppContainer.Screen component={Home} name="VideosScreen" /> */}
         <AppContainer.Screen
           component={AuthScreens}
           name="Auth"

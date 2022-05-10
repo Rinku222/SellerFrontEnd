@@ -3,6 +3,7 @@ export const colors = {
   white: '#fff',
   themeLightGray: '#FAFAFA',
   themeGray: '#B5B5B5',
+  lightGrey: '#707070',
   placeholderGray: '#888888',
   themeShadow: '#00000029',
 
@@ -16,6 +17,8 @@ export const colors = {
   themeSkyBlue: '#15BAC4',
   black: '#000',
   themeBlue: '#08D2EA79',
+  themeBlack: '#878787',
+  backgroundGrey: '#F5F5F5',
 
   primaryGreen: '#289C5E',
 };

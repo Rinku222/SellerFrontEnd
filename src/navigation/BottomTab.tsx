@@ -67,7 +67,7 @@ function BottomTab({state, descriptors, navigation}) {
   const floatingTab = (
     <TouchableOpacity
       style={styles.floatingTabContainer}
-      onPress={() => console.log('----->floating button presed')}>
+      onPress={() => navigation.navigate('VideosScreen')}>
       <View style={styles.floatingTabIcon}>
         <Ionicons color={colors.white} name="ios-play" size={30} />
       </View>
