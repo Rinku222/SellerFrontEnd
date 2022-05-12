@@ -1,38 +1,37 @@
 import React, {useState} from 'react';
-
 import {View, StyleSheet, Text, ScrollView, TouchableOpacity} from 'react-native';
-import {Subheading} from 'react-native-paper';
-import TopHeader from '../../../components/TopHeader';
+import Video from 'react-native-video';
 import {colors} from '../../config/colors';
 import Messages from './Components/Messages/Index';
+import Notes from './Components/Notes';
 import Reviews from './Components/Reviews';
 import TermsAndFAQ from './Components/TermsAndFAQ';
-import TermsAndFAW from './Components/TermsAndFAQ';
+import DocumentsAndVideos from './Components/VideosAndDocuments';
 
 const TABS = [
   {id: 1, name: 'Messages'},
   {id: 2, name: 'Terms & FAQ'},
   {id: 3, name: 'Reviews'},
-  {id: 4, name: 'rinku'},
-  {id: 5, name: 'poonia'},
+  {id: 4, name: 'Notes'},
+  {id: 5, name: 'Videos and Documents'},
   {id: 6, name: 'poonia'},
   {id: 7, name: 'poonia'},
   {id: 8, name: 'poonia'},
   {id: 9, name: 'poonia'},
 ];
 
-function RenderTab(props) {
+function RenderTab(props: any) {
   const {selectedTab} = props;
 
   switch (selectedTab) {
     case 1:
       return <Messages />;
     case 5:
-      return <Text>2</Text>;
+      return <DocumentsAndVideos />;
     case 3:
       return <Reviews />;
     case 4:
-      return <Text>4</Text>;
+      return <Notes />;
     case 2:
       return <TermsAndFAQ />;
     default:
@@ -40,11 +39,20 @@ function RenderTab(props) {
   }
 }
 
-function MainScreen(props) {
+function MainScreen() {
   const [selectedTab, setSelectedTab] = useState(2);
 
   return (
     <View style={styles.container}>
+      <View>
+        <Video
+          controls
+          source={{
+            uri: 'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
+          }}
+          style={{width: 340, height: 300}}
+        />
+      </View>
       <Text style={{fontWeight: 'bold', fontSize: 16, marginBottom: 15}}>Clinical Learning</Text>
       <View style={{justifyContent: 'space-between', flexDirection: 'row', marginBottom: 10}}>
         <Text style={{fontWeight: 'bold'}}>Credits earned:</Text>

@@ -13,6 +13,7 @@ import PlayVideo from './playVideo.svg';
 import Achievement from './achievement.svg';
 import PrevArrow from './prevArrow.svg';
 import NextArrow from './nextArrow.svg';
+import Dustbin from './dustbin.svg';
 
 export interface ISVGProps {
   color?: string;
@@ -58,4 +59,7 @@ export function NextArrowIcon(props: ISVGProps) {
 }
 export function PrevArrowIcon(props: ISVGProps) {
   return <PrevArrow {...props} name="prevArrow" />;
+}
+export function DustbinIcon(props: ISVGProps) {
+  return <Dustbin {...props} name="prevArrow" />;
 }

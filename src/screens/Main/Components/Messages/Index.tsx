@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 
-import {View, StyleSheet, Text, ScrollView, TouchableOpacity, Image, TextInput} from 'react-native';
-import {Divider, Subheading} from 'react-native-paper';
+import {View, StyleSheet, Text, Image, TextInput} from 'react-native';
+import {Divider} from 'react-native-paper';
 import {colors} from '../../../../config/colors';
 import UserImage from '../../../../assets/images/laps.png';
 import ReviewsList from '../../../../components/ReviewsList';

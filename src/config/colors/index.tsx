@@ -19,6 +19,7 @@ export const colors = {
   themeBlue: '#08D2EA79',
   themeBlack: '#878787',
   backgroundGrey: '#F5F5F5',
+  whiteShade: '#F1F1F1',
 
   primaryGreen: '#289C5E',
 };
