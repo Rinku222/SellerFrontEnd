@@ -6,7 +6,7 @@ import UserImage from '../../assets/images/laps.png';
 
 function ReviewsList() {
   return (
-    <View style={{flexDirection: 'row'}}>
+    <View style={{flexDirection: 'row', marginBottom: 20}}>
       <View style={{marginRight: 10}}>
         <Image source={UserImage} style={styles.image} />
       </View>

@@ -13,6 +13,11 @@ import PlayVideo from './playVideo.svg';
 import Achievement from './achievement.svg';
 import PrevArrow from './prevArrow.svg';
 import NextArrow from './nextArrow.svg';
+import Dustbin from './dustbin.svg';
+import Star from './star.svg';
+import StarFilled from './starFilled.svg';
+import UpArrow from './upArrow.svg';
+import DownArrow from './downArrow.svg';
 
 export interface ISVGProps {
   color?: string;
@@ -58,4 +63,19 @@ export function NextArrowIcon(props: ISVGProps) {
 }
 export function PrevArrowIcon(props: ISVGProps) {
   return <PrevArrow {...props} name="prevArrow" />;
+}
+export function DustbinIcon(props: ISVGProps) {
+  return <Dustbin {...props} name="prevArrow" />;
+}
+export function StarIcon(props: ISVGProps) {
+  return <Star {...props} name="star" />;
+}
+export function StarFilledIcon(props: ISVGProps) {
+  return <StarFilled {...props} name="star" />;
+}
+export function UpArrowIcon(props: ISVGProps) {
+  return <UpArrow {...props} name="upArrow" />;
+}
+export function DownArrowIcon(props: ISVGProps) {
+  return <DownArrow {...props} name="downArrow" />;
 }
