@@ -14,10 +14,6 @@ const TABS = [
   {id: 3, name: 'Reviews'},
   {id: 4, name: 'Notes'},
   {id: 5, name: 'Videos and Documents'},
-  {id: 6, name: 'poonia'},
-  {id: 7, name: 'poonia'},
-  {id: 8, name: 'poonia'},
-  {id: 9, name: 'poonia'},
 ];
 
 function RenderTab(props: any) {
@@ -40,48 +36,53 @@ function RenderTab(props: any) {
 }
 
 function MainScreen() {
-  const [selectedTab, setSelectedTab] = useState(2);
+  const [selectedTab, setSelectedTab] = useState(5);
 
   return (
     <View style={styles.container}>
       <View>
         <Video
           controls
+          fullscreen
+          fullscreenAutorotate
+          playInBackground
           source={{
             uri: 'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
           }}
-          style={{width: 340, height: 300}}
+          style={{width: '100%', height: 250}}
         />
       </View>
-      <Text style={{fontWeight: 'bold', fontSize: 16, marginBottom: 15}}>Clinical Learning</Text>
-      <View style={{justifyContent: 'space-between', flexDirection: 'row', marginBottom: 10}}>
-        <Text style={{fontWeight: 'bold'}}>Credits earned:</Text>
-        <View style={{flexDirection: 'row', alignItems: 'center'}}>
-          <Text style={{fontWeight: 'bold'}}>500</Text>
-          <Text>/1000</Text>
+      <ScrollView showsHorizontalScrollIndicator={false} showsVerticalScrollIndicator={false}>
+        <Text style={{fontWeight: 'bold', fontSize: 16, marginBottom: 15}}>Clinical Learning</Text>
+        <View style={{justifyContent: 'space-between', flexDirection: 'row', marginBottom: 10}}>
+          <Text style={{fontWeight: 'bold'}}>Credits earned:</Text>
+          <View style={{flexDirection: 'row', alignItems: 'center'}}>
+            <Text style={{fontWeight: 'bold'}}>500</Text>
+            <Text>/1000</Text>
+          </View>
         </View>
-      </View>
-      <ScrollView horizontal style={{flexDirection: 'row', overflow: 'scroll'}}>
-        {TABS.map(item => {
-          return (
-            <TouchableOpacity key={item.id} onPress={() => setSelectedTab(item.id)}>
-              <Text
-                style={{
-                  color: selectedTab === item.id ? colors.white : colors.black,
-                  backgroundColor:
-                    item.id === selectedTab ? colors.themeYellow : colors.backgroundGrey,
-                  textAlign: 'center',
-                  paddingHorizontal: 10,
-                  paddingVertical: 5,
-                  borderRadius: 10,
-                }}>
-                {item.name}
-              </Text>
-            </TouchableOpacity>
-          );
-        })}
+        <ScrollView horizontal style={{flexDirection: 'row', overflow: 'scroll'}}>
+          {TABS.map(item => {
+            return (
+              <TouchableOpacity key={item.id} onPress={() => setSelectedTab(item.id)}>
+                <Text
+                  style={{
+                    color: selectedTab === item.id ? colors.white : colors.black,
+                    backgroundColor:
+                      item.id === selectedTab ? colors.themeYellow : colors.backgroundGrey,
+                    textAlign: 'center',
+                    paddingHorizontal: 10,
+                    paddingVertical: 5,
+                    borderRadius: 10,
+                  }}>
+                  {item.name}
+                </Text>
+              </TouchableOpacity>
+            );
+          })}
+        </ScrollView>
+        <RenderTab selectedTab={selectedTab} />
       </ScrollView>
-      <RenderTab selectedTab={selectedTab} />
     </View>
   );
 }

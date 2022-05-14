@@ -2,6 +2,7 @@ import React, {useState} from 'react';
 
 import {View, StyleSheet, Text, TouchableOpacity} from 'react-native';
 import {colors} from '../../../../config/colors';
+import TabViewExample from '../TabView';
 
 const TABS = [
   {id: 1, name: 'Terms'},
@@ -25,28 +26,29 @@ function TermsAndFAQ(props) {
   const [selectedTab, setSelectedTab] = useState(1);
 
   return (
-    <View style={styles.container}>
-      <View style={styles.subContainer}>
-        {TABS.map(item => {
-          return (
-            <TouchableOpacity style={{flexGrow: 1}} onPress={() => setSelectedTab(item.id)}>
-              <Text
-                style={[
-                  styles.text,
-                  {
-                    borderBottomColor: selectedTab === item.id ? colors.themeYellow : colors.white,
-                  },
-                ]}>
-                {item.name}
-              </Text>
-            </TouchableOpacity>
-          );
-        })}
-      </View>
-      <View style={styles.tab}>
-        <RenderTab selectedTab={selectedTab} />
-      </View>
-    </View>
+    <TabViewExample />
+    // <View style={styles.container}>
+    //   <View style={styles.subContainer}>
+    //     {TABS.map(item => {
+    //       return (
+    //         <TouchableOpacity style={{flexGrow: 1}} onPress={() => setSelectedTab(item.id)}>
+    //           <Text
+    //             style={[
+    //               styles.text,
+    //               {
+    //                 borderBottomColor: selectedTab === item.id ? colors.themeYellow : colors.white,
+    //               },
+    //             ]}>
+    //             {item.name}
+    //           </Text>
+    //         </TouchableOpacity>
+    //       );
+    //     })}
+    //   </View>
+    //   <View style={styles.tab}>
+    //     <RenderTab selectedTab={selectedTab} />
+    //   </View>
+    // </View>
   );
 }
 

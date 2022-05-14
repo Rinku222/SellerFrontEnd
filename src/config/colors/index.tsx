@@ -22,4 +22,5 @@ export const colors = {
   whiteShade: '#F1F1F1',
 
   primaryGreen: '#289C5E',
+  greyTheme: '#DEDEDE',
 };

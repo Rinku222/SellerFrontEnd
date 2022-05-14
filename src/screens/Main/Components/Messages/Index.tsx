@@ -11,7 +11,6 @@ function Messages(props) {
 
   return (
     <View style={styles.container}>
-      <Text>Message</Text>
       <View style={{flexDirection: 'row', alignItems: 'center', flexGrow: 1}}>
         <Image source={UserImage} style={styles.image} />
         <TextInput
