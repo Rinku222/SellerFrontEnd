@@ -141,14 +141,15 @@ export default function AppNavigator() {
   return (
     <NavigationContainer>
       <AppContainer.Navigator screenOptions={{headerShown: false}}>
-        <AppContainer.Screen component={AppScreens} name="App" options={{gestureEnabled: false}} />
-        <AppContainer.Screen component={MainScreen} name="VideosScreen" />
-        {/* <AppContainer.Screen component={Home} name="VideosScreen" /> */}
-        <AppContainer.Screen
+      <AppContainer.Screen
           component={AuthScreens}
           name="Auth"
           options={{gestureEnabled: false}}
         />
+        <AppContainer.Screen component={AppScreens} name="App" options={{gestureEnabled: false}} />
+        <AppContainer.Screen component={MainScreen} name="VideosScreen" />
+        {/* <AppContainer.Screen component={Home} name="VideosScreen" /> */}
+ 
       </AppContainer.Navigator>
     </NavigationContainer>
   );
