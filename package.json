@@ -38,6 +38,7 @@
     "@types/react-native": "^0.67.6",
     "@types/react-native-snap-carousel": "^3.8.5",
     "@types/react-native-vector-icons": "^6.4.10",
+    "@types/react-native-video": "^5.0.13",
     "@typescript-eslint/eslint-plugin": "^5.21.0",
     "@typescript-eslint/parser": "^5.21.0",
     "babel-jest": "^28.0.2",

@@ -1,17 +1,17 @@
 import React, {useState} from 'react';
 
-import {View, StyleSheet, Text, Image, TextInput} from 'react-native';
+import {View, StyleSheet, Text, Image, TextInput, ScrollView} from 'react-native';
 import {Divider} from 'react-native-paper';
 import {colors} from '../../../../config/colors';
 import UserImage from '../../../../assets/images/laps.png';
 import ReviewsList from '../../../../components/ReviewsList';
 
-function Messages(props) {
+function Messages(props: any) {
   const [comment, setComment] = useState('hello');
 
   return (
-    <View style={styles.container}>
-      <View style={{flexDirection: 'row', alignItems: 'center', flexGrow: 1}}>
+    <ScrollView contentContainerStyle={styles.container} showsVerticalScrollIndicator={false}>
+      <View style={styles.imageContainer}>
         <Image source={UserImage} style={styles.image} />
         <TextInput
           multiline
@@ -22,14 +22,23 @@ function Messages(props) {
           onChangeText={v => setComment(v)}
         />
       </View>
-      <Divider style={{height: 3, backgroundColor: colors.themeBlack, marginVertical: 10}} />
+      <Divider style={styles.divider} />
       <ReviewsList />
-    </View>
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {padding: 10, flexGrow: 1, justifyContent: 'space-around'},
+  container: {
+    // padding: 10,
+    flexGrow: 1,
+    marginTop: 5,
+    // justifyContent: 'space-around',
+  },
+  imageContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
   image: {
     width: 40,
     height: 40,
@@ -43,6 +52,11 @@ const styles = StyleSheet.create({
     borderColor: colors.lightGrey,
     flexGrow: 1,
     borderRadius: 5,
+  },
+  divider: {
+    height: 3,
+    backgroundColor: colors.themeBlack,
+    marginVertical: 10,
   },
 });
 

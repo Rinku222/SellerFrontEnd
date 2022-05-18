@@ -3,7 +3,6 @@ import {View, StyleSheet, Text, TouchableOpacity} from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import {TextInput} from 'react-native-paper';
-import {boolean} from 'yup';
 import {getShadow} from '../../../../config/globalStyles';
 import {colors} from '../../../../config/colors';
 import ThemeButton from '../../../../components/ThemeButton/ThemeButton';
@@ -137,6 +136,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     padding: 10,
     marginHorizontal: 5,
+    marginVertical: 5,
   },
   icons: {
     marginHorizontal: 5,

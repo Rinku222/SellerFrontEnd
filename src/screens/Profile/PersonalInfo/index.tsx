@@ -14,7 +14,7 @@ const LIST = [
   {icon: <AboutIcon />, value: 'Help', path: 'about', border: false},
 ];
 
-function Row(props) {
+function Row(props: any) {
   const {data, navigation} = props;
   const {icon, value, path, border} = data;
 
@@ -36,7 +36,7 @@ function Row(props) {
   );
 }
 
-function PersonalInfo(props) {
+function PersonalInfo(props: any) {
   return (
     <View style={styles.container}>
       <View>

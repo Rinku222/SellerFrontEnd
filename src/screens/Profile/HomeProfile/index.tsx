@@ -26,7 +26,7 @@ const List = [
   {name: 'About', icon: <AboutIcon width={15} />, path: 'About'},
 ];
 
-function RenderRow(props) {
+function RenderRow(props: any) {
   const {data, navigation} = props;
   const {name, icon, path} = data;
 
@@ -42,7 +42,7 @@ function RenderRow(props) {
   );
 }
 
-function HomeProfile(props) {
+function HomeProfile(props: any) {
   return (
     <View>
       <Image source={UserImage} style={styles.profileImage} />

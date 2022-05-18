@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {View, StyleSheet, Text, TouchableOpacity, Image, TextInput, ScrollView} from 'react-native';
+import {View, StyleSheet, TouchableOpacity, Image, TextInput, ScrollView} from 'react-native';
 import {Divider} from 'react-native-paper';
 import {colors} from '../../../../config/colors';
 import UserImage from '../../../../assets/images/laps.png';
@@ -9,12 +9,12 @@ import {StarFilledIcon, StarIcon} from '../../../../assets/svg';
 
 const data = [1, 2, 3, 4, 5];
 
-function Reviews(props) {
+function Reviews(props: any) {
   const [comment, setComment] = useState('');
   const [rating, setRating] = useState(0);
 
   return (
-    <View style={styles.container}>
+    <ScrollView contentContainerStyle={styles.container} showsVerticalScrollIndicator={false}>
       <View style={styles.subContainer}>
         <Image source={UserImage} style={styles.image} />
         <View style={styles.flexGrow}>
@@ -33,7 +33,7 @@ function Reviews(props) {
           </View>
           <TextInput
             multiline
-            numberOfLines={4}
+            numberOfLines={2}
             placeholder="Write your Review here"
             style={styles.input}
             value={comment}
@@ -49,9 +49,8 @@ function Reviews(props) {
       </View>
       <Divider style={styles.divider} />
       <ReviewsList />
-      <ReviewsList />
-      <ReviewsList />
-    </View>
+      {/* <ReviewsList /> */}
+    </ScrollView>
   );
 }
 
@@ -69,7 +68,7 @@ const styles = StyleSheet.create({
     marginRight: 20,
   },
   input: {
-    height: 40,
+    height: 50,
     borderWidth: 1,
     padding: 10,
     borderColor: colors.lightGrey,
