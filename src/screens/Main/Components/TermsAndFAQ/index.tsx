@@ -1,15 +1,8 @@
 import React, {useState} from 'react';
-
-import {View, StyleSheet, Text, TouchableOpacity} from 'react-native';
-import {colors} from '../../../../config/colors';
+import {StyleSheet, Text} from 'react-native';
 import TabViewExample from '../TabView';
 
-const TABS = [
-  {id: 1, name: 'Terms'},
-  {id: 2, name: 'FAQ'},
-];
-
-function RenderTab(props) {
+function RenderTab(props: any) {
   const {selectedTab} = props;
 
   switch (selectedTab) {
@@ -22,7 +15,7 @@ function RenderTab(props) {
   }
 }
 
-function TermsAndFAQ(props) {
+function TermsAndFAQ(props: any) {
   const [selectedTab, setSelectedTab] = useState(1);
 
   return (

@@ -7,7 +7,7 @@ import {colors} from '../../../config/colors';
 
 const LIST = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 
-function Quiz(props) {
+function Quiz(props: any) {
   const [active, setActive] = useState(10);
 
   const handlePrev = () => {
