@@ -16,13 +16,8 @@ import NextArrow from './nextArrow.svg';
 import Dustbin from './dustbin.svg';
 import Star from './star.svg';
 import StarFilled from './starFilled.svg';
-<<<<<<< HEAD
 import UpArrow from './UpArrow.svg';
 import DownArrow from './DownArrow.svg';
-=======
-import UpArrow from './upArrow.svg';
-import DownArrow from './downArrow.svg';
->>>>>>> origin/master
 
 export interface ISVGProps {
   color?: string;

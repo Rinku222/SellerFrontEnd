@@ -79,7 +79,7 @@ const styles = StyleSheet.create({
   },
   indicatorStyle: {
     backgroundColor: colors.themeBlue,
-    height: 3,
+    height: 2,
     borderRadius: 5,
   },
 });
