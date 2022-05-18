@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
-import {View, StyleSheet, Text, TouchableOpacity} from 'react-native';
-import {Route, SceneRendererProps, TabBar, TabView} from 'react-native-tab-view';
+import {View, StyleSheet, Text, Animated, TouchableWithoutFeedback, ScrollView} from 'react-native';
+import {NavigationState, SceneRendererProps, TabView} from 'react-native-tab-view';
 import Video from 'react-native-video';
 import {colors} from '../../config/colors';
 import Layout from '../../utils/Layout';
@@ -10,6 +10,13 @@ import Reviews from './Components/Reviews';
 import TermsAndFAQ from './Components/TermsAndFAQ';
 import DocumentsAndVideos from './Components/VideosAndDocuments';
 
+type Route = {
+  key: string;
+  title: string;
+};
+
+type State = NavigationState<Route>;
+
 const routes: Route[] = [
   {key: '0', title: 'Messages'},
   {key: '1', title: 'Terms & FAQ'},
@@ -18,9 +25,56 @@ const routes: Route[] = [
   {key: '4', title: 'Videos and Documents'},
 ];
 
+const renderItem =
+  ({
+    navigationState,
+    position,
+  }: {
+    navigationState: State;
+    position: Animated.AnimatedInterpolation;
+  }) =>
+  // eslint-disable-next-line react/function-component-definition
+  ({route, index}: {route: Route; index: number}) => {
+    const inputRange = navigationState.routes.map((_, i) => i);
+
+    const activeOpacity = position.interpolate({
+      inputRange,
+      outputRange: inputRange.map((i: number) => (i === index ? 1 : 0)),
+    });
+    const inactiveOpacity = position.interpolate({
+      inputRange,
+      outputRange: inputRange.map((i: number) => (i === index ? 0 : 1)),
+    });
+
+    return (
+      <View style={styles.tab}>
+        <Animated.View style={[styles.item, {opacity: inactiveOpacity}]}>
+          <Text style={[styles.label, styles.inactive]}>{route.title}</Text>
+        </Animated.View>
+        <Animated.View style={[styles.item, styles.activeItem, {opacity: activeOpacity}]}>
+          <Text style={[styles.label, styles.active]}>{route.title}</Text>
+        </Animated.View>
+      </View>
+    );
+  };
+
+const renderTabBar = (props: SceneRendererProps & {navigationState: State}) => (
+  <View style={styles.tabbar}>
+    <ScrollView horizontal contentContainerStyle={{flexGrow: 1}}>
+      {props.navigationState.routes.map((route: Route, index: number) => {
+        return (
+          <TouchableWithoutFeedback key={route.key} onPress={() => props.jumpTo(route.key)}>
+            {renderItem(props)({route, index})}
+          </TouchableWithoutFeedback>
+        );
+      })}
+    </ScrollView>
+  </View>
+);
+
 function MainScreen() {
   // const [selectedTab, setSelectedTab] = useState(5);
-  const [selectedTab, setSelectedTab] = useState(4);
+  const [selectedTab, setSelectedTab] = useState(0);
 
   const renderScene = ({
     route: {key},
@@ -46,74 +100,35 @@ function MainScreen() {
   };
 
   return (
-    <View style={styles.container}>
-      <View>
+    <View style={{flexGrow: 1}}>
+      <View style={{flexGrow: 1, position: 'relative', top: 0, bottom: 0, paddingBottom: 0}}>
         <Video
           controls
-          fullscreen
-          fullscreenAutorotate
-          playInBackground
           source={{
             uri: 'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
           }}
           style={styles.videos}
         />
       </View>
-      <Text style={styles.header}>Clinical Learning</Text>
-      <View style={styles.scoreContainer}>
-        <Text style={styles.creditText}>Credits earned:</Text>
-        <View style={styles.scoreTextContainer}>
-          <Text style={styles.scoreText}>500</Text>
-          <Text>/1000</Text>
+
+      <View style={styles.container}>
+        <Text style={styles.header}>Clinical Learning</Text>
+        <View style={styles.scoreContainer}>
+          <Text style={styles.creditText}>Credits earned:</Text>
+          <View style={styles.scoreTextContainer}>
+            <Text style={styles.scoreText}>500</Text>
+            <Text>/1000</Text>
+          </View>
         </View>
-      </View>
-      <View style={{flexGrow: 1}}>
-        <TabView
-          initialLayout={{width: Layout.window.width}}
-          navigationState={{index: selectedTab, routes}}
-          renderScene={renderScene}
-          renderTabBar={tabBarProps => {
-            return (
-              <TabBar
-                {...tabBarProps}
-                scrollEnabled
-                activeColor={colors.primary}
-                // contentContainerStyle={{flexGrow: 1}}
-                inactiveColor={colors.lightGrey}
-                indicatorStyle={{backgroundColor: 'transparent'}}
-                renderTabBarItem={itemProps => {
-                  const {key, navigationState} = itemProps;
-                  console.log('-------->itemProps', itemProps);
-                  console.log('-------->Number(key)', Number(key));
-                  console.log('-------->navigationState.index', navigationState.index);
-                  return (
-                    <TouchableOpacity>
-                      <View
-                        style={
-                          Number(key) === navigationState.index
-                            ? {
-                                backgroundColor: colors.themeBlue,
-                                padding: 10,
-                                borderRadius: 20,
-                              }
-                            : {
-                                padding: 10,
-                                borderRadius: 20,
-                                backgroundColor: '#fff',
-                              }
-                        }>
-                        <Text>{itemProps.route.title}</Text>
-                      </View>
-                    </TouchableOpacity>
-                  );
-                }}
-                style={{backgroundColor: '#fff'}}
-                tabStyle={{borderRadius: 15}}
-              />
-            );
-          }}
-          onIndexChange={setSelectedTab}
-        />
+        <View style={{flexGrow: 1}}>
+          <TabView
+            initialLayout={{width: Layout.window.width}}
+            navigationState={{index: selectedTab, routes}}
+            renderScene={renderScene}
+            renderTabBar={renderTabBar}
+            onIndexChange={setSelectedTab}
+          />
+        </View>
       </View>
     </View>
   );
@@ -122,17 +137,20 @@ function MainScreen() {
 const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
-    paddingHorizontal: 5,
+    marginHorizontal: 10,
+    marginTop: -120,
   },
   header: {
     fontWeight: 'bold',
     fontSize: 16,
     marginBottom: 15,
+    paddingHorizontal: 5,
   },
   scoreContainer: {
     justifyContent: 'space-between',
     flexDirection: 'row',
     marginBottom: 10,
+    paddingHorizontal: 5,
   },
   creditText: {
     fontWeight: 'bold',
@@ -148,20 +166,47 @@ const styles = StyleSheet.create({
   videos: {
     width: '100%',
     height: 250,
+    position: 'absolute',
+    top: 0,
+    bottom: 0,
+    right: 0,
+    left: 0,
   },
-  activeTab: {
+  tabbar: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    backgroundColor: '#fafafa',
+  },
+  tab: {
+    // alignItems: 'center',
+    // borderTopWidth: StyleSheet.hairlineWidth,
+    // borderTopColor: 'rgba(0, 0, 0, .2)',
+  },
+  item: {
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  activeItem: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+  },
+  active: {
+    color: '#000',
     backgroundColor: colors.themeBlue,
-    padding: 10,
-    borderRadius: 20,
   },
-  inActiveTab: {
-    padding: 10,
-    borderRadius: 20,
-    backgroundColor: '#fff',
+  inactive: {
+    color: '#000',
   },
-  selected: {
-    backgroundColor: 'red',
-    color: '#fff',
+
+  label: {
+    fontSize: 15,
+    // backgroundColor: colors.themeBlue,
+    borderRadius: 5,
+    padding: 10,
+    marginLeft: 5,
   },
 });
 

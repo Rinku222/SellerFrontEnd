@@ -38,7 +38,7 @@ const renderScene = SceneMap({
 });
 
 export default function TabViewExample() {
-  const [selectedTab, setSelectedTab] = React.useState(4);
+  const [selectedTab, setSelectedTab] = React.useState(0);
 
   const [routes] = React.useState([
     {key: 'first', title: 'Terms'},
@@ -57,7 +57,7 @@ export default function TabViewExample() {
               {...tabBarProps}
               activeColor={colors.primary}
               inactiveColor={colors.black}
-              indicatorStyle={{backgroundColor: 'blue'}}
+              indicatorStyle={styles.indicatorStyle}
               style={{backgroundColor: '#F5F5F5', marginHorizontal: 5}}
             />
           );
@@ -71,9 +71,15 @@ export default function TabViewExample() {
 const styles = StyleSheet.create({
   container: {
     margin: 10,
+    flexGrow: 1,
   },
   tabContainer: {
     flexGrow: 1,
     marginTop: 15,
+  },
+  indicatorStyle: {
+    backgroundColor: colors.themeBlue,
+    height: 3,
+    borderRadius: 5,
   },
 });
