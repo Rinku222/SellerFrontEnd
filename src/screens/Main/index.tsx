@@ -104,6 +104,9 @@ function MainScreen() {
       <View style={{flexGrow: 1, position: 'relative', top: 0, bottom: 0, paddingBottom: 0}}>
         <Video
           controls
+          fullscreen
+          fullscreenAutorotate
+          playInBackground
           source={{
             uri: 'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
           }}

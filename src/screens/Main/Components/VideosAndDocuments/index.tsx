@@ -159,6 +159,14 @@ const styles = StyleSheet.create({
     // margin: 5,
     paddingHorizontal: 5,
   },
+  topImageView: {
+    position: 'relative',
+  },
+  profileImage: {
+    width: 100,
+    height: 60,
+    borderRadius: 10,
+  },
   accordionContainer: {
     paddingBottom: 0,
     backgroundColor: colors.white,

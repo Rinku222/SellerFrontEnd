@@ -16,8 +16,13 @@ import NextArrow from './nextArrow.svg';
 import Dustbin from './dustbin.svg';
 import Star from './star.svg';
 import StarFilled from './starFilled.svg';
+<<<<<<< HEAD
 import UpArrow from './UpArrow.svg';
 import DownArrow from './DownArrow.svg';
+=======
+import UpArrow from './upArrow.svg';
+import DownArrow from './downArrow.svg';
+>>>>>>> origin/master
 
 export interface ISVGProps {
   color?: string;
@@ -68,14 +73,14 @@ export function DustbinIcon(props: ISVGProps) {
   return <Dustbin {...props} name="prevArrow" />;
 }
 export function StarIcon(props: ISVGProps) {
-  return <Star {...props} name="prevArrow" />;
+  return <Star {...props} name="star" />;
 }
 export function StarFilledIcon(props: ISVGProps) {
-  return <StarFilled {...props} name="prevArrow" />;
+  return <StarFilled {...props} name="star" />;
 }
 export function UpArrowIcon(props: ISVGProps) {
-  return <UpArrow {...props} name="prevArrow" />;
+  return <UpArrow {...props} name="upArrow" />;
 }
 export function DownArrowIcon(props: ISVGProps) {
-  return <DownArrow {...props} name="prevArrow" />;
+  return <DownArrow {...props} name="downArrow" />;
 }

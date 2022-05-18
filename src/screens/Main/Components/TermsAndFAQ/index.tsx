@@ -1,12 +1,6 @@
 import React, {useState} from 'react';
-
 import {StyleSheet, Text} from 'react-native';
 import TabViewExample from '../TabView';
-
-const TABS = [
-  {id: 1, name: 'Terms'},
-  {id: 2, name: 'FAQ'},
-];
 
 function RenderTab(props: any) {
   const {selectedTab} = props;

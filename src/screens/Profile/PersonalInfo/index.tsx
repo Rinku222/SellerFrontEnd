@@ -36,7 +36,7 @@ function Row(props: any) {
   );
 }
 
-function PersonalInfo(props) {
+function PersonalInfo(props: any) {
   return (
     <View style={styles.container}>
       <View>
