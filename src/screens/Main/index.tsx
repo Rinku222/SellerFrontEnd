@@ -4,6 +4,7 @@ import {NavigationState, SceneRendererProps, TabView} from 'react-native-tab-vie
 import Video from 'react-native-video';
 import {colors} from '../../config/colors';
 import Layout from '../../utils/Layout';
+import Description from './Components/Description';
 import Messages from './Components/Messages/Index';
 import Notes from './Components/Notes';
 import Reviews from './Components/Reviews';
@@ -23,6 +24,7 @@ const routes: Route[] = [
   {key: '2', title: 'Reviews'},
   {key: '3', title: 'Notes'},
   {key: '4', title: 'Videos and Documents'},
+  {key: '5', title: 'Description'},
 ];
 
 const renderItem =
@@ -93,6 +95,8 @@ function MainScreen() {
         return <Notes />;
       case '4':
         return <DocumentsAndVideos />;
+      case '5':
+        return <Description />;
 
       default:
         return <View />;
