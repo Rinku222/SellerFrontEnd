@@ -49,6 +49,7 @@ function BottomTab({state, descriptors, navigation}) {
         accessibilityLabel={options.tabBarAccessibilityLabel}
         accessibilityRole="button"
         accessibilityState={isFocused ? {selected: true} : {}}
+        key={index}
         style={styles.tabItemsContainer}
         testID={options.tabBarTestID}
         onLongPress={onLongPress}

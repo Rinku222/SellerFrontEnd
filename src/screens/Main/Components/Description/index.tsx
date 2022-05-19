@@ -34,9 +34,9 @@ function Description() {
         <View style={styles.mentorSubheading}>
           <Text style={styles.mentorSubheadingText}>name of the mentor will be here</Text>
           <View style={styles.imagesDataContainer}>
-            {ImagesData.map(item => {
+            {ImagesData.map((item, i) => {
               return (
-                <TouchableOpacity>
+                <TouchableOpacity key={i}>
                   <Image source={item} style={styles.images} />
                 </TouchableOpacity>
               );

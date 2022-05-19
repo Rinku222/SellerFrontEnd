@@ -21,7 +21,10 @@ function Reviews(props: any) {
           <View style={styles.starIcons}>
             {data.map((item, index) => {
               return (
-                <TouchableOpacity style={styles.starIcon} onPress={() => setRating(index + 1)}>
+                <TouchableOpacity
+                  key={index}
+                  style={styles.starIcon}
+                  onPress={() => setRating(index + 1)}>
                   {index < rating ? (
                     <StarFilledIcon height={25} width={25} />
                   ) : (

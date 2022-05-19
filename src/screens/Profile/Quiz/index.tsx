@@ -29,9 +29,12 @@ function Quiz(props: any) {
       <View style={styles.subContainer}>
         <TopHeader color={colors.white} {...props} />
         <View style={styles.numberList}>
-          {LIST.map(item => {
+          {LIST.map((item, i) => {
             return (
-              <TouchableOpacity style={styles.numberContainer} onPress={() => setActive(item)}>
+              <TouchableOpacity
+                key={i}
+                style={styles.numberContainer}
+                onPress={() => setActive(item)}>
                 <Text style={{color: item === active ? 'black' : 'grey'}}>{item}</Text>
               </TouchableOpacity>
             );
