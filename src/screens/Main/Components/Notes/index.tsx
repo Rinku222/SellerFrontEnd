@@ -7,6 +7,8 @@ import {getShadow} from '../../../../config/globalStyles';
 import {colors} from '../../../../config/colors';
 import ThemeButton from '../../../../components/ThemeButton/ThemeButton';
 
+const DATA = [];
+
 type BottomIconProps = {
   edit: boolean;
   setEdit: (edit: boolean) => void;
@@ -93,27 +95,33 @@ function ParaGraphHeader(props: ParaGraphIconProps) {
 
 function Notes() {
   const [comment, setComment] = useState<string>();
-  const [edit, setEdit] = useState(true);
+  const [edit, setEdit] = useState(false);
 
   return (
-    <View style={styles.notesContainer}>
-      <View style={styles.container}>
-        {edit ? (
-          <TextInput
-            dense
-            activeOutlineColor={colors.lightGrey}
-            mode="outlined"
-            placeholder="Write Title of notes"
-            style={styles.input}
-            value={comment}
-            onChangeText={v => setComment(v)}
-          />
-        ) : (
-          <Text>comment</Text>
-        )}
-      </View>
-      <ParaGraphHeader edit={edit} />
-      <BottomIcon edit={edit} setEdit={setEdit} />
+    <View>
+      {DATA.length > 0 ? (
+        <View style={styles.notesContainer}>
+          <View style={styles.container}>
+            {edit ? (
+              <TextInput
+                dense
+                activeOutlineColor={colors.lightGrey}
+                mode="outlined"
+                placeholder="Write Title of notes"
+                style={styles.input}
+                value={comment}
+                onChangeText={v => setComment(v)}
+              />
+            ) : (
+              <Text>comment</Text>
+            )}
+          </View>
+          <ParaGraphHeader edit={edit} />
+          <BottomIcon edit={edit} setEdit={setEdit} />
+        </View>
+      ) : (
+        <Text>hello</Text>
+      )}
     </View>
   );
 }
