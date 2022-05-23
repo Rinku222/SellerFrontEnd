@@ -88,7 +88,6 @@ const renderTabBar = (props: SceneRendererProps & {navigationState: State}) => (
 );
 
 function MainScreen(props: any) {
-  // const [selectedTab, setSelectedTab] = useState(5);
   const [selectedTab, setSelectedTab] = useState(0);
 
   const renderScene = ({
@@ -107,10 +106,8 @@ function MainScreen(props: any) {
         return <Notes />;
       case '4':
         return <Messages />;
-
       case '5':
         return <Reviews />;
-
       default:
         return <View />;
     }
@@ -120,7 +117,6 @@ function MainScreen(props: any) {
     <View style={styles.mainContainer}>
       <View style={styles.videoContainer}>
         <VideoPlayer
-          // navigator={props.navigator}
           source={{
             uri: 'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
           }}
@@ -172,7 +168,6 @@ function MainScreen(props: any) {
 const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
-    // borderWidth: 1,
     borderTopRightRadius: 30,
     borderTopLeftRadius: 30,
     borderTopLef: 10,
@@ -208,7 +203,6 @@ const styles = StyleSheet.create({
 
   videos: {
     width: '100%',
-    // height: 250,
     position: 'absolute',
     top: 0,
     bottom: 0,
@@ -218,7 +212,6 @@ const styles = StyleSheet.create({
   mainContainer: {
     flexGrow: 1,
     backgroundColor: colors.white,
-    // borderWidth: 1,
   },
   contentContainer: {
     backgroundColor: colors.backgroundGrey,
@@ -232,8 +225,6 @@ const styles = StyleSheet.create({
     top: 0,
     bottom: 0,
     paddingBottom: 0,
-    // borderWidth: 1,
-    // margin: 2,
   },
   tabbar: {
     flexDirection: 'row',
@@ -263,8 +254,6 @@ const styles = StyleSheet.create({
 
   label: {
     fontSize: 15,
-    // backgroundColor: colors.themeBlue,
-    // borderRadius: 5,
     padding: 10,
     marginLeft: 5,
   },
@@ -275,10 +264,11 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     position: 'absolute',
-    bottom: 5,
-    right: 5,
-    left: 5,
-    backgroundColor: colors.darkBlue,
+    bottom: 0,
+    right: 10,
+    left: 10,
+    paddingVertical: 3,
+    backgroundColor: colors.primary,
     alignItems: 'center',
     borderRadius: 5,
   },
