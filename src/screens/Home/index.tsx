@@ -55,8 +55,8 @@ function RenderRecommended({recommended}) {
   return (
     <ScrollView horizontal style={{marginTop: 40}}>
       <View style={{flexDirection: 'row'}}>
-        {recommended.map(item, index => (
-          <CourseCard key={index} />
+        {recommended.map(item => (
+          <CourseCard item={item} />
         ))}
       </View>
     </ScrollView>

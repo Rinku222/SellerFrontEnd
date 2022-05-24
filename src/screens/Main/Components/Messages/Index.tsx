@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 
-import {View, StyleSheet, Text, Image, TextInput, ScrollView} from 'react-native';
+import {View, StyleSheet, Image, TextInput, ScrollView} from 'react-native';
 import {Divider} from 'react-native-paper';
 import {colors} from '../../../../config/colors';
 import UserImage from '../../../../assets/images/laps.png';

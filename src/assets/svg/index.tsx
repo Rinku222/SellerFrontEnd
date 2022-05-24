@@ -17,7 +17,8 @@ import Dustbin from './dustbin.svg';
 import Star from './star.svg';
 import StarFilled from './starFilled.svg';
 import UpArrow from './upArrow.svg';
-import DownArrow from './downArrow.svg';
+import DownArrow from './DownArrow.svg';
+import Info from './infoIcon.svg';
 
 export interface ISVGProps {
   color?: string;
@@ -78,4 +79,7 @@ export function UpArrowIcon(props: ISVGProps) {
 }
 export function DownArrowIcon(props: ISVGProps) {
   return <DownArrow {...props} name="downArrow" />;
+}
+export function InfoIcon(props: ISVGProps) {
+  return <Info {...props} name="infoIcon" />;
 }
