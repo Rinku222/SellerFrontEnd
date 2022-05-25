@@ -1,16 +1,12 @@
-import React,{useEffect} from 'react'
-import { View } from 'react-native'
+import React, {useEffect} from 'react';
+import {View} from 'react-native';
 
 function Splash(props) {
+  useEffect(() => {
+    props.navigation.navigate('Login');
+  }, []);
 
-    useEffect(()=>{
-        console.log('comes to Splash and props is',props)
-        props.navigation.navigate('Login')
-    },[])
-
-    return(
-        <View/>
-    )
+  return <View />;
 }
 
-export default Splash
+export default Splash;

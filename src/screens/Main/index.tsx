@@ -33,7 +33,7 @@ type State = NavigationState<Route>;
 
 const routes: Route[] = [
   {key: '0', title: 'Description'},
-  {key: '1', title: 'Videos and Documents'},
+  {key: '1', title: 'Videos'},
   {key: '2', title: 'Terms & FAQ'},
   {key: '3', title: 'Notes'},
   {key: '4', title: 'Messages'},
@@ -90,6 +90,8 @@ const renderTabBar = (props: SceneRendererProps & {navigationState: State}) => (
 function MainScreen(props: any) {
   const [selectedTab, setSelectedTab] = useState(0);
 
+  const courseBought = true;
+
   const renderScene = ({
     route: {key},
   }: SceneRendererProps & {
@@ -99,15 +101,15 @@ function MainScreen(props: any) {
       case '0':
         return <Description />;
       case '1':
-        return <DocumentsAndVideos />;
+        return <DocumentsAndVideos courseBought={courseBought} />;
       case '2':
         return <TermsAndFAQ />;
       case '3':
-        return <Notes />;
+        return <Notes courseBought={courseBought} />;
       case '4':
-        return <Messages />;
+        return <Messages courseBought={courseBought} />;
       case '5':
-        return <Reviews />;
+        return <Reviews courseBought={courseBought} />;
       default:
         return <View />;
     }
@@ -155,12 +157,14 @@ function MainScreen(props: any) {
           </View>
         </View>
       </View>
-      <View style={styles.buttonContainer}>
-        <TouchableOpacity style={styles.buttonContentContainer}>
-          <Feather color="#fff" name="shopping-cart" size={20} />
-          <Text style={styles.buttonText}>Add to cart</Text>
-        </TouchableOpacity>
-      </View>
+      {!courseBought ? (
+        <View style={styles.buttonContainer}>
+          <TouchableOpacity style={styles.buttonContentContainer}>
+            <Feather color="#fff" name="shopping-cart" size={20} />
+            <Text style={styles.buttonText}>Add to cart</Text>
+          </TouchableOpacity>
+        </View>
+      ) : null}
     </View>
   );
 }
