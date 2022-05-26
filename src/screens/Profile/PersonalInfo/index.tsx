@@ -68,11 +68,7 @@ function PersonalInfo(props: any) {
       {/* <Image source={Email} style={{width: 100, height: 100}} /> */}
 
       <View style={styles.buttonView}>
-        <ThemeButton
-          style={{paddingHorizontal: 30}}
-          title="Save"
-          onPress={() => console.log('----->pressed')}
-        />
+        <ThemeButton style={{paddingHorizontal: 30}} title="Save" />
       </View>
     </View>
   );
