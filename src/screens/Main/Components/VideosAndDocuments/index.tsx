@@ -1,10 +1,13 @@
 import React, {useState} from 'react';
 import {View, StyleSheet, Text, TouchableOpacity, Image, ScrollView} from 'react-native';
 import {List} from 'react-native-paper';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {colors} from '../../../../config/colors';
 import {getShadow} from '../../../../config/globalStyles';
 import UserImage from '../../../../assets/images/laps.png';
 import {DownArrowIcon, PlayVideoIcon, UpArrowIcon} from '../../../../assets/svg';
+
+// chevron-up
 
 const data = [1, 2, 3];
 const listData = [1, 2, 3, 4, 5];
@@ -62,8 +65,6 @@ function DropDownSection() {
 
   const [show, setShow] = useState(false);
 
-  console.log('----->show', show);
-
   return (
     <View style={styles.dropDownContainer}>
       <TouchableOpacity style={styles.subAccordion} onPress={() => setShow(!show)}>
@@ -107,16 +108,43 @@ function DropDownSection() {
 
 const renderTitle = () => <DropDownSection />;
 
+const renderIcon = (v, courseBought) => (
+  <View style={{flexDirection: 'row', alignItems: 'center'}}>
+    {courseBought ? (
+      <Text style={{color: colors.black, marginRight: 10}}>
+        Credits 10/ <Text>20</Text>
+      </Text>
+    ) : (
+      <MaterialCommunityIcons color={colors.primary} name="lock-outline" size={30} />
+    )}
+    <View>
+      <MaterialCommunityIcons name={v ? 'chevron-up' : 'chevron-down'} size={30} />
+    </View>
+  </View>
+);
+
 function DropDownList(props: any) {
+  const {courseBought} = props;
+  const [expanded, setExpanded] = useState(false);
+
+  function handlePress() {
+    if (courseBought) {
+      setExpanded(!expanded);
+    }
+  }
+
   return (
     <View style={styles.accordionContainer}>
       <List.Accordion
+        expanded={expanded}
+        right={() => renderIcon(expanded, courseBought)}
         title={
           <View style={styles.accordionTitle}>
             <Text>Accordion title</Text>
           </View>
         }
-        titleStyle={styles.text}>
+        titleStyle={styles.text}
+        onPress={() => handlePress()}>
         {data.map(item => {
           return <List.Item key={item} style={styles.title} title={renderTitle} />;
         })}
@@ -125,12 +153,13 @@ function DropDownList(props: any) {
   );
 }
 
-function DocumentsAndVideos() {
+function DocumentsAndVideos(props) {
+  const {courseBought} = props;
+
   return (
     <ScrollView showsVerticalScrollIndicator={false} style={styles.container}>
-      {/* <Text>Credits:20/20</Text> */}
-      {listData.map(item => {
-        return <DropDownList key={item} />;
+      {listData.map((item, index) => {
+        return <DropDownList courseBought={index < 2 ? true : courseBought} key={item} />;
       })}
     </ScrollView>
   );

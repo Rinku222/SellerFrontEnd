@@ -46,7 +46,6 @@ function AddNote(props) {
 function RenderNote() {
   return (
     <View style={styles.renderNoteMainContainer}>
-      {/* <Text>comment</Text> */}
       <ParaGraphHeader edit={false} />
       <BottomIcon edit={false} />
     </View>
@@ -128,7 +127,8 @@ function ParaGraphHeader(props: ParaGraphIconProps) {
   );
 }
 
-function Notes() {
+function Notes(props) {
+  const {courseBought} = props;
   const [comment, setComment] = useState<string>();
   const [edit, setEdit] = useState(false);
   const [addNote, setAddNote] = useState(false);
@@ -138,7 +138,7 @@ function Notes() {
       {DATA.length > 0 ? (
         addNote ? (
           <AddNote addNote={addNote} setAddNote={setAddNote} />
-        ) : (
+        ) : !courseBought ? (
           <View>
             <View style={styles.addNewNoteContainer}>
               <TouchableOpacity
@@ -148,15 +148,14 @@ function Notes() {
                 <Text style={styles.buttonText}>Add New Note</Text>
               </TouchableOpacity>
             </View>
-
             <RenderNote />
           </View>
-        )
+        ) : null
       ) : (
         <View>
           {addNote ? (
             <AddNote setAddNote={setAddNote} />
-          ) : (
+          ) : !courseBought ? (
             <View style={styles.emptyMinContainer}>
               <View style={styles.emptySubContainer}>
                 <Text style={styles.emptyText}>Click below button to add new notes</Text>
@@ -170,7 +169,7 @@ function Notes() {
                 </View>
               </View>
             </View>
-          )}
+          ) : null}
         </View>
       )}
     </View>
