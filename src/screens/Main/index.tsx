@@ -1,14 +1,28 @@
 import React, {useState} from 'react';
-import {View, StyleSheet, Text, Animated, TouchableWithoutFeedback, ScrollView} from 'react-native';
+import {
+  View,
+  StyleSheet,
+  Text,
+  Animated,
+  TouchableWithoutFeedback,
+  ScrollView,
+  Image,
+  TouchableOpacity,
+} from 'react-native';
 import {NavigationState, SceneRendererProps, TabView} from 'react-native-tab-view';
-import Video from 'react-native-video';
+import VideoPlayer from 'react-native-video-controls';
+import Feather from 'react-native-vector-icons/Feather';
 import {colors} from '../../config/colors';
+import {getShadow} from '../../config/globalStyles';
 import Layout from '../../utils/Layout';
+import Description from './Components/Description';
 import Messages from './Components/Messages/Index';
 import Notes from './Components/Notes';
 import Reviews from './Components/Reviews';
 import TermsAndFAQ from './Components/TermsAndFAQ';
 import DocumentsAndVideos from './Components/VideosAndDocuments';
+import {InfoIcon} from '../../assets/svg';
+import LikeImage from '../../assets/images/likeImage.png';
 
 type Route = {
   key: string;
@@ -18,11 +32,12 @@ type Route = {
 type State = NavigationState<Route>;
 
 const routes: Route[] = [
-  {key: '0', title: 'Messages'},
-  {key: '1', title: 'Terms & FAQ'},
-  {key: '2', title: 'Reviews'},
+  {key: '0', title: 'Description'},
+  {key: '1', title: 'Videos'},
+  {key: '2', title: 'Terms & FAQ'},
   {key: '3', title: 'Notes'},
-  {key: '4', title: 'Videos and Documents'},
+  {key: '4', title: 'Messages'},
+  {key: '5', title: 'Reviews'},
 ];
 
 const renderItem =
@@ -47,7 +62,7 @@ const renderItem =
     });
 
     return (
-      <View style={styles.tab}>
+      <View>
         <Animated.View style={[styles.item, {opacity: inactiveOpacity}]}>
           <Text style={[styles.label, styles.inactive]}>{route.title}</Text>
         </Animated.View>
@@ -60,7 +75,7 @@ const renderItem =
 
 const renderTabBar = (props: SceneRendererProps & {navigationState: State}) => (
   <View style={styles.tabbar}>
-    <ScrollView horizontal contentContainerStyle={{flexGrow: 1}}>
+    <ScrollView horizontal contentContainerStyle={styles.contentContainer}>
       {props.navigationState.routes.map((route: Route, index: number) => {
         return (
           <TouchableWithoutFeedback key={route.key} onPress={() => props.jumpTo(route.key)}>
@@ -72,41 +87,38 @@ const renderTabBar = (props: SceneRendererProps & {navigationState: State}) => (
   </View>
 );
 
-function MainScreen() {
-  // const [selectedTab, setSelectedTab] = useState(5);
+function MainScreen(props: any) {
   const [selectedTab, setSelectedTab] = useState(0);
+
+  const courseBought = true;
 
   const renderScene = ({
     route: {key},
   }: SceneRendererProps & {
     route: Route;
   }) => {
-    console.log('-------->key', key);
     switch (key) {
       case '0':
-        return <Messages />;
+        return <Description />;
       case '1':
-        return <TermsAndFAQ />;
+        return <DocumentsAndVideos courseBought={courseBought} />;
       case '2':
-        return <Reviews />;
+        return <TermsAndFAQ />;
       case '3':
-        return <Notes />;
+        return <Notes courseBought={courseBought} />;
       case '4':
-        return <DocumentsAndVideos />;
-
+        return <Messages courseBought={courseBought} />;
+      case '5':
+        return <Reviews courseBought={courseBought} />;
       default:
         return <View />;
     }
   };
 
   return (
-    <View style={{flexGrow: 1}}>
-      <View style={{flexGrow: 1, position: 'relative', top: 0, bottom: 0, paddingBottom: 0}}>
-        <Video
-          controls
-          fullscreen
-          fullscreenAutorotate
-          playInBackground
+    <View style={styles.mainContainer}>
+      <View style={styles.videoContainer}>
+        <VideoPlayer
           source={{
             uri: 'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
           }}
@@ -114,25 +126,45 @@ function MainScreen() {
         />
       </View>
 
-      <View style={styles.container}>
-        <Text style={styles.header}>Clinical Learning</Text>
-        <View style={styles.scoreContainer}>
-          <Text style={styles.creditText}>Credits earned:</Text>
-          <View style={styles.scoreTextContainer}>
-            <Text style={styles.scoreText}>500</Text>
-            <Text>/1000</Text>
+      <View style={{backgroundColor: '#000', flexGrow: 1}}>
+        <View style={styles.container}>
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              paddingTop: 10,
+              paddingBottom: 10,
+            }}>
+            <Text style={styles.header}>Clinical Learning</Text>
+            <Image source={LikeImage} style={styles.images} />
+          </View>
+          <View style={styles.scoreContainer}>
+            <Text style={styles.creditText}>Credits earned:</Text>
+            <View style={styles.scoreTextContainer}>
+              <Text style={styles.scoreText}>500</Text>
+              <Text style={styles.scoreSubText}>/1000</Text>
+              <InfoIcon />
+            </View>
+          </View>
+          <View style={styles.mainContainer}>
+            <TabView
+              initialLayout={{width: Layout.window.width}}
+              navigationState={{index: selectedTab, routes}}
+              renderScene={renderScene}
+              renderTabBar={renderTabBar}
+              onIndexChange={setSelectedTab}
+            />
           </View>
         </View>
-        <View style={{flexGrow: 1}}>
-          <TabView
-            initialLayout={{width: Layout.window.width}}
-            navigationState={{index: selectedTab, routes}}
-            renderScene={renderScene}
-            renderTabBar={renderTabBar}
-            onIndexChange={setSelectedTab}
-          />
-        </View>
       </View>
+      {!courseBought ? (
+        <View style={styles.buttonContainer}>
+          <TouchableOpacity style={styles.buttonContentContainer}>
+            <Feather color="#fff" name="shopping-cart" size={20} />
+            <Text style={styles.buttonText}>Add to cart</Text>
+          </TouchableOpacity>
+        </View>
+      ) : null}
     </View>
   );
 }
@@ -140,8 +172,12 @@ function MainScreen() {
 const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
-    marginHorizontal: 10,
-    marginTop: -120,
+    borderTopRightRadius: 30,
+    borderTopLeftRadius: 30,
+    borderTopLef: 10,
+    paddingTop: 10,
+    backgroundColor: colors.white,
+    paddingHorizontal: 10,
   },
   header: {
     fontWeight: 'bold',
@@ -165,26 +201,41 @@ const styles = StyleSheet.create({
   scoreText: {
     fontWeight: 'bold',
   },
+  scoreSubText: {
+    marginRight: 5,
+  },
 
   videos: {
     width: '100%',
-    height: 250,
     position: 'absolute',
     top: 0,
     bottom: 0,
     right: 0,
     left: 0,
   },
+  mainContainer: {
+    flexGrow: 1,
+    backgroundColor: colors.white,
+  },
+  contentContainer: {
+    backgroundColor: colors.backgroundGrey,
+    ...getShadow(3),
+    borderRadius: 5,
+    flexGrow: 1,
+  },
+  videoContainer: {
+    flexGrow: 1,
+    position: 'relative',
+    top: 0,
+    bottom: 0,
+    paddingBottom: 0,
+  },
   tabbar: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    backgroundColor: '#fafafa',
+    backgroundColor: colors.themeLightGray,
   },
-  tab: {
-    // alignItems: 'center',
-    // borderTopWidth: StyleSheet.hairlineWidth,
-    // borderTopColor: 'rgba(0, 0, 0, .2)',
-  },
+
   item: {
     alignItems: 'center',
     justifyContent: 'center',
@@ -197,19 +248,42 @@ const styles = StyleSheet.create({
     bottom: 0,
   },
   active: {
-    color: '#000',
+    color: colors.black,
     backgroundColor: colors.themeBlue,
+    borderRadius: 10,
   },
   inactive: {
-    color: '#000',
+    color: colors.black,
   },
 
   label: {
     fontSize: 15,
-    // backgroundColor: colors.themeBlue,
-    borderRadius: 5,
     padding: 10,
     marginLeft: 5,
+  },
+  images: {
+    width: 25,
+    height: 25,
+    marginRight: 20,
+  },
+  buttonContainer: {
+    position: 'absolute',
+    bottom: 0,
+    right: 10,
+    left: 10,
+    paddingVertical: 3,
+    backgroundColor: colors.primary,
+    alignItems: 'center',
+    borderRadius: 5,
+  },
+  buttonContentContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 10,
+  },
+  buttonText: {
+    color: colors.white,
+    marginLeft: 15,
   },
 });
 

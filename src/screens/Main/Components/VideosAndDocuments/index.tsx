@@ -1,10 +1,13 @@
 import React, {useState} from 'react';
 import {View, StyleSheet, Text, TouchableOpacity, Image, ScrollView} from 'react-native';
 import {List} from 'react-native-paper';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {colors} from '../../../../config/colors';
 import {getShadow} from '../../../../config/globalStyles';
 import UserImage from '../../../../assets/images/laps.png';
 import {DownArrowIcon, PlayVideoIcon, UpArrowIcon} from '../../../../assets/svg';
+
+// chevron-up
 
 const data = [1, 2, 3];
 const listData = [1, 2, 3, 4, 5];
@@ -14,13 +17,7 @@ function Tabs() {
 
   return (
     <View>
-      <View
-        style={{
-          flexDirection: 'row',
-          justifyContent: 'space-around',
-          backgroundColor: colors.backgroundGrey,
-          marginTop: 5,
-        }}>
+      <View style={styles.tabContainer}>
         <TouchableOpacity
           style={{
             borderBottomColor: selected === 1 ? colors.primary : 'transparent',
@@ -45,7 +42,7 @@ function Tabs() {
         </TouchableOpacity>
       </View>
       {selected === 1 ? (
-        <View style={{padding: 10}}>
+        <View>
           <Text>
             Lorem ipsum dolor sit amet consectetur adipisicing elit. Molestiae maiores dignissimos
             atque modi quos autem.
@@ -53,7 +50,7 @@ function Tabs() {
         </View>
       ) : (
         <View>
-          <Text style={{padding: 10}}>
+          <Text style={styles.tabContainerText}>
             Lorem ipsum dolor sit amet consectetur adipisicing elit. Laborum sint, sequi nesciunt
             iusto aliquam ducimus.
           </Text>
@@ -68,18 +65,16 @@ function DropDownSection() {
 
   const [show, setShow] = useState(false);
 
-  console.log('----->show', show);
-
   return (
-    <View style={{flexGrow: 1}}>
-      <TouchableOpacity style={{flexDirection: 'row'}} onPress={() => setShow(!show)}>
-        <View>
+    <View style={styles.dropDownContainer}>
+      <TouchableOpacity style={styles.subAccordion} onPress={() => setShow(!show)}>
+        <View style={styles.videoContainer}>
           <Image source={UserImage} style={styles.image} />
           <View style={styles.videoIcon}>
             <PlayVideoIcon height={30} width={30} />
           </View>
         </View>
-        <View style={{flexGrow: 1, flex: 1, marginRight: 5}}>
+        <View style={styles.dropDownSubContainer}>
           <View style={styles.videoTitle}>
             <Text style={styles.videoTitleText}>
               Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor
@@ -90,14 +85,7 @@ function DropDownSection() {
           <View>
             <Text>1hr 30min</Text>
           </View>
-          <View
-            style={{
-              height: 8,
-              width: '100%',
-              backgroundColor: colors.themeGray,
-              borderRadius: 10,
-              position: 'relative',
-            }}>
+          <View style={styles.videoStatusBar}>
             <View
               style={{
                 height: 8,
@@ -120,20 +108,43 @@ function DropDownSection() {
 
 const renderTitle = () => <DropDownSection />;
 
+const renderIcon = (v, courseBought) => (
+  <View style={{flexDirection: 'row', alignItems: 'center'}}>
+    {courseBought ? (
+      <Text style={{color: colors.black, marginRight: 10}}>
+        Credits 10/ <Text>20</Text>
+      </Text>
+    ) : (
+      <MaterialCommunityIcons color={colors.primary} name="lock-outline" size={30} />
+    )}
+    <View>
+      <MaterialCommunityIcons name={v ? 'chevron-up' : 'chevron-down'} size={30} />
+    </View>
+  </View>
+);
+
 function DropDownList(props: any) {
+  const {courseBought} = props;
+  const [expanded, setExpanded] = useState(false);
+
+  function handlePress() {
+    if (courseBought) {
+      setExpanded(!expanded);
+    }
+  }
+
   return (
     <View style={styles.accordionContainer}>
       <List.Accordion
+        expanded={expanded}
+        right={() => renderIcon(expanded, courseBought)}
         title={
-          <View
-            style={{
-              justifyContent: 'space-between',
-              flexDirection: 'row',
-            }}>
+          <View style={styles.accordionTitle}>
             <Text>Accordion title</Text>
           </View>
         }
-        titleStyle={styles.text}>
+        titleStyle={styles.text}
+        onPress={() => handlePress()}>
         {data.map(item => {
           return <List.Item key={item} style={styles.title} title={renderTitle} />;
         })}
@@ -142,12 +153,13 @@ function DropDownList(props: any) {
   );
 }
 
-function DocumentsAndVideos() {
+function DocumentsAndVideos(props) {
+  const {courseBought} = props;
+
   return (
     <ScrollView showsVerticalScrollIndicator={false} style={styles.container}>
-      {/* <Text>Credits:20/20</Text> */}
-      {listData.map(item => {
-        return <DropDownList key={item} />;
+      {listData.map((item, index) => {
+        return <DropDownList courseBought={index < 2 ? true : courseBought} key={item} />;
       })}
     </ScrollView>
   );
@@ -155,18 +167,9 @@ function DocumentsAndVideos() {
 
 const styles = StyleSheet.create({
   container: {
-    marginTop: 15,
-    // margin: 5,
-    paddingHorizontal: 5,
+    marginTop: 5,
   },
-  topImageView: {
-    position: 'relative',
-  },
-  profileImage: {
-    width: 100,
-    height: 60,
-    borderRadius: 10,
-  },
+
   accordionContainer: {
     paddingBottom: 0,
     backgroundColor: colors.white,
@@ -174,7 +177,30 @@ const styles = StyleSheet.create({
     borderRadius: 3,
     margin: 5,
     flexGrow: 1,
-    width: '100%',
+  },
+  accordionTitle: {
+    justifyContent: 'space-between',
+    flexDirection: 'row',
+  },
+  dropDownContainer: {
+    flexGrow: 1,
+  },
+  subAccordion: {
+    flexDirection: 'row',
+    backgroundColor: colors.white,
+    ...getShadow(1),
+    borderRadius: 5,
+    marginVertical: 5,
+    // marginBottom: 5,
+    marginLeft: -10,
+  },
+  videoContainer: {
+    // marginLeft: -10,
+  },
+  dropDownSubContainer: {
+    flexGrow: 1,
+    flex: 1,
+    marginRight: 15,
   },
 
   title: {
@@ -186,7 +212,6 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     flex: 1,
     justifyContent: 'space-between',
-    width: '100%',
   },
   image: {
     width: 100,
@@ -216,6 +241,22 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
     color: colors.black,
     marginRight: 10,
+  },
+  tabContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    backgroundColor: colors.backgroundGrey,
+    marginTop: 5,
+  },
+  tabContainerText: {
+    padding: 10,
+  },
+  videoStatusBar: {
+    height: 8,
+    width: '100%',
+    backgroundColor: colors.themeGray,
+    borderRadius: 10,
+    position: 'relative',
   },
 });
 

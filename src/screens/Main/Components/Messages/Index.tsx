@@ -1,28 +1,34 @@
 import React, {useState} from 'react';
 
-import {View, StyleSheet, Text, Image, TextInput, ScrollView} from 'react-native';
+import {View, StyleSheet, Image, TextInput, ScrollView} from 'react-native';
 import {Divider} from 'react-native-paper';
 import {colors} from '../../../../config/colors';
 import UserImage from '../../../../assets/images/laps.png';
 import ReviewsList from '../../../../components/ReviewsList';
 
 function Messages(props: any) {
+  const {courseBought} = props;
   const [comment, setComment] = useState('hello');
 
   return (
     <ScrollView contentContainerStyle={styles.container} showsVerticalScrollIndicator={false}>
-      <View style={styles.imageContainer}>
-        <Image source={UserImage} style={styles.image} />
-        <TextInput
-          multiline
-          numberOfLines={4}
-          placeholder="useless placeholder"
-          style={styles.input}
-          value={comment}
-          onChangeText={v => setComment(v)}
-        />
-      </View>
-      <Divider style={styles.divider} />
+      {courseBought ? (
+        <View>
+          <View style={styles.imageContainer}>
+            <Image source={UserImage} style={styles.image} />
+            <TextInput
+              multiline
+              numberOfLines={4}
+              placeholder="useless placeholder"
+              style={styles.input}
+              value={comment}
+              onChangeText={v => setComment(v)}
+            />
+          </View>
+          <Divider style={styles.divider} />
+        </View>
+      ) : null}
+
       <ReviewsList />
     </ScrollView>
   );

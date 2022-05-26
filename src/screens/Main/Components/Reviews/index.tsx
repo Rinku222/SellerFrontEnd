@@ -10,44 +10,54 @@ import {StarFilledIcon, StarIcon} from '../../../../assets/svg';
 const data = [1, 2, 3, 4, 5];
 
 function Reviews(props: any) {
+  const {courseBought} = props;
+
   const [comment, setComment] = useState('');
   const [rating, setRating] = useState(0);
 
   return (
     <ScrollView contentContainerStyle={styles.container} showsVerticalScrollIndicator={false}>
-      <View style={styles.subContainer}>
-        <Image source={UserImage} style={styles.image} />
-        <View style={styles.flexGrow}>
-          <View style={styles.starIcons}>
-            {data.map((item, index) => {
-              return (
-                <TouchableOpacity style={styles.starIcon} onPress={() => setRating(index + 1)}>
-                  {index < rating ? (
-                    <StarFilledIcon height={25} width={25} />
-                  ) : (
-                    <StarIcon height={25} width={25} />
-                  )}
-                </TouchableOpacity>
-              );
-            })}
+      {courseBought ? (
+        <View>
+          <View style={styles.subContainer}>
+            <Image source={UserImage} style={styles.image} />
+            <View style={styles.flexGrow}>
+              <View style={styles.starIcons}>
+                {data.map((item, index) => {
+                  return (
+                    <TouchableOpacity
+                      key={index}
+                      style={styles.starIcon}
+                      onPress={() => setRating(index + 1)}>
+                      {index < rating ? (
+                        <StarFilledIcon height={25} width={25} />
+                      ) : (
+                        <StarIcon height={25} width={25} />
+                      )}
+                    </TouchableOpacity>
+                  );
+                })}
+              </View>
+              <TextInput
+                multiline
+                numberOfLines={2}
+                placeholder="Write your Review here"
+                style={styles.input}
+                value={comment}
+                onChangeText={v => setComment(v)}
+              />
+              <View style={styles.button}>
+                <ThemeButton
+                  title="Submit"
+                  onPress={() => console.log('----->submit button pressed')}
+                />
+              </View>
+            </View>
           </View>
-          <TextInput
-            multiline
-            numberOfLines={2}
-            placeholder="Write your Review here"
-            style={styles.input}
-            value={comment}
-            onChangeText={v => setComment(v)}
-          />
-          <View style={styles.button}>
-            <ThemeButton
-              title="Submit"
-              onPress={() => console.log('----->submit button pressed')}
-            />
-          </View>
+          <Divider style={styles.divider} />
         </View>
-      </View>
-      <Divider style={styles.divider} />
+      ) : null}
+
       <ReviewsList />
       {/* <ReviewsList /> */}
     </ScrollView>

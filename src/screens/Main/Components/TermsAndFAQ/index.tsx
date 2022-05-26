@@ -16,33 +16,7 @@ function RenderTab(props: any) {
 }
 
 function TermsAndFAQ(props: any) {
-  const [selectedTab, setSelectedTab] = useState(1);
-
-  return (
-    <TabViewExample />
-    // <View style={styles.container}>
-    //   <View style={styles.subContainer}>
-    //     {TABS.map(item => {
-    //       return (
-    //         <TouchableOpacity style={{flexGrow: 1}} onPress={() => setSelectedTab(item.id)}>
-    //           <Text
-    //             style={[
-    //               styles.text,
-    //               {
-    //                 borderBottomColor: selectedTab === item.id ? colors.themeYellow : colors.white,
-    //               },
-    //             ]}>
-    //             {item.name}
-    //           </Text>
-    //         </TouchableOpacity>
-    //       );
-    //     })}
-    //   </View>
-    //   <View style={styles.tab}>
-    //     <RenderTab selectedTab={selectedTab} />
-    //   </View>
-    // </View>
-  );
+  return <TabViewExample />;
 }
 
 const styles = StyleSheet.create({
