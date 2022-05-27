@@ -19,6 +19,7 @@ import MyCourses from '../screens/Profile/MyCourses';
 import MyCertificates from '../screens/Profile/MyCertificates';
 import Quiz from '../screens/Profile/Quiz';
 import MainScreen from '../screens/Main';
+import VerificationMail from '../screens/Verification/EmailVerification/index';
 
 const AppContainer = createNativeStackNavigator();
 const AuthStack = createNativeStackNavigator();
@@ -31,6 +32,7 @@ function AuthScreens() {
     <AuthStack.Navigator screenOptions={{headerShown: false}}>
       <AuthStack.Screen component={Splash} name="Splash" options={{gestureEnabled: false}} />
       <AuthStack.Screen component={Login} name="Login" options={{gestureEnabled: false}} />
+      <AuthStack.Screen component={VerificationMail} name="mail_verification" options={{gestureEnabled: false}} />
     </AuthStack.Navigator>
   );
 }
@@ -101,12 +103,17 @@ function ProfileStackScreens() {
         component={EditPassword}
         name="change_password"
         options={{gestureEnabled: false}}
-      />
+      />  
       <HomeStack.Screen
         component={UpdateSuccess}
         name="update_success"
         options={{gestureEnabled: false}}
       />
+       {/* <HomeStack.Screen
+        component={VerificationMail}
+        name="mail_verification"
+        options={{gestureEnabled: false}}
+      /> */}
     </HomeStack.Navigator>
   );
 }
@@ -141,15 +148,16 @@ export default function AppNavigator() {
   return (
     <NavigationContainer>
       <AppContainer.Navigator screenOptions={{headerShown: false}}>
-        <AppContainer.Screen component={AppScreens} name="App" options={{gestureEnabled: false}} />
-        <AppContainer.Screen component={MainScreen} name="VideosScreen" />
-        {/* <AppContainer.Screen component={Home} name="VideosScreen" /> */}
-
-        <AppContainer.Screen
+      <AppContainer.Screen
           component={AuthScreens}
           name="Auth"
           options={{gestureEnabled: false}}
         />
+        <AppContainer.Screen component={AppScreens} name="App" options={{gestureEnabled: false}} />
+        <AppContainer.Screen component={MainScreen} name="VideosScreen" />
+        {/* <AppContainer.Screen component={Home} name="VideosScreen" /> */}
+
+       
       </AppContainer.Navigator>
     </NavigationContainer>
   );
