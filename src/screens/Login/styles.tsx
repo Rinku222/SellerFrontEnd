@@ -61,6 +61,12 @@ export const styles=StyleSheet.create({
         shadowOpacity: 1,
         shadowRadius: 6,
         elevation: 5 , 
+    },
+    verifyContainer:{
+        marginTop:30,
+        flex:1,
+        backgroundColor:'white',
+        alignItems: 'center',
     }
 
 })
