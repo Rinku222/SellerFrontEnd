@@ -32,7 +32,11 @@ function AuthScreens() {
     <AuthStack.Navigator screenOptions={{headerShown: false}}>
       <AuthStack.Screen component={Splash} name="Splash" options={{gestureEnabled: false}} />
       <AuthStack.Screen component={Login} name="Login" options={{gestureEnabled: false}} />
-      <AuthStack.Screen component={VerificationMail} name="mail_verification" options={{gestureEnabled: false}} />
+      <AuthStack.Screen
+        component={VerificationMail}
+        name="mail_verification"
+        options={{gestureEnabled: false}}
+      />
     </AuthStack.Navigator>
   );
 }
@@ -103,13 +107,13 @@ function ProfileStackScreens() {
         component={EditPassword}
         name="change_password"
         options={{gestureEnabled: false}}
-      />  
+      />
       <HomeStack.Screen
         component={UpdateSuccess}
         name="update_success"
         options={{gestureEnabled: false}}
       />
-       {/* <HomeStack.Screen
+      {/* <HomeStack.Screen
         component={VerificationMail}
         name="mail_verification"
         options={{gestureEnabled: false}}
@@ -156,8 +160,7 @@ export default function AppNavigator() {
         <AppContainer.Screen component={AppScreens} name="App" options={{gestureEnabled: false}} />
         <AppContainer.Screen component={MainScreen} name="VideosScreen" />
         {/* <AppContainer.Screen component={Home} name="VideosScreen" /> */}
-
-       
+        
       </AppContainer.Navigator>
     </NavigationContainer>
   );
