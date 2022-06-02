@@ -153,7 +153,7 @@ function DropDownList(props: any) {
   );
 }
 
-function DocumentsAndVideos(props) {
+function DocumentsAndVideos(props: any) {
   const {courseBought} = props;
 
   return (
