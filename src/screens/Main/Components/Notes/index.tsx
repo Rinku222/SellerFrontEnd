@@ -8,6 +8,7 @@ import {getShadow} from '../../../../config/globalStyles';
 import {colors} from '../../../../config/colors';
 import ThemeButton from '../../../../components/ThemeButton/ThemeButton';
 import Button from '../../../../components/Button';
+import {PDFExample} from '../../../PDF/PDF';
 
 const DATA = [1];
 
@@ -114,7 +115,7 @@ function ParaGraphHeader(props: ParaGraphIconProps) {
           placeholder="Write Title of notes"
           style={styles.input}
           underlineColor="transparent"
-          value="hello"
+          value="world"
           onChangeText={v => console.log('-------->hello')}
         />
       ) : (
@@ -128,13 +129,15 @@ function ParaGraphHeader(props: ParaGraphIconProps) {
 }
 
 function Notes(props) {
-  const {courseBought} = props;
-  const [comment, setComment] = useState<string>();
-  const [edit, setEdit] = useState(false);
+  const {courseBought, navigation} = props;
   const [addNote, setAddNote] = useState(false);
 
   return (
-    <View>
+    <View style={{flex: 1}}>
+      <TouchableOpacity style={{flex: 1}} onPress={() => navigation.navigate('PDFScreen')}>
+        {/* <PDFExample /> */}
+        <Text style={{padding: 5}}>Pdf</Text>
+      </TouchableOpacity>
       {DATA.length > 0 ? (
         addNote ? (
           <AddNote addNote={addNote} setAddNote={setAddNote} />
@@ -268,9 +271,6 @@ const styles = StyleSheet.create({
   },
   mainBottomContainer: {
     alignItems: 'flex-end',
-  },
-  buttonMainContainer: {
-    alignItems: 'center',
   },
 });
 

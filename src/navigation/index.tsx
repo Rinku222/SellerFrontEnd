@@ -20,6 +20,7 @@ import MyCertificates from '../screens/Profile/MyCertificates';
 import Quiz from '../screens/Profile/Quiz';
 import MainScreen from '../screens/Main';
 import VerificationMail from '../screens/Verification/EmailVerification/index';
+import {PDFExample} from '../screens/PDF/PDF';
 
 const AppContainer = createNativeStackNavigator();
 const AuthStack = createNativeStackNavigator();
@@ -152,15 +153,15 @@ export default function AppNavigator() {
   return (
     <NavigationContainer>
       <AppContainer.Navigator screenOptions={{headerShown: false}}>
-      <AppContainer.Screen
+        <AppContainer.Screen component={AppScreens} name="App" options={{gestureEnabled: false}} />
+        <AppContainer.Screen component={MainScreen} name="VideosScreen" />
+        <AppContainer.Screen component={PDFExample} name="PDFScreen" />
+        {/* <AppContainer.Screen component={Home} name="VideosScreen" /> */}
+        <AppContainer.Screen
           component={AuthScreens}
           name="Auth"
           options={{gestureEnabled: false}}
         />
-        <AppContainer.Screen component={AppScreens} name="App" options={{gestureEnabled: false}} />
-        <AppContainer.Screen component={MainScreen} name="VideosScreen" />
-        {/* <AppContainer.Screen component={Home} name="VideosScreen" /> */}
-        
       </AppContainer.Navigator>
     </NavigationContainer>
   );

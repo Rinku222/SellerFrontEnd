@@ -90,6 +90,8 @@ const renderTabBar = (props: SceneRendererProps & {navigationState: State}) => (
 function MainScreen(props: any) {
   const [selectedTab, setSelectedTab] = useState(0);
 
+  console.log('-------->props.navigate', props);
+
   const courseBought = true;
 
   const renderScene = ({
@@ -103,13 +105,13 @@ function MainScreen(props: any) {
       case '1':
         return <DocumentsAndVideos courseBought={courseBought} />;
       case '2':
-        return <TermsAndFAQ />;
+        return <TermsAndFAQ {...props} />;
       case '3':
-        return <Notes courseBought={courseBought} />;
+        return <Notes courseBought={courseBought} {...props} />;
       case '4':
-        return <Messages courseBought={courseBought} />;
+        return <Messages courseBought={courseBought} {...props} />;
       case '5':
-        return <Reviews courseBought={courseBought} />;
+        return <Reviews courseBought={courseBought} {...props} />;
       default:
         return <View />;
     }
