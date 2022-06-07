@@ -21,6 +21,8 @@ import Quiz from '../screens/Profile/Quiz';
 import MainScreen from '../screens/Main';
 import VerificationMail from '../screens/Verification/EmailVerification/index';
 import {PDFExample} from '../screens/PDF/PDF';
+import Forgot from '../screens/ForgotPassword';
+import NewPassword from '../screens/NewPassword';
 
 const AppContainer = createNativeStackNavigator();
 const AuthStack = createNativeStackNavigator();
@@ -30,9 +32,16 @@ const Tab = createBottomTabNavigator();
 
 function AuthScreens() {
   return (
-    <AuthStack.Navigator screenOptions={{headerShown: false}}>
+    <AuthStack.Navigator initialRouteName="Splash" screenOptions={{headerShown: false}}>
       <AuthStack.Screen component={Splash} name="Splash" options={{gestureEnabled: false}} />
       <AuthStack.Screen component={Login} name="Login" options={{gestureEnabled: false}} />
+      <AuthStack.Screen component={Forgot} name="forgot" options={{gestureEnabled: false}} />
+      <AuthStack.Screen
+        component={NewPassword}
+        name="new-password"
+        options={{gestureEnabled: false}}
+      />
+
       <AuthStack.Screen
         component={VerificationMail}
         name="mail_verification"
@@ -153,15 +162,16 @@ export default function AppNavigator() {
   return (
     <NavigationContainer>
       <AppContainer.Navigator screenOptions={{headerShown: false}}>
-        <AppContainer.Screen component={AppScreens} name="App" options={{gestureEnabled: false}} />
-        <AppContainer.Screen component={MainScreen} name="VideosScreen" />
-        <AppContainer.Screen component={PDFExample} name="PDFScreen" />
-        {/* <AppContainer.Screen component={Home} name="VideosScreen" /> */}
         <AppContainer.Screen
           component={AuthScreens}
           name="Auth"
           options={{gestureEnabled: false}}
         />
+
+        <AppContainer.Screen component={AppScreens} name="App" options={{gestureEnabled: false}} />
+        <AppContainer.Screen component={MainScreen} name="VideosScreen" />
+        <AppContainer.Screen component={PDFExample} name="PDFScreen" />
+        {/* <AppContainer.Screen component={Home} name="VideosScreen" /> */}
       </AppContainer.Navigator>
     </NavigationContainer>
   );

@@ -1,4 +1,4 @@
-import React, {useEffect, useState, useRef, useMemo} from 'react';
+import React, {useState, useRef, useMemo} from 'react';
 import {View, Animated, Easing, Text, Image, TextInput, TouchableOpacity} from 'react-native';
 import {SvgXml} from 'react-native-svg';
 import {Auth} from 'aws-amplify';
@@ -11,7 +11,7 @@ import {colors} from '../../config/colors';
 import TopHeader from '../../components/TopHeader';
 import Email from '../../assets/images/Change_email.png';
 
-function Login(props) {
+function Login(props: any) {
   const animationDuration = 500;
   const initialBottomDrawerHeight = screenHeight > 650 ? 330 : 230;
   const finallBottomDrawerHeight = screenHeight > 650 ? 480 : 460;
@@ -277,6 +277,16 @@ function Login(props) {
           onChangeText={onPasswordChangeForLogin}
         />
         <Button style={styles.renderLoginButton} text="Login" variant="primary" onPress={signIn} />
+
+        <View style={styles.forgot}>
+          <Text>
+            {'Forgot Password? '}
+            <Text style={{color: colors.skyBlue}} onPress={() => navigation.navigate('forgot')}>
+              Forgot
+            </Text>
+          </Text>
+        </View>
+
         <View style={{flex: 1, flexDirection: 'row', justifyContent: 'space-evenly'}}>
           <TouchableOpacity>
             <Image source={require('../../assets/images/google.png')} style={styles.socialIcon} />
@@ -297,18 +307,6 @@ function Login(props) {
     );
   };
 
-  const handleValidEmail = val => {
-    const reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
-
-    if (val.length === 0) {
-      setEmailValidError('email address must be enter');
-    } else if (reg.test(val) === false) {
-      setEmailValidError('enter valid email address');
-    } else if (reg.test(val) === true) {
-      setEmailValidError('');
-    }
-  };
-
   const renderSignUp = () => {
     const signUp = async () => {
       console.log('----->signUp called');
@@ -322,6 +320,7 @@ function Login(props) {
         console.log('error signing up:', JSON.stringify(error));
       }
     };
+
     return (
       <>
         <Text style={styles.headerLabelTextSignUp}>Sign Up</Text>

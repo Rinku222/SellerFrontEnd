@@ -119,4 +119,8 @@ export const styles = StyleSheet.create({
     alignSelf: 'center',
     marginTop: 24,
   },
+  forgot: {
+    alignSelf: 'center',
+    paddingBottom: 10,
+  },
 });
