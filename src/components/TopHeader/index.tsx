@@ -5,8 +5,6 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 function TopHeader(props) {
   const {navigation, title, color = 'black', icon} = props;
 
-  console.log('----->navigation weewfer', navigation);
-
   return (
     <View>
       <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>

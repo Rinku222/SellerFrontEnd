@@ -1,15 +1,15 @@
 import React from 'react';
 import {TouchableOpacity, View, Image, Text, StyleSheet} from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import {AboutIcon, PlayVideoIcon, AchievementIcon} from '../../assets/svg';
-import {colors} from '../../config/colors';
+import {AboutIcon, PlayVideoIcon, AchievementIcon} from '../../../assets/svg';
+import {colors} from '../../../config/colors';
 // import UserImage from '../../../assets/images/laps.png';
 import UserImage from '../../assets/images/laps.png';
-import ThemeButton from '../ThemeButton/ThemeButton';
-import {getShadow} from '../../utils';
-import {readService, Authorization} from '../../services/HttpService/HttpService';
-import useWishlistActions from '../../redux/actions/wishlistActions';
-import homeActions from '../../redux/actions/homeActions';
+import ThemeButton from '../../ThemeButton/ThemeButton';
+import {getShadow} from '../../../utils';
+import {readService, Authorization} from '../../../services/HttpService/HttpService';
+import useWishlistActions from '../../../redux/actions/wishlistActions';
+import homeActions from '../../../redux/actions/homeActions';
 
 // cards-heart
 
@@ -95,19 +95,18 @@ function CourseCard(props) {
     owner,
     totalLession,
     wishListed,
-    wishListId,
   } = data || {};
 
   const {name, profileUrl} = owner || {};
 
   const handleWishlistPress = async () => {
     if (wishListed) {
-      await {wishlistId: wishListId};
+      await deleteWishlist({courseId: _id});
     } else {
       await addWishlist({courseId: _id});
     }
-    getWishlist();
-    getHomeCourses({offset: 0, limit: 10});
+    await getWishlist();
+    await getHomeCourses({offset: 0, limit: 10});
   };
 
   return (
