@@ -1,18 +1,40 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {View, Text, Image, StyleSheet, ScrollView, TouchableOpacity} from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {Button, Paragraph, Dialog, Portal, Provider} from 'react-native-paper';
+import {useSelector} from 'react-redux';
 import {colors} from '../../config/colors';
 import UserImage from '../../assets/images/laps.png';
+import useWishlistActions from '../../redux/actions/wishlistActions';
+import {Loader} from '../../../App';
+import loadingVariable from '../../redux/selector';
 
-function RenderRow() {
+function RenderRow(props) {
+  const {data} = props;
+
+  const {_id, amount, courseId, courseTitle, coverImageUrl, duration, totalLession} = data;
+
+  const {deleteWishlist, getWishlist} = useWishlistActions();
+
+  const handleDeleteWishlist = async () => {
+    await deleteWishlist({wishlistId: _id});
+    await getWishlist();
+  };
+
   return (
     <TouchableOpacity style={styles.container}>
-      <Image source={UserImage} style={styles.image} />
+      <Image
+        source={{
+          uri: coverImageUrl,
+        }}
+        style={styles.image}
+      />
       <View style={styles.subContainer}>
         <View style={styles.itemHeading}>
-          <Text style={styles.colorBlack}>Covid-19</Text>
-          <MaterialCommunityIcons color={colors.primary} name="cards-heart" size={20} />
+          <Text style={styles.colorBlack}>{courseTitle}</Text>
+          <TouchableOpacity onPress={handleDeleteWishlist}>
+            <MaterialCommunityIcons color={colors.primary} name="cards-heart" size={20} />
+          </TouchableOpacity>
         </View>
         <View style={styles.itemReview}>
           <MaterialCommunityIcons color={colors.primary} name="star" size={20} />
@@ -21,11 +43,11 @@ function RenderRow() {
         </View>
         <View style={styles.itemTime}>
           <MaterialCommunityIcons color={colors.themeGray} name="clock-outline" size={20} />
-          <Text style={styles.colorGreyTheme}>16 hr 30 min</Text>
+          <Text style={styles.colorGreyTheme}>{duration}</Text>
         </View>
         <View style={styles.itemLessons}>
-          <Text>20 Lesson</Text>
-          <Text style={[styles.colorBlack, styles.bold]}>₹800/-</Text>
+          <Text>{totalLession} Lesson</Text>
+          <Text style={[styles.colorBlack, styles.bold]}>₹{amount}/-</Text>
         </View>
       </View>
     </TouchableOpacity>
@@ -33,17 +55,33 @@ function RenderRow() {
 }
 
 function WishList() {
+  const {wishlist} = useSelector(s => s.wishlist);
+
+  const loading = loadingVariable();
+
+  const {getWishlist} = useWishlistActions();
+
+  const loadData = async () => {
+    getWishlist();
+  };
+
+  useEffect(() => {
+    loadData();
+  }, []);
+
+  if (loading) {
+    return <Loader />;
+  }
+
   return (
     <View style={styles.mainContainer}>
       <View style={styles.heading}>
         <Text style={styles.colorBlack}>All Saved Program</Text>
       </View>
       <ScrollView showsVerticalScrollIndicator={false} style={styles.scrollView}>
-        <RenderRow />
-        <RenderRow />
-        <RenderRow />
-        <RenderRow />
-        <RenderRow />
+        {wishlist.map((item, i) => {
+          return <RenderRow data={item} key={i} />;
+        })}
       </ScrollView>
     </View>
   );

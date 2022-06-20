@@ -45,5 +45,3 @@ const indexContent = [
 ].join('\n');
 
 writeFileSync('src/assets/svg/index.tsx', indexContent);
-
-console.log('Icon component file created! ✅');

@@ -9,8 +9,7 @@ import Email from '../../../assets/images/Change_email.png';
 function VerificationMail(props) {
   const [otp, setOtp] = useState({1: '', 2: '', 3: '', 4: '', 5: '', 6: ''});
   const {navigation, route} = props;
-  const {itemId, emailPhoneForSignUp, otherParam} = route.params;
-  console.log('Item id is', itemId);
+  const {emailPhoneForSignUp} = route.params;
 
   const inputOne = useRef();
   const inputTwo = useRef();
@@ -23,7 +22,10 @@ function VerificationMail(props) {
 
   async function confirmSignUp() {
     try {
-      navigation.navigate('App');
+      const user = await Auth.confirmSignUp(emailPhoneForSignUp, code.replace(/,/g, ''));
+      if (user) {
+        navigation.navigate('App');
+      }
     } catch (error) {
       console.log('error confirming sign up', error);
     }

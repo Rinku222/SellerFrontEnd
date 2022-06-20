@@ -6,8 +6,6 @@ import InputBox from '../../components/InputBox';
 import {styles} from '../Login/styles';
 
 function Forgot(props: any) {
-  console.log('-------->123', props);
-
   const {navigation} = props;
   const [email, setEmail] = useState('');
 
@@ -18,7 +16,6 @@ function Forgot(props: any) {
   const forgotpassword = () => {
     Auth.forgotPassword(email)
       .then(value => {
-        console.log('value', value);
         navigation.navigate('new-password', {
           userName: email,
         });

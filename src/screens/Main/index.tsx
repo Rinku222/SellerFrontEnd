@@ -90,8 +90,6 @@ const renderTabBar = (props: SceneRendererProps & {navigationState: State}) => (
 function MainScreen(props: any) {
   const [selectedTab, setSelectedTab] = useState(0);
 
-  console.log('-------->props.navigate', props);
-
   const courseBought = true;
 
   const renderScene = ({

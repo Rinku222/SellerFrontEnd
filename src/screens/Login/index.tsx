@@ -1,4 +1,4 @@
-import React, {useState, useRef, useMemo} from 'react';
+import React, {useEffect, useState, useRef, useMemo} from 'react';
 import {View, Animated, Easing, Text, Image, TextInput, TouchableOpacity} from 'react-native';
 import {SvgXml} from 'react-native-svg';
 import {Auth} from 'aws-amplify';
@@ -10,8 +10,9 @@ import {screenHeight} from '../../config/globalStyles';
 import {colors} from '../../config/colors';
 import TopHeader from '../../components/TopHeader';
 import Email from '../../assets/images/Change_email.png';
+import {createService, Authorization} from '../../services/HttpService/HttpService';
 
-function Login(props: any) {
+function Login(props) {
   const animationDuration = 500;
   const initialBottomDrawerHeight = screenHeight > 650 ? 330 : 230;
   const finallBottomDrawerHeight = screenHeight > 650 ? 480 : 460;
@@ -19,23 +20,28 @@ function Login(props: any) {
   const drawerHeight = initialBottomDrawerHeight;
   const [mode, setMode] = useState('landing');
   const [emailPhoneForSignUp, setEmailPhoneForSignUp] = useState('');
+  const [nameForSignUp, setNameForSignUp] = useState('');
+  const [incorrectPasswordError, setIncorrectPasswordError] = useState('');
   const [passwordForSignUp, setPasswordForSignUp] = useState('');
   const [confirmPasswordForSignUp, setConfirmPasswordForSignUp] = useState('');
   const [confirmPasswordForSignUpError, setConfirmPasswordForSignUpError] = useState('');
+  const [passwordForSignUpError, setPasswordForSignUpError] = useState('');
 
   const [emailPhoneForLogin, setEmailPhoneForLogin] = useState('');
   const [passwordForLogin, setPasswordForLogin] = useState('');
   const [validationSignUp, setValidationSignUp] = useState(false);
+  const [phoneForSignUp, setPhoneForSignUp] = useState('');
   const [validationLogIn, setValidationLogIn] = useState(false);
-  const [otp, setOtp] = useState({1: '', 2: '', 3: '', 4: '', 5: '', 6: ''});
+
+  // const [otp, setOtp] = useState({1: '', 2: '', 3: '', 4: '', 5: '', 6: ''});
   const {navigation} = props;
 
-  const inputOne = useRef();
-  const inputTwo = useRef();
-  const inputThree = useRef();
-  const inputFour = useRef();
-  const inputFive = useRef();
-  const inputSix = useRef();
+  // const inputOne = useRef();
+  // const inputTwo = useRef();
+  // const inputThree = useRef();
+  // const inputFour = useRef();
+  // const inputFive = useRef();
+  // const inputSix = useRef();
 
   const animateHeight = () => {
     // AnimatedHeight.setValue(0);
@@ -90,17 +96,13 @@ function Login(props: any) {
   const onEmailPhoneChangeForLogin = (text: string) => {
     setEmailPhoneForLogin(text);
     const reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
-    const reg2 = /^[+]?(\d{1,2})?[\s.-]?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}$/;
 
     if (text.length > 2) {
       if (text.length === 0) {
-        setValidationLogIn('Enter a valid Email/PhoneNo');
-        console.log('----->enter something');
-      } else if (reg.test(text) === false && reg2.test(text) === false) {
-        console.log('----->false in regex');
-        setValidationLogIn('Enter a valid Email/PhoneNo');
-      } else if (reg.test(text) === true || reg2.test(text) === true) {
-        console.log('----->true in both regex');
+        setValidationLogIn('Enter a valid Email');
+      } else if (reg.test(text) === false) {
+        setValidationLogIn('Enter a valid Email');
+      } else if (reg.test(text) === true) {
         setValidationLogIn('');
       }
     }
@@ -109,30 +111,45 @@ function Login(props: any) {
     setPasswordForLogin(text);
   };
 
+  const onPhoneChangeForSignUp = (text: string) => {
+    if (text !== ' ') setPhoneForSignUp(text);
+  };
+  const onNameChangeForSignUp = (text: string) => {
+    if (text !== ' ') setNameForSignUp(text);
+  };
+
   const onEmailPhoneChangeForSignUp = (text: string) => {
-    setEmailPhoneForSignUp(text);
+    if (text !== ' ') setEmailPhoneForSignUp(text);
     const reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
-    const reg2 = /^[+]?(\d{1,2})?[\s.-]?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}$/;
 
     if (text.length > 2) {
       if (text.length === 0) {
+        setValidationSignUp('Email is required');
+      } else if (reg.test(text) === false) {
         setValidationSignUp('Enter a valid Email/PhoneNo');
-        console.log('----->enter something');
-      } else if (reg.test(text) === false && reg2.test(text) === false) {
-        console.log('----->false in regex');
-        setValidationSignUp('Enter a valid Email/PhoneNo');
-      } else if (reg.test(text) === true || reg2.test(text) === true) {
-        console.log('----->true in both regex');
+      } else if (reg.test(text) === true) {
         setValidationSignUp('');
       }
     }
   };
 
   const onPasswordChangeForSignUp = (text: string) => {
-    setPasswordForSignUp(text);
+    if (text !== ' ') setPasswordForSignUp(text);
+
+    const reg = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+
+    if (text.length > 2) {
+      if (text.length === 0) {
+        setPasswordForSignUpError('password is required');
+      } else if (reg.test(text) === false) {
+        setPasswordForSignUpError('Not strong enough');
+      } else if (reg.test(text) === true) {
+        setPasswordForSignUpError('');
+      }
+    }
   };
   const onConfirmPasswordChangeForSignUp = (text: string) => {
-    setConfirmPasswordForSignUp(text);
+    if (text !== ' ') setConfirmPasswordForSignUp(text);
     if (text.length > passwordForSignUp.length) {
       setConfirmPasswordForSignUpError('Passwords do not match');
     } else if (text.length === passwordForSignUp.length) {
@@ -146,116 +163,25 @@ function Login(props: any) {
     }
   };
 
-  const renderVerification = () => {
-    const code = Object.values(otp).toString();
-    console.log('Code is', code.replace(/,/g, ''));
-
-    async function confirmSignUp() {
-      try {
-        const user = await Auth.confirmSignUp('deepak@amci.net.in', code.replace(/,/g, ''));
-        console.log('confirm Sign Up', JSON.stringify(user));
-      } catch (error) {
-        console.log('error confirming sign up', error);
-      }
-    }
-
-    console.log('----->props csdvsvr', props);
-
-    return (
-      <View style={styles.verificationContainer}>
-        <TopHeader navigation={navigation} title="Email verification" />
-        <View style={styles.verifyContainer}>
-          <Image source={Email} />
-          <Text numberOfLines={5} style={styles.emailText}>
-            Enter the verification code you received on ri*@lip**.com on this mail id
-          </Text>
-          <View style={styles.inputContainer}>
-            <View style={styles.inputTextContainer}>
-              <TextInput
-                keyboardType="number-pad"
-                maxLength={1}
-                ref={inputOne}
-                style={styles.inputText}
-                onChangeText={text => {
-                  setOtp({...otp, 1: text});
-                  text && inputTwo.current.focus();
-                }}
-              />
-            </View>
-            <View style={styles.inputTextContainer}>
-              <TextInput
-                keyboardType="number-pad"
-                maxLength={1}
-                ref={inputTwo}
-                style={styles.inputText}
-                onChangeText={text => {
-                  setOtp({...otp, 2: text});
-                  text ? inputThree.current.focus() : inputOne.current.focus();
-                }}
-              />
-            </View>
-            <View style={styles.inputTextContainer}>
-              <TextInput
-                keyboardType="number-pad"
-                maxLength={1}
-                ref={inputThree}
-                style={styles.inputText}
-                onChangeText={text => {
-                  setOtp({...otp, 3: text});
-                  text ? inputFour.current.focus() : inputTwo.current.focus();
-                }}
-              />
-            </View>
-            <View style={styles.inputTextContainer}>
-              <TextInput
-                keyboardType="number-pad"
-                maxLength={1}
-                ref={inputFour}
-                style={styles.inputText}
-                onChangeText={text => {
-                  setOtp({...otp, 4: text});
-                  text ? inputFive.current.focus() : inputThree.current.focus();
-                }}
-              />
-            </View>
-            <View style={styles.inputTextContainer}>
-              <TextInput
-                keyboardType="number-pad"
-                maxLength={1}
-                ref={inputFive}
-                style={styles.inputText}
-                onChangeText={text => {
-                  setOtp({...otp, 5: text});
-                  text ? inputSix.current.focus() : inputFour.current.focus();
-                }}
-              />
-            </View>
-            <View style={styles.inputTextContainer}>
-              <TextInput
-                keyboardType="number-pad"
-                maxLength={1}
-                ref={inputSix}
-                style={styles.inputText}
-                onChangeText={text => {
-                  setOtp({...otp, 6: text});
-                  text ? inputSix.current.focus() : inputFive.current.focus();
-                }}
-              />
-            </View>
-          </View>
-          <Button style={styles.button} text="Verify" variant="primary" onPress={confirmSignUp} />
-        </View>
-      </View>
-    );
-  };
-
   const renderLogin = () => {
     async function signIn() {
       try {
-        const user = await Auth.signIn('deepak@amci.net.in', 'Deepak@1234');
-        console.log('Login success response', JSON.stringify(user));
+        const user = await Auth.signIn(emailPhoneForLogin, passwordForLogin);
+        console.log('----->user in sign in', user);
+        const Authorization1 = user.signInUserSession.idToken.jwtToken;
+        navigation.navigate('App', {
+          Authorization1,
+        });
       } catch (error) {
-        console.log('error signing in', JSON.stringify(error));
+        console.log('----->error', error);
+        if (error.name === 'UserNotConfirmedException') {
+          navigation.navigate('mail_verification', {
+            emailPhoneForSignUp: emailPhoneForLogin,
+          });
+        }
+        if (error.name === 'NotAuthorizedException') {
+          setIncorrectPasswordError('Incorrect username or password');
+        }
       }
     }
 
@@ -264,7 +190,7 @@ function Login(props: any) {
         <Text style={styles.headerLabelText}>Login</Text>
         <InputBox
           errorText={validationLogIn}
-          placeHolder="Email / Phone"
+          placeHolder="Email"
           style={styles.renderLoginTextBox}
           value={emailPhoneForLogin}
           onChangeText={onEmailPhoneChangeForLogin}
@@ -276,17 +202,13 @@ function Login(props: any) {
           value={passwordForLogin}
           onChangeText={onPasswordChangeForLogin}
         />
+        {incorrectPasswordError ? (
+          <View style={{alignItems: 'center', marginVertical: 10}}>
+            <Text style={{color: 'red'}}>{incorrectPasswordError}</Text>
+          </View>
+        ) : null}
+
         <Button style={styles.renderLoginButton} text="Login" variant="primary" onPress={signIn} />
-
-        <View style={styles.forgot}>
-          <Text>
-            {'Forgot Password? '}
-            <Text style={{color: colors.skyBlue}} onPress={() => navigation.navigate('forgot')}>
-              Forgot
-            </Text>
-          </Text>
-        </View>
-
         <View style={{flex: 1, flexDirection: 'row', justifyContent: 'space-evenly'}}>
           <TouchableOpacity>
             <Image source={require('../../assets/images/google.png')} style={styles.socialIcon} />
@@ -309,15 +231,46 @@ function Login(props: any) {
 
   const renderSignUp = () => {
     const signUp = async () => {
-      console.log('----->signUp called');
-      try {
-        navigation.navigate('mail_verification', {
-          itemId: 86,
-          emailPhoneForSignUp,
-          otherParam: 'anything you want here',
-        });
-      } catch (error) {
-        console.log('error signing up:', JSON.stringify(error));
+      const valid =
+        !confirmPasswordForSignUpError.length &&
+        !validationSignUp &&
+        !passwordForSignUpError.length;
+
+      if (valid) {
+        try {
+          const {user} = await Auth.signUp({
+            username: emailPhoneForSignUp,
+            password: confirmPasswordForSignUp,
+            attributes: {
+              email: emailPhoneForSignUp, // optional
+              phone_number: `+91${phoneForSignUp}`, // optional - E.164 number convention
+              name: nameForSignUp,
+            },
+          });
+
+          if (user) {
+            console.log('----->user', user);
+
+            const body = {
+              displayName: nameForSignUp,
+              email: emailPhoneForLogin,
+              phone: phoneForSignUp,
+            };
+
+            const {data: result} = await createService('/mentee', body, {
+              headers: {Authorization},
+            });
+
+            navigation.navigate('mail_verification', {
+              itemId: 86,
+              emailPhoneForSignUp,
+              otherParam: 'anything you want here',
+            });
+          }
+        } catch (error) {
+          console.log('error signing up:', JSON.stringify(error));
+          console.log('error error up:', error);
+        }
       }
     };
 
@@ -325,13 +278,28 @@ function Login(props: any) {
       <>
         <Text style={styles.headerLabelTextSignUp}>Sign Up</Text>
         <InputBox
+          // errorText={validationSignUp}
+          placeHolder="Name"
+          value={nameForSignUp}
+          onChangeText={onNameChangeForSignUp}
+        />
+        <InputBox
+          // errorText={validationSignUp}
+          placeHolder="Phone No"
+          style={{marginTop: 22}}
+          value={phoneForSignUp}
+          onChangeText={onPhoneChangeForSignUp}
+        />
+        <InputBox
           errorText={validationSignUp}
-          placeHolder="Email / Phone"
+          placeHolder="Email Id"
+          style={{marginTop: 22}}
           value={emailPhoneForSignUp}
           onChangeText={onEmailPhoneChangeForSignUp}
         />
         <InputBox
           secureTextEntry
+          errorText={passwordForSignUpError}
           placeHolder="Password"
           style={{marginTop: 22}}
           value={passwordForSignUp}
@@ -340,7 +308,7 @@ function Login(props: any) {
         <InputBox
           secureTextEntry
           errorText={confirmPasswordForSignUpError}
-          placeHolder="Reenter Password"
+          placeHolder="Re-enter Password"
           style={{marginTop: 22}}
           value={confirmPasswordForSignUp}
           onChangeText={onConfirmPasswordChangeForSignUp}
@@ -349,7 +317,7 @@ function Login(props: any) {
           style={{marginBottom: 20, alignSelf: 'center', marginTop: 22}}
           text="Sign Up"
           variant="primary"
-          onPress={!validationSignUp.length === 0 ? null : signUp}
+          onPress={signUp}
         />
         <View style={{flex: 1, flexDirection: 'row', justifyContent: 'space-evenly'}}>
           <TouchableOpacity>

@@ -1,15 +1,22 @@
-import React, {useState, useRef} from 'react';
+import React, {useState, useRef, useEffect} from 'react';
 import {View, Text, TouchableOpacity, ScrollView} from 'react-native';
 import Carousel from 'react-native-snap-carousel';
+import {useSelector} from 'react-redux';
 import {colors} from '../../config/colors';
 import OfferCard from '../../components/OfferCard';
 import OgoingCourseCard from '../../components/OngoingCourseCard';
-import CourseCard from '../../components/CourseCard';
+// import CourseCard from '../../components/CourseCard';
 import {styles} from './styles';
 import {screenWidth} from '../../config/globalStyles';
 
 import {onGoingCoursesList} from './OngoingCourses';
 import {CartIcon} from '../../assets/svg';
+import {readService, Authorization} from '../../services/HttpService/HttpService';
+import CourseCard from '../../components/CourseCard';
+// import homeActions from 'redux/actions/notificationActions';
+import homeActions from '../../redux/actions/homeActions';
+import {Loader} from '../../../App';
+import loadingVariable from '../../redux/selector';
 
 function TopRow({firstName}) {
   return (
@@ -53,34 +60,55 @@ function OnGoingCourses() {
 
 function RenderRecommended({recommended}) {
   return (
-    <ScrollView horizontal style={{marginTop: 40}}>
+    <ScrollView horizontal style={{marginTop: 10}}>
       <View style={{flexDirection: 'row'}}>
-        {recommended.map(item => (
-          <CourseCard item={item} />
+        {recommended?.map(item => (
+          <View style={{width: 200}}>
+            <CourseCard data={item} />
+          </View>
         ))}
       </View>
     </ScrollView>
   );
 }
 
-function Home(props) {
-  const [firstName, setFirstName] = useState('Rishi');
-  const [recommended, setRecommended] = useState([1, 2, 3, 4, 5, 6, 7, 8, 9]);
+function Home({route}) {
+  const [firstName, setFirstName] = useState(' Rinku');
+
+  const loading = loadingVariable();
+
+  console.log('----->loading in home screen', loading);
+
+  const {allCourses} = useSelector(s => s.home);
+
+  const {getHomeCourses} = homeActions();
+
+  const loadData = async () => {
+    await getHomeCourses({offset: 0, limit: 10});
+  };
+
+  useEffect(() => {
+    loadData();
+  }, []);
+
+  if (loading) {
+    return <Loader />;
+  }
 
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container}>
       <TopRow firstName={firstName} />
       <ScrollView contentContainerStyle={{flex: 1, paddingTop: 40}}>
         <OfferCard />
         <Text style={styles.labelText}>Ongoing Course</Text>
         <View style={{flex: 1}}>
           <OnGoingCourses />
-          <View style={{position: 'absolute', top: 100}}>
-            <RenderRecommended recommended={recommended} />
+          <View>
+            <RenderRecommended recommended={allCourses} />
           </View>
         </View>
       </ScrollView>
-    </View>
+    </ScrollView>
   );
 }
 
