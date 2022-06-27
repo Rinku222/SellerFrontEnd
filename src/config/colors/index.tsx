@@ -25,4 +25,5 @@ export const colors = {
   primaryGreen: '#289C5E',
   greyTheme: '#DEDEDE',
   darkBlue: '#0047AB',
+  searchBar: 'rgba(4,29,54,0.1)',
 };

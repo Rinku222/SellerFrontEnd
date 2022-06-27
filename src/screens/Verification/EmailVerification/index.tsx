@@ -5,11 +5,14 @@ import {styles} from './style';
 import Button from '../../../components/Button/index';
 import TopHeader from '../../../components/TopHeader';
 import Email from '../../../assets/images/Change_email.png';
+import useUserActions from '../../../redux/actions/userActions';
 
 function VerificationMail(props) {
   const [otp, setOtp] = useState({1: '', 2: '', 3: '', 4: '', 5: '', 6: ''});
   const {navigation, route} = props;
-  const {emailPhoneForSignUp} = route.params;
+  const {emailPhoneForSignUp, passwordForSignUp} = route.params;
+
+  const {getUserDetails} = useUserActions();
 
   const inputOne = useRef();
   const inputTwo = useRef();
@@ -24,6 +27,11 @@ function VerificationMail(props) {
     try {
       const user = await Auth.confirmSignUp(emailPhoneForSignUp, code.replace(/,/g, ''));
       if (user) {
+        await getUserDetails({
+          emailPhoneForLogin: emailPhoneForSignUp,
+          passwordForLogin: passwordForSignUp,
+        });
+
         navigation.navigate('App');
       }
     } catch (error) {

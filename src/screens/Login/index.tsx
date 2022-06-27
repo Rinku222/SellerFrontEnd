@@ -1,7 +1,17 @@
 import React, {useEffect, useState, useRef, useMemo} from 'react';
-import {View, Animated, Easing, Text, Image, TextInput, TouchableOpacity} from 'react-native';
+import {
+  View,
+  Animated,
+  Easing,
+  Text,
+  Image,
+  TextInput,
+  TouchableOpacity,
+  ScrollView,
+} from 'react-native';
 import {SvgXml} from 'react-native-svg';
 import {Auth} from 'aws-amplify';
+import {useSelector} from 'react-redux';
 import {styles} from './styles';
 import Button from '../../components/Button';
 import SplashSvgXml from '../../assets/svg/SplashSvg';
@@ -11,11 +21,12 @@ import {colors} from '../../config/colors';
 import TopHeader from '../../components/TopHeader';
 import Email from '../../assets/images/Change_email.png';
 import {createService, Authorization} from '../../services/HttpService/HttpService';
+import useUserActions from '../../redux/actions/userActions';
 
 function Login(props) {
   const animationDuration = 500;
   const initialBottomDrawerHeight = screenHeight > 650 ? 330 : 230;
-  const finallBottomDrawerHeight = screenHeight > 650 ? 480 : 460;
+  const finallBottomDrawerHeight = screenHeight - 100;
   const AnimatedHeight = useRef(new Animated.Value(0)).current;
   const drawerHeight = initialBottomDrawerHeight;
   const [mode, setMode] = useState('landing');
@@ -33,18 +44,11 @@ function Login(props) {
   const [phoneForSignUp, setPhoneForSignUp] = useState('');
   const [validationLogIn, setValidationLogIn] = useState(false);
 
-  // const [otp, setOtp] = useState({1: '', 2: '', 3: '', 4: '', 5: '', 6: ''});
+  const {getUserDetails} = useUserActions();
+
   const {navigation} = props;
 
-  // const inputOne = useRef();
-  // const inputTwo = useRef();
-  // const inputThree = useRef();
-  // const inputFour = useRef();
-  // const inputFive = useRef();
-  // const inputSix = useRef();
-
   const animateHeight = () => {
-    // AnimatedHeight.setValue(0);
     Animated.timing(AnimatedHeight, {
       toValue: 1,
       duration: animationDuration,
@@ -60,7 +64,7 @@ function Login(props) {
 
   const scaleForSvg = AnimatedHeight.interpolate({
     inputRange: [0, 1],
-    outputRange: [screenHeight > 650 ? 0.9 : 0.7, screenHeight > 650 ? 0.7 : 0.4],
+    outputRange: [screenHeight > 650 ? 0.9 : 0.7, 0],
   });
 
   const margiTopForSvg = AnimatedHeight.interpolate({
@@ -168,7 +172,9 @@ function Login(props) {
       try {
         const user = await Auth.signIn(emailPhoneForLogin, passwordForLogin);
         console.log('----->user in sign in', user);
+        await getUserDetails({emailPhoneForLogin, passwordForLogin});
         const Authorization1 = user.signInUserSession.idToken.jwtToken;
+
         navigation.navigate('App', {
           Authorization1,
         });
@@ -264,6 +270,7 @@ function Login(props) {
             navigation.navigate('mail_verification', {
               itemId: 86,
               emailPhoneForSignUp,
+              passwordForSignUp,
               otherParam: 'anything you want here',
             });
           }
@@ -286,14 +293,14 @@ function Login(props) {
         <InputBox
           // errorText={validationSignUp}
           placeHolder="Phone No"
-          style={{marginTop: 22}}
+          style={{marginTop: 12}}
           value={phoneForSignUp}
           onChangeText={onPhoneChangeForSignUp}
         />
         <InputBox
           errorText={validationSignUp}
           placeHolder="Email Id"
-          style={{marginTop: 22}}
+          style={{marginTop: 12}}
           value={emailPhoneForSignUp}
           onChangeText={onEmailPhoneChangeForSignUp}
         />
@@ -301,7 +308,7 @@ function Login(props) {
           secureTextEntry
           errorText={passwordForSignUpError}
           placeHolder="Password"
-          style={{marginTop: 22}}
+          style={{marginTop: 12}}
           value={passwordForSignUp}
           onChangeText={onPasswordChangeForSignUp}
         />
@@ -309,12 +316,12 @@ function Login(props) {
           secureTextEntry
           errorText={confirmPasswordForSignUpError}
           placeHolder="Re-enter Password"
-          style={{marginTop: 22}}
+          style={{marginTop: 12}}
           value={confirmPasswordForSignUp}
           onChangeText={onConfirmPasswordChangeForSignUp}
         />
         <Button
-          style={{marginBottom: 20, alignSelf: 'center', marginTop: 22}}
+          style={{marginBottom: 20, alignSelf: 'center', marginTop: 12}}
           text="Sign Up"
           variant="primary"
           onPress={signUp}

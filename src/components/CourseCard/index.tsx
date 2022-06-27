@@ -10,6 +10,7 @@ import {getShadow} from '../../utils';
 import {readService, Authorization} from '../../services/HttpService/HttpService';
 import useWishlistActions from '../../redux/actions/wishlistActions';
 import homeActions from '../../redux/actions/homeActions';
+import useSearchActions from '../../redux/actions/searchActions';
 
 // cards-heart
 
@@ -54,32 +55,36 @@ function RenderCourseBar() {
   const percentage = '100%';
 
   return (
-    <View style={styles.courseMainContainer}>
-      <View style={styles.courseText}>
-        {percentage === '100%' ? (
-          <Text style={[styles.bold, styles.whiteColor]}>Completed</Text>
-        ) : (
-          <Text style={styles.bold}>{percentage} Completed</Text>
-        )}
-      </View>
+    <View style={{justifyContent: 'center', alignItems: 'center'}}>
+      <View style={styles.courseMainContainer}>
+        <View style={styles.courseText}>
+          {percentage === '100%' ? (
+            <Text style={[styles.bold, styles.whiteColor]}>Completed</Text>
+          ) : (
+            <Text style={styles.bold}>{percentage} Completed</Text>
+          )}
+        </View>
 
-      <View
-        style={[
-          styles.percentageFillBar,
-          {
-            backgroundColor: percentage === '100%' ? colors.primaryGreen : colors.themeYellow,
-            width: percentage,
-          },
-        ]}
-      />
+        <View
+          style={[
+            styles.percentageFillBar,
+            {
+              backgroundColor: percentage === '100%' ? colors.primaryGreen : colors.themeYellow,
+              width: percentage,
+            },
+          ]}
+        />
+      </View>
     </View>
   );
 }
 
 function CourseCard(props) {
-  const {course, data, myCourse} = props;
+  const {course, data, myCourse, searchName = '', selected = '', onPress} = props;
 
   const {addWishlist, getWishlist, deleteWishlist} = useWishlistActions();
+  const {getAllSearchedCourses} = useSearchActions();
+
   const {getHomeCourses} = homeActions();
 
   const {
@@ -108,10 +113,16 @@ function CourseCard(props) {
     }
     getWishlist();
     getHomeCourses({offset: 0, limit: 10});
+    getAllSearchedCourses({
+      offset: 0,
+      limit: 10,
+      searchText: searchName,
+      streamId: selected,
+    });
   };
 
   return (
-    <View style={styles.cardMainContainer}>
+    <TouchableOpacity style={styles.cardMainContainer} onPress={onPress}>
       <View style={styles.topImageView}>
         <Image
           source={{
@@ -134,11 +145,14 @@ function CourseCard(props) {
         )}
       </View>
       <View style={styles.content}>
-        <Text style={styles.heading}>{courseTitle}</Text>
-        <View style={styles.subheading}>
-          <Image source={{uri: profileUrl}} style={styles.image} />
-          <Text>{name}</Text>
+        <View style={{flexDirection: 'row', justifyContent: 'space-between', flexWrap: 'wrap'}}>
+          <Text style={styles.heading}>{courseTitle}</Text>
+          <View style={styles.subheading}>
+            <Image source={{uri: profileUrl}} style={styles.image} />
+            <Text>{name}</Text>
+          </View>
         </View>
+
         {!myCourse && (
           <View
             style={{
@@ -153,7 +167,7 @@ function CourseCard(props) {
         </View>
       </View>
       {myCourse && (course ? <RenderCourseBar /> : <RenderCertificateBar />)}
-    </View>
+    </TouchableOpacity>
   );
 }
 
@@ -168,8 +182,9 @@ const styles = StyleSheet.create({
   },
   cardMainContainer: {
     padding: 8,
+    width: '100%',
     backgroundColor: colors.white,
-    margin: 5,
+    // margin: 5,
     borderRadius: 10,
     flex: 0.5,
     ...getShadow(10),
@@ -194,6 +209,7 @@ const styles = StyleSheet.create({
     color: colors.black,
     marginBottom: 20,
     marginTop: 12,
+    width: 140,
   },
   subheading: {
     flexDirection: 'row',
@@ -250,6 +266,8 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     height: 30,
     position: 'relative',
+    justifyContent: 'center',
+    width: 150,
   },
   percentageFillBar: {
     borderRadius: 5,

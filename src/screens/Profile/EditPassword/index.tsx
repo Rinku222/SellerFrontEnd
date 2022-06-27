@@ -32,7 +32,6 @@ function ChangePassword(props) {
         <Formik initialValues={{}} validationSchema={schema} onSubmit={onSubmit}>
           {({handleChange, handleBlur, handleSubmit, values}) => (
             <View style={styles.formikContainer}>
-              {console.log('----->values', values)}
               <TextInput
                 mode="outlined"
                 placeholder="Current Password"

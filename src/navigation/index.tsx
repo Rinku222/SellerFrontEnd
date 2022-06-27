@@ -23,6 +23,8 @@ import VerificationMail from '../screens/Verification/EmailVerification/index';
 import {PDFExample} from '../screens/PDF/PDF';
 import Forgot from '../screens/ForgotPassword';
 import NewPassword from '../screens/NewPassword';
+import Search from '../screens/Search';
+import Video from '../screens/Video';
 
 const AppContainer = createNativeStackNavigator();
 const AuthStack = createNativeStackNavigator();
@@ -64,6 +66,7 @@ function AppScreens() {
       <Tab.Screen component={WishListStackScreens} name="wishlist" />
       <Tab.Screen component={SearchListStackScreens} name="search" />
       <Tab.Screen component={ProfileStackScreens} name="profile" />
+      <Tab.Screen component={Video} name="video" />
     </Tab.Navigator>
   );
 }
@@ -149,11 +152,7 @@ function SearchListStackScreens() {
       screenOptions={{
         headerShown: false,
       }}>
-      <HomeStack.Screen
-        component={CreditEarnedDialog}
-        name="SearchList"
-        options={{gestureEnabled: false}}
-      />
+      <HomeStack.Screen component={Search} name="SearchList" options={{gestureEnabled: false}} />
     </HomeStack.Navigator>
   );
 }

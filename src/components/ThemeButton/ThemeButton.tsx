@@ -7,7 +7,7 @@ function ThemeButton(props) {
   const {title, onPress, style} = props;
 
   return (
-    <Button color={colors.white} style={styles.button} uppercase={false} onPress={onPress}>
+    <Button color={colors.white} style={[styles.button, style]} uppercase={false} onPress={onPress}>
       {title}
     </Button>
     // <Button color={colors.themeYellow} style={style} title={title} onPress={onPress} />

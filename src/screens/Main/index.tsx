@@ -8,6 +8,7 @@ import {
   ScrollView,
   Image,
   TouchableOpacity,
+  Button,
 } from 'react-native';
 import {NavigationState, SceneRendererProps, TabView} from 'react-native-tab-view';
 import VideoPlayer from 'react-native-video-controls';
@@ -125,6 +126,12 @@ function MainScreen(props: any) {
           style={styles.videos}
         />
       </View>
+      {/* <Button
+        accessibilityLabel="Learn more about this purple button"
+        color="#841584"
+        title="Learn More"
+        onPress={() => navigation.navigate('search')}
+      /> */}
 
       <View style={{backgroundColor: '#000', flexGrow: 1}}>
         <View style={styles.container}>

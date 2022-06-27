@@ -18,57 +18,60 @@ const ICONS = {
 };
 
 function BottomTab({state, descriptors, navigation}) {
-  const tabItems = state.routes.map((route, index) => {
-    const {options} = descriptors[route.key];
+  const tabItems = state.routes
+    .filter(i => i.name !== 'video')
+    .map((route, index) => {
+      const {options} = descriptors[route.key];
 
-    const {name} = route;
+      const {name} = route;
 
-    const isFocused = state.index === index;
+      const isFocused = state.index === index;
 
-    const onPress = () => {
-      const event = navigation.emit({
-        type: 'tabPress',
-        target: route.key,
-        canPreventDefault: true,
-      });
+      const onPress = () => {
+        const event = navigation.emit({
+          type: 'tabPress',
+          target: route.key,
+          canPreventDefault: true,
+        });
 
-      if (!isFocused && !event.defaultPrevented) {
-        navigation.navigate({name: route.name, merge: true});
-      }
-    };
+        if (!isFocused && !event.defaultPrevented) {
+          navigation.navigate({name: route.name, merge: true});
+        }
+      };
 
-    const onLongPress = () => {
-      navigation.emit({
-        type: 'tabLongPress',
-        target: route.key,
-      });
-    };
+      const onLongPress = () => {
+        navigation.emit({
+          type: 'tabLongPress',
+          target: route.key,
+        });
+      };
 
-    return (
-      <TouchableOpacity
-        accessibilityLabel={options.tabBarAccessibilityLabel}
-        accessibilityRole="button"
-        accessibilityState={isFocused ? {selected: true} : {}}
-        key={index}
-        style={styles.tabItemsContainer}
-        testID={options.tabBarTestID}
-        onLongPress={onLongPress}
-        onPress={onPress}>
-        <View
-          style={[
-            styles.tabItemsIcons,
-            {backgroundColor: isFocused ? colors.primary : 'transparent'},
-          ]}>
-          {ICONS[name as keyof typeof ICONS]({color: isFocused ? colors.white : colors.primary})}
-        </View>
-      </TouchableOpacity>
-    );
-  });
+      return (
+        <TouchableOpacity
+          accessibilityLabel={options.tabBarAccessibilityLabel}
+          accessibilityRole="button"
+          accessibilityState={isFocused ? {selected: true} : {}}
+          key={index}
+          style={styles.tabItemsContainer}
+          testID={options.tabBarTestID}
+          onLongPress={onLongPress}
+          onPress={onPress}>
+          <View
+            style={[
+              styles.tabItemsIcons,
+              {backgroundColor: isFocused ? colors.primary : 'transparent'},
+            ]}>
+            {ICONS[name as keyof typeof ICONS]({color: isFocused ? colors.white : colors.primary})}
+          </View>
+        </TouchableOpacity>
+      );
+    });
 
   const floatingTab = (
     <TouchableOpacity
       style={styles.floatingTabContainer}
-      onPress={() => navigation.navigate('VideosScreen')}>
+      // onPress={() => navigation.navigate('VideosScreen')}>
+      onPress={() => navigation.navigate('video')}>
       <View style={styles.floatingTabIcon}>
         <Ionicons color={colors.white} name="ios-play" size={30} />
       </View>
