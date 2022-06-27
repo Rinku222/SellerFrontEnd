@@ -63,7 +63,7 @@ function RenderRecommended({recommended}) {
     <ScrollView horizontal style={{marginTop: 10}}>
       <View style={{flexDirection: 'row'}}>
         {recommended?.map(item => (
-          <View style={{width: 200}}>
+          <View style={{width: 200, margin: 5}}>
             <CourseCard data={item} />
           </View>
         ))}
@@ -73,11 +73,9 @@ function RenderRecommended({recommended}) {
 }
 
 function Home({route}) {
-  const [firstName, setFirstName] = useState(' Rinku');
+  const firstName = useSelector(s => s.user.userData?.username) || '';
 
   const loading = loadingVariable();
-
-  console.log('----->loading in home screen', loading);
 
   const {allCourses} = useSelector(s => s.home);
 

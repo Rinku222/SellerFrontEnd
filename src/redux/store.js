@@ -28,6 +28,6 @@ const store = createStore(
   // applyMiddleware(...allMiddleware),
 );
 
-// const persistor = persistStore(store);
+const persistor = persistStore(store);
 
-export {store};
+export {store, persistor};

@@ -1,10 +1,10 @@
-import React, {Suspense} from 'react';
+import React, {useEffect, Suspense} from 'react';
 import Amplify from 'aws-amplify';
 import {Provider as StoreProvider} from 'react-redux';
-import Spinner from 'react-native-loading-spinner-overlay';
+// import {PersistGate} from 'redux-persist/integration/react';
+import Spinner from 'react-native-loading-spinner-overlay/lib';
 import AppNavigator from './src/navigation';
 import awsConfig from './src/config/amplifyConfig/awsConfig';
-
 import {store} from './src/redux/store';
 
 Amplify.configure(awsConfig);
@@ -14,6 +14,14 @@ export function Loader() {
 }
 
 function App() {
+  // useEffect(() => {
+  // loadData()
+  // }, []);
+
+  // const loadData=()={
+  //   getNewToken();
+  // }
+
   return (
     <StoreProvider store={store}>
       <Suspense fallback={<Loader />}>
@@ -21,6 +29,8 @@ function App() {
       </Suspense>
     </StoreProvider>
   );
+
+  // return <AppNavigator />;
 }
 
 export default App;
