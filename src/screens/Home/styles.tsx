@@ -1,13 +1,13 @@
 import {StyleSheet} from 'react-native';
 import {colors} from '../../config/colors';
 import {fontSizes} from '../../config/globalStyles';
+import {getShadow} from '../../utils';
 
 export const styles = StyleSheet.create({
   container: {
     flex: 1,
     flexGrow: 1,
     backgroundColor: colors.themeLightGray,
-    // backgroundColor: 'red',
     paddingHorizontal: 16,
   },
   topRow: {
@@ -24,5 +24,15 @@ export const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
     marginVertical: 16,
+  },
+  ongoingCourses: {
+    marginHorizontal: 5,
+  },
+  cardContainer: {
+    height: 75,
+    alignItems: 'center',
+    backgroundColor: colors.white,
+    borderRadius: 5,
+    ...getShadow(6),
   },
 });

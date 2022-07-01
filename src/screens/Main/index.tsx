@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   View,
   StyleSheet,
@@ -8,11 +8,12 @@ import {
   ScrollView,
   Image,
   TouchableOpacity,
-  Button,
 } from 'react-native';
 import {NavigationState, SceneRendererProps, TabView} from 'react-native-tab-view';
 import VideoPlayer from 'react-native-video-controls';
 import Feather from 'react-native-vector-icons/Feather';
+import {useSelector} from 'react-redux';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {colors} from '../../config/colors';
 import {getShadow} from '../../config/globalStyles';
 import Layout from '../../utils/Layout';
@@ -22,8 +23,9 @@ import Notes from './Components/Notes';
 import Reviews from './Components/Reviews';
 import TermsAndFAQ from './Components/TermsAndFAQ';
 import DocumentsAndVideos from './Components/VideosAndDocuments';
-import {InfoIcon} from '../../assets/svg';
+import {UsersIcon} from '../../assets/svg';
 import LikeImage from '../../assets/images/likeImage.png';
+import useMainScreenActions from '../../redux/actions/mainScreenActions';
 
 type Route = {
   key: string;
@@ -33,8 +35,8 @@ type Route = {
 type State = NavigationState<Route>;
 
 const routes: Route[] = [
-  {key: '0', title: 'Description'},
-  {key: '1', title: 'Videos'},
+  {key: '1', title: 'Description'},
+  {key: '0', title: 'Videos'},
   {key: '2', title: 'Terms & FAQ'},
   {key: '3', title: 'Notes'},
   {key: '4', title: 'Messages'},
@@ -89,7 +91,44 @@ const renderTabBar = (props: SceneRendererProps & {navigationState: State}) => (
 );
 
 function MainScreen(props: any) {
+  const {route} = props;
+  const {params} = route;
+
+  const {courseId} = params;
+
+  const {descriptions} = useSelector(s => s.main);
+
+  const {
+    _id,
+    categoryId,
+    courseTitle,
+    coverImageUrl,
+    duration,
+    description,
+    wishListed,
+    totalCredits,
+    totalLession,
+    subscriptionCount,
+  } = descriptions || {};
+
+  const {getSections, getDescriptions, readNotes} = useMainScreenActions();
+
+  const loadData = async () => {
+    await getDescriptions({courseId, offset: 0, limit: 20});
+    await getSections({courseId, offset: 0, limit: 20});
+  };
+
+  useEffect(() => {
+    loadData();
+  }, [courseId, videoId]);
+
   const [selectedTab, setSelectedTab] = useState(0);
+  const [video, setVideo] = useState(
+    // 'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
+    'https://www.learningcontainer.com/wp-content/uploads/2020/05/sample-mp4-file.mp4',
+  );
+
+  const [videoId, setVideoId] = useState('');
 
   const courseBought = true;
 
@@ -99,14 +138,21 @@ function MainScreen(props: any) {
     route: Route;
   }) => {
     switch (key) {
-      case '0':
-        return <Description />;
       case '1':
-        return <DocumentsAndVideos courseBought={courseBought} />;
+        return <Description description={description} />;
+      case '0':
+        return (
+          <DocumentsAndVideos
+            courseBought={courseBought}
+            courseId={courseId}
+            setVideo={setVideo}
+            setVideoId={setVideoId}
+          />
+        );
       case '2':
         return <TermsAndFAQ {...props} />;
       case '3':
-        return <Notes courseBought={courseBought} {...props} />;
+        return <Notes courseBought={courseBought} videoId={videoId} {...props} />;
       case '4':
         return <Messages courseBought={courseBought} {...props} />;
       case '5':
@@ -121,17 +167,12 @@ function MainScreen(props: any) {
       <View style={styles.videoContainer}>
         <VideoPlayer
           source={{
-            uri: 'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
+            uri: video,
           }}
           style={styles.videos}
+          onError={err => console.log('----->err', err)}
         />
       </View>
-      {/* <Button
-        accessibilityLabel="Learn more about this purple button"
-        color="#841584"
-        title="Learn More"
-        onPress={() => navigation.navigate('search')}
-      /> */}
 
       <View style={{backgroundColor: '#000', flexGrow: 1}}>
         <View style={styles.container}>
@@ -140,19 +181,32 @@ function MainScreen(props: any) {
               flexDirection: 'row',
               justifyContent: 'space-between',
               paddingTop: 10,
-              paddingBottom: 10,
+              // paddingBottom: 10,
             }}>
-            <Text style={styles.header}>Clinical Learning</Text>
-            <Image source={LikeImage} style={styles.images} />
+            <Text style={styles.header}>{courseTitle}</Text>
+            {wishListed ? (
+              <MaterialCommunityIcons color={colors.primary} name="cards-heart" size={20} />
+            ) : (
+              <MaterialCommunityIcons name="cards-heart-outline" size={20} />
+            )}
+            {/* <Image source={LikeImage} style={styles.images} /> */}
           </View>
-          <View style={styles.scoreContainer}>
-            <Text style={styles.creditText}>Credits earned:</Text>
-            <View style={styles.scoreTextContainer}>
-              <Text style={styles.scoreText}>500</Text>
-              <Text style={styles.scoreSubText}>/1000</Text>
-              <InfoIcon />
+          <View style={{flexDirection: 'row', marginBottom: 10, paddingHorizontal: 5}}>
+            <Text style={{paddingRight: 10}}>{duration}</Text>
+            <Text style={{paddingHorizontal: 10}}>{totalLession} Lessons</Text>
+            <View style={{flexDirection: 'row', paddingHorizontal: 10}}>
+              <Text>{subscriptionCount}</Text>
+              <UsersIcon />
             </View>
           </View>
+          {/* <View style={styles.scoreContainer}>
+            <Text style={styles.creditText}>Credits earned:</Text>
+            <View style={styles.scoreTextContainer}>
+              <Text style={styles.scoreText}>0</Text>
+              <Text style={styles.scoreSubText}>/{totalCredits}</Text>
+              <InfoIcon />
+            </View>
+          </View> */}
           <View style={styles.mainContainer}>
             <TabView
               initialLayout={{width: Layout.window.width}}
@@ -164,14 +218,14 @@ function MainScreen(props: any) {
           </View>
         </View>
       </View>
-      {!courseBought ? (
+      {/* {!courseBought ? (
         <View style={styles.buttonContainer}>
           <TouchableOpacity style={styles.buttonContentContainer}>
             <Feather color="#fff" name="shopping-cart" size={20} />
             <Text style={styles.buttonText}>Add to cart</Text>
           </TouchableOpacity>
         </View>
-      ) : null}
+      ) : null} */}
     </View>
   );
 }
@@ -189,7 +243,7 @@ const styles = StyleSheet.create({
   header: {
     fontWeight: 'bold',
     fontSize: 16,
-    marginBottom: 15,
+    marginBottom: 5,
     paddingHorizontal: 5,
   },
   scoreContainer: {

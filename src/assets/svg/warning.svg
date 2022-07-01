@@ -1,0 +1,6 @@
+<svg id="warning" xmlns="http://www.w3.org/2000/svg" width="43" height="43" viewBox="0 0 43 43">
+  <rect id="Rectangle_4515" data-name="Rectangle 4515" width="43" height="43" fill="none"/>
+  <path id="Path_64733" data-name="Path 64733" d="M39.314,33.352,24.419,59.079a2.708,2.708,0,0,0,2.336,4.062h29.79a2.708,2.708,0,0,0,2.336-4.062L43.986,33.352a2.691,2.691,0,0,0-4.672,0Z" transform="translate(-19.985 -26.582)" fill="#fff" stroke="#34578e" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+  <path id="Path_64734" data-name="Path 64734" d="M2.293,0A2.293,2.293,0,1,1,0,2.293,2.293,2.293,0,0,1,2.293,0Z" transform="translate(20 28)" fill="#285892"/>
+  <line id="Line_131" data-name="Line 131" y2="6" transform="translate(22.5 18.5)" fill="none" stroke="#285892" stroke-linecap="round" stroke-width="1"/>
+</svg>

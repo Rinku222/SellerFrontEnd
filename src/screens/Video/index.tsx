@@ -6,6 +6,8 @@ import {colors} from '../../config/colors';
 import {CourseIcon} from '../../assets/svg';
 import ThemeButton from '../../components/ThemeButton/ThemeButton';
 import Teaching from '../../assets/images/online-learning.png';
+import {Loader} from '../../../App';
+import loadingVariable from '../../redux/selector';
 
 const course = true;
 
@@ -35,11 +37,16 @@ function RenderEmpty(props) {
 
 function Video(props) {
   const {navigation} = props;
-  const {allCourses} = useSelector(s => s.home);
+  const {subscribedCourses} = useSelector(s => s.home);
+  const loading = loadingVariable();
+
+  if (loading) {
+    return <Loader />;
+  }
 
   return (
     <View style={styles.mainContainer}>
-      {allCourses.length ? (
+      {subscribedCourses.length ? (
         <View style={styles.header}>
           <CourseIcon />
           <Text style={styles.headerText}>Video Screen</Text>
@@ -47,8 +54,8 @@ function Video(props) {
       ) : null}
 
       <FlatList
-        data={allCourses}
-        extraData={allCourses}
+        data={subscribedCourses}
+        extraData={subscribedCourses}
         keyExtractor={item => item.id}
         ListEmptyComponent={() => <RenderEmpty navigation={navigation} />}
         renderItem={({item}) => (
@@ -57,7 +64,7 @@ function Video(props) {
               course
               myCourse
               data={item}
-              onPress={() => navigation.navigate('VideosScreen')}
+              onPress={() => navigation.navigate('VideosScreen', {courseId: item.courseId})}
             />
           </View>
         )}

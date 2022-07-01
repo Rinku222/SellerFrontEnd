@@ -1,18 +1,16 @@
 import React, {useState} from 'react';
 import {View, StyleSheet, Text, TouchableOpacity, Image, ScrollView} from 'react-native';
-import {List} from 'react-native-paper';
+import {ActivityIndicator, List} from 'react-native-paper';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import {useSelector} from 'react-redux';
 import {colors} from '../../../../config/colors';
 import {getShadow} from '../../../../config/globalStyles';
 import UserImage from '../../../../assets/images/laps.png';
 import {DownArrowIcon, PlayVideoIcon, UpArrowIcon} from '../../../../assets/svg';
+import useMainScreenActions from '../../../../redux/actions/mainScreenActions';
 
-// chevron-up
-
-const data = [1, 2, 3];
-const listData = [1, 2, 3, 4, 5];
-
-function Tabs() {
+function Tabs(props) {
+  const {description, transcript} = props;
   const [selected, setSelected] = useState(1);
 
   return (
@@ -43,43 +41,60 @@ function Tabs() {
       </View>
       {selected === 1 ? (
         <View>
-          <Text>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Molestiae maiores dignissimos
-            atque modi quos autem.
-          </Text>
+          <Text>{description}</Text>
         </View>
       ) : (
         <View>
-          <Text style={styles.tabContainerText}>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Laborum sint, sequi nesciunt
-            iusto aliquam ducimus.
-          </Text>
+          <Text style={styles.tabContainerText}>{transcript}</Text>
         </View>
       )}
     </View>
   );
 }
 
-function DropDownSection() {
+function DropDownSection(props) {
   const completed = '20%';
+
+  const {item, setVideo, setVideoId} = props;
+
+  const {
+    _id,
+    courseId,
+    description,
+    documentUrl,
+    duration,
+    order,
+    sectionId,
+    thumbnailUrl,
+    transcript,
+    videoTitle,
+    videoUrl,
+  } = item;
 
   const [show, setShow] = useState(false);
 
   return (
     <View style={styles.dropDownContainer}>
-      <TouchableOpacity style={styles.subAccordion} onPress={() => setShow(!show)}>
-        <View style={styles.videoContainer}>
-          <Image source={UserImage} style={styles.image} />
+      <View style={styles.subAccordion}>
+        <TouchableOpacity
+          style={styles.videoContainer}
+          onPress={() => {
+            setVideo(videoUrl);
+            setVideoId(_id);
+          }}>
+          <Image
+            source={{
+              uri: thumbnailUrl,
+            }}
+            style={styles.image}
+          />
           <View style={styles.videoIcon}>
             <PlayVideoIcon height={30} width={30} />
           </View>
-        </View>
-        <View style={styles.dropDownSubContainer}>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.dropDownSubContainer} onPress={() => setShow(!show)}>
           <View style={styles.videoTitle}>
-            <Text style={styles.videoTitleText}>
-              Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor
-              invidunt ut labore et dol
-            </Text>
+            <Text style={styles.videoTitleText}>{videoTitle}</Text>
             {show ? <UpArrowIcon /> : <DownArrowIcon />}
           </View>
           <View>
@@ -99,20 +114,22 @@ function DropDownSection() {
           <View>
             <Text>5% completed</Text>
           </View>
-        </View>
-      </TouchableOpacity>
-      <View>{show ? <Tabs /> : null}</View>
+        </TouchableOpacity>
+      </View>
+      <View>{show ? <Tabs description={description} transcript={transcript} /> : null}</View>
     </View>
   );
 }
 
-const renderTitle = () => <DropDownSection />;
+const renderTitle = (item, setVideo, setVideoId) => (
+  <DropDownSection item={item} setVideo={setVideo} setVideoId={setVideoId} />
+);
 
-const renderIcon = (v, courseBought) => (
+const renderIcon = (v, courseBought, credits) => (
   <View style={{flexDirection: 'row', alignItems: 'center'}}>
     {courseBought ? (
       <Text style={{color: colors.black, marginRight: 10}}>
-        Credits 10/ <Text>20</Text>
+        Credits 0/ <Text>{credits}</Text>
       </Text>
     ) : (
       <MaterialCommunityIcons color={colors.primary} name="lock-outline" size={30} />
@@ -124,30 +141,49 @@ const renderIcon = (v, courseBought) => (
 );
 
 function DropDownList(props: any) {
-  const {courseBought} = props;
+  const {courseBought, item, courseId, getVideos, videos, videoLoading, setVideo, setVideoId} =
+    props;
+
+  const {sectionTitle, credits, _id} = item;
+
   const [expanded, setExpanded] = useState(false);
 
-  function handlePress() {
+  const handlePress = async () => {
     if (courseBought) {
       setExpanded(!expanded);
     }
-  }
+    if (!expanded) {
+      await getVideos({courseId, sectionId: _id, limit: 20, offset: 0});
+    }
+  };
 
   return (
     <View style={styles.accordionContainer}>
       <List.Accordion
         expanded={expanded}
-        right={() => renderIcon(expanded, courseBought)}
+        right={() => renderIcon(expanded, courseBought, credits)}
         title={
           <View style={styles.accordionTitle}>
-            <Text>Accordion title</Text>
+            <Text>{sectionTitle}</Text>
           </View>
         }
         titleStyle={styles.text}
-        onPress={() => handlePress()}>
-        {data.map(item => {
-          return <List.Item key={item} style={styles.title} title={renderTitle} />;
-        })}
+        onPress={() => handlePress(expanded)}>
+        {videoLoading ? (
+          <View style={{marginVertical: 20}}>
+            <ActivityIndicator color={colors.primary} />
+          </View>
+        ) : (
+          videos.map(item => {
+            return (
+              <List.Item
+                key={item}
+                style={styles.title}
+                title={() => renderTitle(item, setVideo, setVideoId)}
+              />
+            );
+          })
+        )}
       </List.Accordion>
     </View>
   );
@@ -156,10 +192,25 @@ function DropDownList(props: any) {
 function DocumentsAndVideos(props: any) {
   const {courseBought} = props;
 
+  const {sections, videoLoading} = useSelector(s => s.main);
+  const {getVideos} = useMainScreenActions();
+
+  const {videos} = useSelector(s => s.main);
+
   return (
     <ScrollView showsVerticalScrollIndicator={false} style={styles.container}>
-      {listData.map((item, index) => {
-        return <DropDownList courseBought={index < 2 ? true : courseBought} key={item} />;
+      {sections?.map((item, index) => {
+        return (
+          <DropDownList
+            courseBought={index < 2 ? true : courseBought}
+            item={item}
+            key={item}
+            {...props}
+            getVideos={getVideos}
+            videoLoading={videoLoading}
+            videos={videos}
+          />
+        );
       })}
     </ScrollView>
   );

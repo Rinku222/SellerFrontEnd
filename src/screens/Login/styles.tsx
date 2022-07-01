@@ -4,24 +4,21 @@ import {fontSizes} from '../../config/globalStyles';
 
 export const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    flexGrow: 1,
     backgroundColor: colors.white,
+    justifyContent: 'space-around',
   },
   upperBody: {
-    flex: 0.5,
     justifyContent: 'center',
     alignItems: 'center',
   },
   mainBody: {
-    position: 'absolute',
-    bottom: 0,
     backgroundColor: colors.themeLightGray,
+    flexGrow: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    width: '100%',
     borderTopLeftRadius: 40,
     borderTopRightRadius: 40,
-
     shadowColor: 'gray',
     shadowOffset: {
       width: 0,
@@ -30,12 +27,6 @@ export const styles = StyleSheet.create({
     shadowOpacity: 1,
     shadowRadius: 6,
     elevation: 5,
-  },
-
-  headerLabel: {
-    position: 'absolute',
-    top: 14,
-    left: 24,
   },
   headerLabelText: {
     fontSize: fontSizes.huge,
@@ -122,5 +113,32 @@ export const styles = StyleSheet.create({
   forgot: {
     alignSelf: 'center',
     paddingBottom: 10,
+  },
+  incorrectContainer: {
+    alignItems: 'center',
+    marginVertical: 10,
+  },
+  incorrectContainerText: {
+    color: 'red',
+  },
+  imageContainer: {
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'space-evenly',
+  },
+  bottomText: {
+    marginTop: 12,
+  },
+  signUpButton: {
+    marginBottom: 20,
+    alignSelf: 'center',
+    marginTop: 12,
+  },
+  loginContainer: {
+    alignSelf: 'center',
+    marginTop: 16,
+  },
+  finalBottomDrawer: {
+    marginBottom: 25,
   },
 });

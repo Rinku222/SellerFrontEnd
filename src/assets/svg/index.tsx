@@ -19,6 +19,8 @@ import StarFilled from './starFilled.svg';
 import UpArrow from './upArrow.svg';
 import DownArrow from './DownArrow.svg';
 import Info from './infoIcon.svg';
+import Warning from './warning.svg';
+import Users from './users.svg';
 
 export interface ISVGProps {
   color?: string;
@@ -82,4 +84,10 @@ export function DownArrowIcon(props: ISVGProps) {
 }
 export function InfoIcon(props: ISVGProps) {
   return <Info {...props} name="infoIcon" />;
+}
+export function WarningIcon(props: ISVGProps) {
+  return <Warning {...props} name="warningIcon" />;
+}
+export function UsersIcon(props: ISVGProps) {
+  return <Users {...props} name="usersIcon" />;
 }
