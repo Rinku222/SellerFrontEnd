@@ -3,11 +3,7 @@ import {TouchableOpacity, View, Image, Text, StyleSheet} from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {AboutIcon, PlayVideoIcon, AchievementIcon} from '../../assets/svg';
 import {colors} from '../../config/colors';
-// import UserImage from '../../../assets/images/laps.png';
-import UserImage from '../../assets/images/laps.png';
-import ThemeButton from '../ThemeButton/ThemeButton';
 import {getShadow} from '../../utils';
-import {readService, Authorization} from '../../services/HttpService/HttpService';
 import useWishlistActions from '../../redux/actions/wishlistActions';
 import homeActions from '../../redux/actions/homeActions';
 import useSearchActions from '../../redux/actions/searchActions';
@@ -51,8 +47,10 @@ function RenderCertificateBar(props) {
   }
 }
 
-function RenderCourseBar() {
-  const percentage = '100%';
+function RenderCourseBar(props) {
+  const {progressValue} = props;
+
+  const percentage = progressValue;
 
   return (
     <View style={{justifyContent: 'center', alignItems: 'center'}}>
@@ -95,12 +93,14 @@ function CourseCard(props) {
     coverImageUrl,
     createdBy,
     creationTS,
+    courseId,
     description,
     duration,
     owner,
     totalLession,
     wishListed,
     wishListId,
+    progressValue,
   } = data || {};
 
   const {name, profileUrl} = owner || {};
@@ -137,7 +137,7 @@ function CourseCard(props) {
         ) : (
           <TouchableOpacity style={styles.wishlistIcon} onPress={() => handleWishlistPress()}>
             {wishListed ? (
-              <MaterialCommunityIcons color="red" name="cards-heart" size={20} />
+              <MaterialCommunityIcons color={colors.primary} name="cards-heart" size={20} />
             ) : (
               <MaterialCommunityIcons name="cards-heart-outline" size={20} />
             )}
@@ -166,7 +166,8 @@ function CourseCard(props) {
           <Text style={styles.fontSize}>{totalLession} Lessons</Text>
         </View>
       </View>
-      {myCourse && (course ? <RenderCourseBar /> : <RenderCertificateBar />)}
+      {myCourse &&
+        (course ? <RenderCourseBar progressValue={progressValue} /> : <RenderCertificateBar />)}
     </TouchableOpacity>
   );
 }

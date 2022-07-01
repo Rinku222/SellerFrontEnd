@@ -1,5 +1,6 @@
 import React from 'react';
 import {View, StyleSheet, Text, Image, TouchableOpacity, ScrollView} from 'react-native';
+import {useSelector} from 'react-redux';
 import {colors} from '../../../../config/colors';
 import UserImage from '../../../../assets/images/laps.png';
 import TwitterImage from '../../../../assets/images/twitter.png';
@@ -8,58 +9,64 @@ import LinkedInImage from '../../../../assets/images/linkedIn.png';
 
 const ImagesData = [TwitterImage, FacebookImage, LinkedInImage];
 
-function DescriptionText() {
+function DescriptionText(props) {
+  const {description} = props;
   return (
     <View style={styles.descriptionContainer}>
       <Text style={styles.descriptionHeader}>About the Course</Text>
-      <Text>
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Eos nisi, optio voluptas dolore
-        dolor laboriosam! Lorem ipsum dolor sit amet consectetur adipisicing elit. Tempora aliquam
-        culpa accusamus aliquid exercitationem. Praesentium voluptate repudiandae illum corrupti a
-        tempore molestiae culpa ab quibusdam.
-      </Text>
+      <Text>{description}</Text>
     </View>
   );
 }
 
-function Description() {
+function Description(props) {
+  const {descriptions} = useSelector(s => s.main);
+
+  const {owner} = descriptions || {};
+
+  const {displayName, profileUrl} = owner || {};
+
+  console.log('----->descriptions in vsv', descriptions);
+
   return (
     <ScrollView showsVerticalScrollIndicator={false} style={styles.container}>
-      <DescriptionText />
-      <Text style={styles.mentorText}>Mentor</Text>
-      <View style={styles.imageContainer}>
-        <View>
-          <Image source={UserImage} style={styles.image} />
-        </View>
-        <View style={styles.mentorSubheading}>
-          <Text style={styles.mentorSubheadingText}>name of the mentor will be here</Text>
-          <View style={styles.imagesDataContainer}>
-            {ImagesData.map((item, i) => {
-              return (
-                <TouchableOpacity key={i}>
-                  <Image source={item} style={styles.images} />
-                </TouchableOpacity>
-              );
-            })}
+      <DescriptionText {...props} />
+      <View style={{paddingHorizontal: 5}}>
+        <Text style={styles.mentorText}>Mentor</Text>
+        <View style={styles.imageContainer}>
+          <View>
+            <Image source={{uri: profileUrl}} style={styles.image} />
+          </View>
+          <View style={styles.mentorSubheading}>
+            <Text style={styles.mentorSubheadingText}>{displayName}</Text>
+            <View style={styles.imagesDataContainer}>
+              {ImagesData.map((item, i) => {
+                return (
+                  <TouchableOpacity key={i}>
+                    <Image source={item} style={styles.images} />
+                  </TouchableOpacity>
+                );
+              })}
+            </View>
           </View>
         </View>
-      </View>
 
-      <View style={styles.biographyContainer}>
-        <Text style={styles.biographyText}>Biography</Text>
+        <View style={styles.biographyContainer}>
+          <Text style={styles.biographyText}>Biography</Text>
+        </View>
+        <Text style={{color: colors.black}}>
+          Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor
+          invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et
+          accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata
+          sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing
+        </Text>
+        <Text style={{color: colors.black}}>
+          Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor
+          invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et
+          accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata
+          sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing
+        </Text>
       </View>
-      <Text style={{color: colors.black}}>
-        Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor
-        invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam
-        et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est
-        Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing
-      </Text>
-      <Text style={{color: colors.black}}>
-        Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor
-        invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam
-        et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est
-        Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing
-      </Text>
     </ScrollView>
   );
 }

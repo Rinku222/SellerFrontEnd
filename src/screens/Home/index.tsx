@@ -1,19 +1,15 @@
-import React, {useState, useRef, useEffect} from 'react';
+import React, {useRef, useEffect} from 'react';
 import {View, Text, TouchableOpacity, ScrollView} from 'react-native';
 import Carousel from 'react-native-snap-carousel';
 import {useSelector} from 'react-redux';
 import {colors} from '../../config/colors';
 import OfferCard from '../../components/OfferCard';
 import OgoingCourseCard from '../../components/OngoingCourseCard';
-// import CourseCard from '../../components/CourseCard';
 import {styles} from './styles';
 import {screenWidth} from '../../config/globalStyles';
 
-import {onGoingCoursesList} from './OngoingCourses';
-import {CartIcon} from '../../assets/svg';
-import {readService, Authorization} from '../../services/HttpService/HttpService';
+import {CartIcon, WarningIcon} from '../../assets/svg';
 import CourseCard from '../../components/CourseCard';
-// import homeActions from 'redux/actions/notificationActions';
 import homeActions from '../../redux/actions/homeActions';
 import {Loader} from '../../../App';
 import loadingVariable from '../../redux/selector';
@@ -32,29 +28,45 @@ function TopRow({firstName}) {
   );
 }
 
-function OnGoingCourses() {
+function OnGoingCourses(props) {
+  const {subscribedCourses} = props;
+
   let _carousel = useRef(null);
 
   const renderCarouselItem = ({item, index}) => {
     return (
       // <Text>Hello</Text>
-      <OgoingCourseCard creatorName={item.creatorName} programName={item.programName} />
+      <OgoingCourseCard
+        courseImage={item.coverImageUrl}
+        creatorName={item.owner.name}
+        creatorUrl={item.owner.profileUrl}
+        programName={item.courseTitle}
+      />
     );
   };
 
   return (
-    <Carousel
-      loop
-      data={onGoingCoursesList}
-      itemWidth={screenWidth - 10}
-      layout="stack"
-      layoutCardOffset={-20}
-      ref={c => {
-        _carousel = c;
-      }}
-      renderItem={renderCarouselItem}
-      sliderWidth={screenWidth - 30}
-    />
+    <View style={styles.ongoingCourses}>
+      {subscribedCourses.length ? (
+        <Carousel
+          loop
+          data={subscribedCourses}
+          itemWidth={screenWidth - 10}
+          layout="stack"
+          layoutCardOffset={-20}
+          ref={c => {
+            _carousel = c;
+          }}
+          renderItem={renderCarouselItem}
+          sliderWidth={screenWidth - 30}
+        />
+      ) : (
+        <View style={styles.cardContainer}>
+          <WarningIcon />
+          <Text>You are not subscribed to any courses</Text>
+        </View>
+      )}
+    </View>
   );
 }
 
@@ -77,12 +89,13 @@ function Home({route}) {
 
   const loading = loadingVariable();
 
-  const {allCourses} = useSelector(s => s.home);
+  const {allCourses, subscribedCourses} = useSelector(s => s.home);
 
-  const {getHomeCourses} = homeActions();
+  const {getHomeCourses, getAllSubscribedCourses} = homeActions();
 
   const loadData = async () => {
     await getHomeCourses({offset: 0, limit: 10});
+    await getAllSubscribedCourses();
   };
 
   useEffect(() => {
@@ -100,7 +113,7 @@ function Home({route}) {
         <OfferCard />
         <Text style={styles.labelText}>Ongoing Course</Text>
         <View style={{flex: 1}}>
-          <OnGoingCourses />
+          <OnGoingCourses subscribedCourses={subscribedCourses} />
           <View>
             <RenderRecommended recommended={allCourses} />
           </View>

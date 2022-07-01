@@ -1,32 +1,21 @@
-import React, {useEffect, useState, useRef, useMemo} from 'react';
-import {
-  View,
-  Animated,
-  Easing,
-  Text,
-  Image,
-  TextInput,
-  TouchableOpacity,
-  ScrollView,
-} from 'react-native';
+import React, {useState, useRef} from 'react';
+import {View, Animated, Easing, Text, Image, TouchableOpacity, ScrollView} from 'react-native';
 import {SvgXml} from 'react-native-svg';
 import {Auth} from 'aws-amplify';
-import {useSelector} from 'react-redux';
 import {styles} from './styles';
 import Button from '../../components/Button';
 import SplashSvgXml from '../../assets/svg/SplashSvg';
 import InputBox from '../../components/InputBox';
 import {screenHeight} from '../../config/globalStyles';
 import {colors} from '../../config/colors';
-import TopHeader from '../../components/TopHeader';
-import Email from '../../assets/images/Change_email.png';
 import {createService, Authorization} from '../../services/HttpService/HttpService';
 import useUserActions from '../../redux/actions/userActions';
 
+const ANIMATION_DURATION = 500;
+
 function Login(props) {
-  const animationDuration = 500;
   const initialBottomDrawerHeight = screenHeight > 650 ? 330 : 230;
-  const finallBottomDrawerHeight = screenHeight - 100;
+  const finalBottomDrawerHeight = screenHeight - 100;
   const AnimatedHeight = useRef(new Animated.Value(0)).current;
   const drawerHeight = initialBottomDrawerHeight;
   const [mode, setMode] = useState('landing');
@@ -40,9 +29,9 @@ function Login(props) {
 
   const [emailPhoneForLogin, setEmailPhoneForLogin] = useState('');
   const [passwordForLogin, setPasswordForLogin] = useState('');
-  const [validationSignUp, setValidationSignUp] = useState(false);
+  const [validationSignUp, setValidationSignUp] = useState<string | boolean>(false);
   const [phoneForSignUp, setPhoneForSignUp] = useState('');
-  const [validationLogIn, setValidationLogIn] = useState(false);
+  const [validationLogIn, setValidationLogIn] = useState<string | boolean>(false);
 
   const {getUserDetails} = useUserActions();
 
@@ -51,25 +40,26 @@ function Login(props) {
   const animateHeight = () => {
     Animated.timing(AnimatedHeight, {
       toValue: 1,
-      duration: animationDuration,
+      duration: ANIMATION_DURATION,
       easing: Easing.linear,
       useNativeDriver: false,
     }).start();
   };
-
-  const heightForBottom = AnimatedHeight.interpolate({
-    inputRange: [0, 1],
-    outputRange: [initialBottomDrawerHeight, finallBottomDrawerHeight],
-  });
 
   const scaleForSvg = AnimatedHeight.interpolate({
     inputRange: [0, 1],
     outputRange: [screenHeight > 650 ? 0.9 : 0.7, 0],
   });
 
-  const margiTopForSvg = AnimatedHeight.interpolate({
+  const imageHeight = AnimatedHeight.interpolate({
+    inputRange: [0, 1],
+    outputRange: [300, 0],
+  });
+
+  const marginTopForSvg = AnimatedHeight.interpolate({
     inputRange: [0, 1],
     outputRange: [0, screenHeight > 650 ? -210 : -190],
+    // outputRange: [0, screenHeight > 650 ? -210 : -190],
   });
 
   const fadeOpacity = AnimatedHeight.interpolate({
@@ -81,21 +71,10 @@ function Login(props) {
     inputRange: [0, 1],
     outputRange: [0, 1],
   });
-
   const onButtonPress = mode => {
     setMode(mode);
     animateHeight();
   };
-
-  function SplashSvg() {
-    return (
-      <Animated.View style={{transform: [{scale: scaleForSvg}], marginTop: margiTopForSvg}}>
-        <SvgXml xml={SplashSvgXml} />
-      </Animated.View>
-    );
-  }
-
-  const memoizedSplash = useMemo(() => SplashSvg, []);
 
   const onEmailPhoneChangeForLogin = (text: string) => {
     setEmailPhoneForLogin(text);
@@ -209,13 +188,13 @@ function Login(props) {
           onChangeText={onPasswordChangeForLogin}
         />
         {incorrectPasswordError ? (
-          <View style={{alignItems: 'center', marginVertical: 10}}>
-            <Text style={{color: 'red'}}>{incorrectPasswordError}</Text>
+          <View style={styles.incorrectContainer}>
+            <Text style={styles.incorrectContainerText}>{incorrectPasswordError}</Text>
           </View>
         ) : null}
 
         <Button style={styles.renderLoginButton} text="Login" variant="primary" onPress={signIn} />
-        <View style={{flex: 1, flexDirection: 'row', justifyContent: 'space-evenly'}}>
+        <View style={styles.imageContainer}>
           <TouchableOpacity>
             <Image source={require('../../assets/images/google.png')} style={styles.socialIcon} />
           </TouchableOpacity>
@@ -284,23 +263,17 @@ function Login(props) {
     return (
       <>
         <Text style={styles.headerLabelTextSignUp}>Sign Up</Text>
+        <InputBox placeHolder="Name" value={nameForSignUp} onChangeText={onNameChangeForSignUp} />
         <InputBox
-          // errorText={validationSignUp}
-          placeHolder="Name"
-          value={nameForSignUp}
-          onChangeText={onNameChangeForSignUp}
-        />
-        <InputBox
-          // errorText={validationSignUp}
           placeHolder="Phone No"
-          style={{marginTop: 12}}
+          style={styles.bottomText}
           value={phoneForSignUp}
           onChangeText={onPhoneChangeForSignUp}
         />
         <InputBox
           errorText={validationSignUp}
           placeHolder="Email Id"
-          style={{marginTop: 12}}
+          style={styles.bottomText}
           value={emailPhoneForSignUp}
           onChangeText={onEmailPhoneChangeForSignUp}
         />
@@ -308,7 +281,7 @@ function Login(props) {
           secureTextEntry
           errorText={passwordForSignUpError}
           placeHolder="Password"
-          style={{marginTop: 12}}
+          style={styles.bottomText}
           value={passwordForSignUp}
           onChangeText={onPasswordChangeForSignUp}
         />
@@ -316,17 +289,12 @@ function Login(props) {
           secureTextEntry
           errorText={confirmPasswordForSignUpError}
           placeHolder="Re-enter Password"
-          style={{marginTop: 12}}
+          style={styles.bottomText}
           value={confirmPasswordForSignUp}
           onChangeText={onConfirmPasswordChangeForSignUp}
         />
-        <Button
-          style={{marginBottom: 20, alignSelf: 'center', marginTop: 12}}
-          text="Sign Up"
-          variant="primary"
-          onPress={signUp}
-        />
-        <View style={{flex: 1, flexDirection: 'row', justifyContent: 'space-evenly'}}>
+        <Button style={styles.signUpButton} text="Sign Up" variant="primary" onPress={signUp} />
+        <View style={styles.imageContainer}>
           <TouchableOpacity>
             <Image source={require('../../assets/images/google.png')} style={styles.socialIcon} />
           </TouchableOpacity>
@@ -334,7 +302,7 @@ function Login(props) {
             <Image source={require('../../assets/images/FB.png')} style={styles.socialIcon} />
           </TouchableOpacity>
         </View>
-        <View style={{alignSelf: 'center', marginTop: 16}}>
+        <View style={styles.loginContainer}>
           <Text>
             {'Already have an account? '}
             <Text style={{color: colors.skyBlue}} onPress={() => setMode('login')}>
@@ -348,29 +316,41 @@ function Login(props) {
 
   return (
     <View style={styles.container}>
-      <View style={styles.upperBody}>{memoizedSplash()}</View>
-      <Animated.View style={[styles.mainBody, {height: heightForBottom}]}>
-        <Animated.View style={[styles.headerLabel, {opacity: appearOpacity}]}>
-          {mode === 'signUp' ? renderSignUp() : renderLogin()}
+      <View style={styles.upperBody}>
+        <Animated.View
+          style={{
+            transform: [{scale: scaleForSvg}],
+            marginTop: marginTopForSvg,
+            height: mode === 'landing' ? 300 : 600,
+          }}>
+          <SvgXml xml={SplashSvgXml} />
         </Animated.View>
-
+      </View>
+      <View style={styles.mainBody}>
+        <Animated.View
+          style={{opacity: appearOpacity, display: mode === 'landing' ? 'none' : 'flex'}}>
+          <ScrollView>{mode === 'login' ? renderLogin() : renderSignUp()}</ScrollView>
+        </Animated.View>
         {mode === 'landing' ? (
-          <Animated.View style={{opacity: fadeOpacity}}>
+          <Animated.View
+            style={{
+              opacity: fadeOpacity,
+            }}>
             <Button
-              disabled={drawerHeight === finallBottomDrawerHeight}
-              style={{marginBottom: 25}}
+              disabled={drawerHeight === finalBottomDrawerHeight}
+              style={styles.finalBottomDrawer}
               text="Login"
               variant="primary"
               onPress={() => onButtonPress('login')}
             />
             <Button
-              disabled={drawerHeight === finallBottomDrawerHeight}
+              disabled={drawerHeight === finalBottomDrawerHeight}
               text="SignUp"
               onPress={() => onButtonPress('signUp')}
             />
           </Animated.View>
         ) : null}
-      </Animated.View>
+      </View>
     </View>
   );
 }
