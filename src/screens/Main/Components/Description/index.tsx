@@ -26,8 +26,6 @@ function Description(props) {
 
   const {displayName, profileUrl} = owner || {};
 
-  console.log('----->descriptions in vsv', descriptions);
-
   return (
     <ScrollView showsVerticalScrollIndicator={false} style={styles.container}>
       <DescriptionText {...props} />

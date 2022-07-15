@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useLayoutEffect, useRef, useState} from 'react';
 import {
   View,
   StyleSheet,
@@ -26,6 +26,8 @@ import DocumentsAndVideos from './Components/VideosAndDocuments';
 import {UsersIcon} from '../../assets/svg';
 import LikeImage from '../../assets/images/likeImage.png';
 import useMainScreenActions from '../../redux/actions/mainScreenActions';
+import useMainServices from '../../services/Main';
+import {readService} from '../../services/HttpService/HttpService';
 
 type Route = {
   key: string;
@@ -96,10 +98,15 @@ function MainScreen(props: any) {
 
   const {courseId} = params;
 
+  const {setVideoTime} = useMainServices();
+
   const {descriptions} = useSelector(s => s.main);
 
+  const totalDuration = useRef(0);
+  const currentTime = useRef(0);
+  const videoRef = useRef();
+
   const {
-    _id,
     categoryId,
     courseTitle,
     coverImageUrl,
@@ -109,28 +116,60 @@ function MainScreen(props: any) {
     totalCredits,
     totalLession,
     subscriptionCount,
+    recentVideo,
+    reviewed,
+    terms,
   } = descriptions || {};
 
-  const {getSections, getDescriptions, readNotes} = useMainScreenActions();
+  const {videoUrl, _id} = recentVideo || {};
+  const _sectionId = recentVideo.sectionId || {};
+
+  const {getSections, getDescriptions, readReviews, addReview, readFAQ} = useMainScreenActions();
+
+  const [selectedTab, setSelectedTab] = useState(0);
+  const [video, setVideo] = useState(videoUrl || '');
+  const [videoId, setVideoId] = useState();
+  const [sectionId, setSectionId] = useState();
+  const [paused, setPaused] = useState(true);
+
+  const courseBought = true;
+
+  console.log('----->sectionId', sectionId);
 
   const loadData = async () => {
     await getDescriptions({courseId, offset: 0, limit: 20});
-    await getSections({courseId, offset: 0, limit: 20});
+    getSections({courseId, offset: 0, limit: 20});
+    readReviews({courseId, offset: 0, limit: 20});
+    readFAQ({courseId, offSet: 0, limit: 20});
+    if (duration) {
+      videoRef?.current?.seekTo?.(duration / 1000);
+    }
   };
+
+  useEffect(() => {
+    if (_id && _id !== videoId) {
+      setVideoId(_id);
+      setSectionId(_sectionId);
+    }
+  }, [_id, videoId]);
 
   useEffect(() => {
     loadData();
   }, [courseId, videoId]);
 
-  const [selectedTab, setSelectedTab] = useState(0);
-  const [video, setVideo] = useState(
-    // 'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
-    'https://www.learningcontainer.com/wp-content/uploads/2020/05/sample-mp4-file.mp4',
-  );
+  useEffect(() => {
+    if (paused) {
+      setVideoTime({courseId, sectionId, videoId, duration: currentTime.current * 1000});
+    }
+  }, [courseId, paused, videoId]);
 
-  const [videoId, setVideoId] = useState('');
+  const handleVideoId = id => {
+    setVideoId(id);
+  };
 
-  const courseBought = true;
+  const handleSectionId = id => {
+    setSectionId(id);
+  };
 
   const renderScene = ({
     route: {key},
@@ -145,18 +184,28 @@ function MainScreen(props: any) {
           <DocumentsAndVideos
             courseBought={courseBought}
             courseId={courseId}
+            setSectionId={handleSectionId}
             setVideo={setVideo}
-            setVideoId={setVideoId}
+            setVideoId={handleVideoId}
           />
         );
       case '2':
-        return <TermsAndFAQ {...props} />;
+        return <TermsAndFAQ {...props} courseId={courseId} terms={terms} />;
       case '3':
         return <Notes courseBought={courseBought} videoId={videoId} {...props} />;
       case '4':
         return <Messages courseBought={courseBought} {...props} />;
       case '5':
-        return <Reviews courseBought={courseBought} {...props} />;
+        return (
+          <Reviews
+            addReview={addReview}
+            courseBought={courseBought}
+            courseId={courseId}
+            readReviews={readReviews}
+            reviewed={reviewed}
+            {...props}
+          />
+        );
       default:
         return <View />;
     }
@@ -166,11 +215,18 @@ function MainScreen(props: any) {
     <View style={styles.mainContainer}>
       <View style={styles.videoContainer}>
         <VideoPlayer
-          source={{
-            uri: video,
-          }}
+          paused={paused}
+          ref={videoRef}
+          source={{uri: video}}
           style={styles.videos}
+          onEnd={() => setPaused(true)}
           onError={err => console.log('----->err', err)}
+          onPause={() => setPaused(true)}
+          onPlay={() => setPaused(false)}
+          onProgress={e => {
+            totalDuration.current = e.seekableDuration;
+            currentTime.current = e.currentTime;
+          }}
         />
       </View>
 
@@ -181,7 +237,6 @@ function MainScreen(props: any) {
               flexDirection: 'row',
               justifyContent: 'space-between',
               paddingTop: 10,
-              // paddingBottom: 10,
             }}>
             <Text style={styles.header}>{courseTitle}</Text>
             {wishListed ? (
@@ -189,7 +244,6 @@ function MainScreen(props: any) {
             ) : (
               <MaterialCommunityIcons name="cards-heart-outline" size={20} />
             )}
-            {/* <Image source={LikeImage} style={styles.images} /> */}
           </View>
           <View style={{flexDirection: 'row', marginBottom: 10, paddingHorizontal: 5}}>
             <Text style={{paddingRight: 10}}>{duration}</Text>
@@ -199,14 +253,6 @@ function MainScreen(props: any) {
               <UsersIcon />
             </View>
           </View>
-          {/* <View style={styles.scoreContainer}>
-            <Text style={styles.creditText}>Credits earned:</Text>
-            <View style={styles.scoreTextContainer}>
-              <Text style={styles.scoreText}>0</Text>
-              <Text style={styles.scoreSubText}>/{totalCredits}</Text>
-              <InfoIcon />
-            </View>
-          </View> */}
           <View style={styles.mainContainer}>
             <TabView
               initialLayout={{width: Layout.window.width}}
@@ -218,14 +264,6 @@ function MainScreen(props: any) {
           </View>
         </View>
       </View>
-      {/* {!courseBought ? (
-        <View style={styles.buttonContainer}>
-          <TouchableOpacity style={styles.buttonContentContainer}>
-            <Feather color="#fff" name="shopping-cart" size={20} />
-            <Text style={styles.buttonText}>Add to cart</Text>
-          </TouchableOpacity>
-        </View>
-      ) : null} */}
     </View>
   );
 }

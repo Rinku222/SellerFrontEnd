@@ -38,6 +38,7 @@ function SearchDropdown(props: any) {
             {options.map(({label, value}) => {
               return (
                 <TouchableOpacity
+                  key={value}
                   onPress={() => {
                     Keyboard.dismiss();
                     onChangeText(label);

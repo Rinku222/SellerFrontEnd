@@ -1,5 +1,5 @@
 import axios from 'axios';
-import {Auth} from 'aws-amplify';
+import {Auth, Storage} from 'aws-amplify';
 import {useState} from 'react';
 
 export const Authorization =
@@ -13,8 +13,6 @@ axios.interceptors.request.use(
 
     const accessToken = res.getIdToken();
     const jwt = accessToken.getJwtToken();
-
-    console.log('--->jwt', jwt);
 
     return {
       ...config,
@@ -74,4 +72,27 @@ export async function deleteService(endpoint: string, params = {}) {
     .catch(error => {
       return error;
     });
+}
+
+export async function fileUploadService(
+  directory: string,
+  extension: string,
+  entityId: string,
+  file: any,
+) {
+  return new Promise((resolve, reject) => {
+    try {
+      // const extension = file.name.split('.').pop();
+      // Storage.put(`${directory}/${entityId}/${entityId}.${extension}`, file, {level: 'private'})
+      Storage.put(`${directory}/${entityId}/${entityId}.${extension}`, file, {level: 'private'})
+        .then(result => {
+          resolve(result);
+        })
+        .catch(err => {
+          reject(err);
+        });
+    } catch (error) {
+      reject(error);
+    }
+  });
 }

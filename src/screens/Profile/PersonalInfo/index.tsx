@@ -1,11 +1,25 @@
 import React from 'react';
 
 import {View, StyleSheet, Text, TouchableOpacity, Image} from 'react-native';
+import {launchImageLibrary, ImageLibraryOptions} from 'react-native-image-picker';
+import ObjectID from 'bson-objectid';
 import Email from '../../../assets/images/Change_email.png';
 import {AboutIcon, EmailIcon, LockIcon, PhoneIcon, UserIcon} from '../../../assets/svg';
+import {getFileExtension} from '../../../components/Download';
+import useSnackbar from '../../../components/SnackBar';
 import ThemeButton from '../../../components/ThemeButton/ThemeButton';
 import TopHeader from '../../../components/TopHeader';
+import useImagePicker from '../../../components/useImagePicker';
 import {colors} from '../../../config/colors';
+import useUserActions from '../../../redux/actions/userActions';
+// const options = {
+//   title: 'Select Avatar',
+//   customButtons: [{name: 'fb', title: 'Choose Photo from Facebook'}],
+//   storageOptions: {
+//     skipBackup: true,
+//     path: 'images',
+//   },
+// };
 
 const LIST = [
   {icon: <PhoneIcon />, value: '+91 1122112212', path: 'change_phone', border: true},
@@ -37,6 +51,65 @@ function Row(props: any) {
 }
 
 function PersonalInfo(props: any) {
+  const {openImagePicker} = useImagePicker();
+  const snackbar = useSnackbar();
+
+  const {uploadProfileImage} = useUserActions();
+
+  // const onChoose = v => {
+  //   handleFileUpload(v);
+  // };
+
+  // const handleFileUpload = async file => {
+  //   const {name} = file;
+  //   const extension = getFileExtension(file.name);
+  //   file.name = `${name}.${extension}`;
+  //   // const formData = new FormData();
+  //   // formData.append('folder_id', folderId);
+  //   // formData.append('myfile[]', file);
+  //   // formData.append('project_id', project_id);
+  //   // await uploadRDFile(formData);
+  //   // toggleDialog();
+  //   snackbar.showMessage({
+  //     message: 'File Uploaded successfully!',
+  //     variant: 'success',
+  //   });
+  //   // loadFiles();
+  // };
+
+  const handleProfilePress = () => {
+    console.log('----->pressed');
+
+    const entityId = ObjectID();
+
+    const options: ImageLibraryOptions = {
+      mediaType: 'photo',
+      quality: 0.8,
+    };
+    launchImageLibrary(options, response => {
+      const {uri, fileName, type} = response?.assets[0];
+      console.log('Response = ', response);
+      console.log('response.assets.uri = ', response.assets[0].uri);
+      const extension = response.assets[0].uri.split('.').pop();
+
+      const file = {
+        uri,
+        name: fileName,
+        type,
+      };
+
+      console.log('----->file', file);
+
+      console.log('----->extension', extension);
+      uploadProfileImage({
+        directory: 'user-assets',
+        entityId,
+        extension,
+        file: response.assets[0].uri,
+      });
+    });
+  };
+
   return (
     <View style={styles.container}>
       <View>
@@ -45,14 +118,14 @@ function PersonalInfo(props: any) {
             <TopHeader {...props} color={colors.white} />
           </View>
           <View style={styles.profileIcon}>
-            <View style={styles.userIcon}>
+            <TouchableOpacity style={styles.userIcon} onPress={() => handleProfilePress()}>
               <View style={{padding: 30}}>
                 <UserIcon color={colors.white} height={50} width={50} />
               </View>
               <View style={styles.editText}>
                 <Text style={{color: colors.white}}>Edit</Text>
               </View>
-            </View>
+            </TouchableOpacity>
           </View>
         </View>
         <View style={styles.header}>

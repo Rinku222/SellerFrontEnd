@@ -4,8 +4,19 @@ import useMainServices from '../../services/Main';
 
 export default function useMainScreenActions() {
   const dispatch = useDispatch();
-  const {getSections, getVideos, getDescriptions, addNote, readNotes, deleteNote, updateNote} =
-    useMainServices();
+  const {
+    getSections,
+    getVideos,
+    getDescriptions,
+    addNote,
+    readNotes,
+    deleteNote,
+    updateNote,
+    addRecentVideo,
+    readReviews,
+    addReview,
+    readFAQ,
+  } = useMainServices();
 
   return {
     getSections: params =>
@@ -103,6 +114,62 @@ export default function useMainScreenActions() {
           try {
             console.log('----->params in get getDescriptions', params);
             const response = await updateNote(params);
+            const {data} = response;
+
+            return Promise.resolve(data);
+          } catch (error) {
+            console.log('----->error in reducer', error);
+          }
+        },
+      }),
+    addRecentVideo: params =>
+      dispatch({
+        type: types.ADD_RECENT_VIDEO,
+        payload: async () => {
+          try {
+            const response = await addRecentVideo(params);
+            const {data} = response;
+
+            return Promise.resolve(data);
+          } catch (error) {
+            console.log('----->error in reducer', error);
+          }
+        },
+      }),
+    readReviews: params =>
+      dispatch({
+        type: types.READ_REVIEWS,
+        payload: async () => {
+          try {
+            const response = await readReviews(params);
+            const {data} = response;
+
+            return Promise.resolve(data);
+          } catch (error) {
+            console.log('----->error in reducer', error);
+          }
+        },
+      }),
+    addReview: params =>
+      dispatch({
+        type: types.ADD_REVIEW,
+        payload: async () => {
+          try {
+            const response = await addReview(params);
+            const {data} = response;
+
+            return Promise.resolve(data);
+          } catch (error) {
+            console.log('----->error in reducer', error);
+          }
+        },
+      }),
+    readFAQ: params =>
+      dispatch({
+        type: types.READ_FAQ,
+        payload: async () => {
+          try {
+            const response = await readFAQ(params);
             const {data} = response;
 
             return Promise.resolve(data);

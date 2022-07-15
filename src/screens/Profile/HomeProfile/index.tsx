@@ -48,8 +48,8 @@ function HomeProfile(props: any) {
       <Image source={UserImage} style={styles.profileImage} />
       <View style={styles.curve} />
       <View>
-        {List.map(item => {
-          return <RenderRow {...props} data={item} key={item.name} />;
+        {List.map((item, index) => {
+          return <RenderRow {...props} data={item} key={index} />;
         })}
       </View>
     </View>

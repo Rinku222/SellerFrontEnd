@@ -8,6 +8,7 @@ import {getShadow} from '../../../../config/globalStyles';
 import UserImage from '../../../../assets/images/laps.png';
 import {DownArrowIcon, PlayVideoIcon, UpArrowIcon} from '../../../../assets/svg';
 import useMainScreenActions from '../../../../redux/actions/mainScreenActions';
+import {ADD_RECENT_VIDEO} from '../../../../redux/actions/actionTypes';
 
 function Tabs(props) {
   const {description, transcript} = props;
@@ -55,7 +56,7 @@ function Tabs(props) {
 function DropDownSection(props) {
   const completed = '20%';
 
-  const {item, setVideo, setVideoId} = props;
+  const {item, setVideo, setVideoId, addRecentVideo, setSectionId} = props;
 
   const {
     _id,
@@ -71,6 +72,8 @@ function DropDownSection(props) {
     videoUrl,
   } = item;
 
+  console.log('----->_id', _id);
+
   const [show, setShow] = useState(false);
 
   return (
@@ -78,9 +81,13 @@ function DropDownSection(props) {
       <View style={styles.subAccordion}>
         <TouchableOpacity
           style={styles.videoContainer}
-          onPress={() => {
+          onPress={async () => {
             setVideo(videoUrl);
-            setVideoId(_id);
+            if (_id) {
+              setVideoId(_id);
+              setSectionId(sectionId);
+            }
+            await addRecentVideo({courseId, videoId: _id, sectionId});
           }}>
           <Image
             source={{
@@ -121,8 +128,15 @@ function DropDownSection(props) {
   );
 }
 
-const renderTitle = (item, setVideo, setVideoId) => (
-  <DropDownSection item={item} setVideo={setVideo} setVideoId={setVideoId} />
+const renderTitle = (item, setVideo, setVideoId, addRecentVideo, courseId, setSectionId) => (
+  <DropDownSection
+    addRecentVideo={addRecentVideo}
+    courseId={courseId}
+    item={item}
+    setSectionId={setSectionId}
+    setVideo={setVideo}
+    setVideoId={setVideoId}
+  />
 );
 
 const renderIcon = (v, courseBought, credits) => (
@@ -141,8 +155,18 @@ const renderIcon = (v, courseBought, credits) => (
 );
 
 function DropDownList(props: any) {
-  const {courseBought, item, courseId, getVideos, videos, videoLoading, setVideo, setVideoId} =
-    props;
+  const {
+    courseBought,
+    item,
+    courseId,
+    getVideos,
+    videos,
+    videoLoading,
+    setVideo,
+    setVideoId,
+    setSectionId,
+    addRecentVideo,
+  } = props;
 
   const {sectionTitle, credits, _id} = item;
 
@@ -174,12 +198,14 @@ function DropDownList(props: any) {
             <ActivityIndicator color={colors.primary} />
           </View>
         ) : (
-          videos.map(item => {
+          videos.map((item, index) => {
             return (
               <List.Item
-                key={item}
+                key={index}
                 style={styles.title}
-                title={() => renderTitle(item, setVideo, setVideoId)}
+                title={() =>
+                  renderTitle(item, setVideo, setVideoId, addRecentVideo, courseId, setSectionId)
+                }
               />
             );
           })
@@ -190,10 +216,10 @@ function DropDownList(props: any) {
 }
 
 function DocumentsAndVideos(props: any) {
-  const {courseBought} = props;
+  const {courseBought, courseId} = props;
 
   const {sections, videoLoading} = useSelector(s => s.main);
-  const {getVideos} = useMainScreenActions();
+  const {getVideos, addRecentVideo} = useMainScreenActions();
 
   const {videos} = useSelector(s => s.main);
 
@@ -204,8 +230,9 @@ function DocumentsAndVideos(props: any) {
           <DropDownList
             courseBought={index < 2 ? true : courseBought}
             item={item}
-            key={item}
+            key={index}
             {...props}
+            addRecentVideo={addRecentVideo}
             getVideos={getVideos}
             videoLoading={videoLoading}
             videos={videos}
