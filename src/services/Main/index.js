@@ -1,4 +1,4 @@
-import {readService, createService, deleteService} from '../HttpService/HttpService';
+import {readService, createService, deleteService, updateService} from '../HttpService/HttpService';
 
 export default function useMainServices() {
   return {
@@ -13,6 +13,11 @@ export default function useMainServices() {
       return readService(
         `/video?sectionId=${sectionId}&offset=${offset}&limit=${limit}&courseId=${courseId}`,
       );
+    },
+    addRecentVideo: data => {
+      const {courseId, videoId, sectionId} = data;
+
+      return createService(`/video/recent`, {courseId, videoId, sectionId});
     },
     getDescriptions: data => {
       const {limit, courseId, offset} = data;
@@ -31,8 +36,30 @@ export default function useMainServices() {
       return deleteService(`/stickynote?stickynoteId=${stickynoteId}`);
     },
     updateNote: data => {
-      const {stickynoteId,stickyTitle,description,videoId} = data;
-      return deleteService(`/stickynote?stickynoteId=${stickynoteId}`,{stickyTitle, description, videoId});
+      const {stickynoteId, stickyTitle, description, videoId} = data;
+      return deleteService(`/stickynote?stickynoteId=${stickynoteId}`, {
+        stickyTitle,
+        description,
+        videoId,
+      });
+    },
+    readReviews: data => {
+      const {courseId, offSet, limit} = data;
+      return readService(`/review?courseId=${courseId}&offset=${offSet}&limit=${limit}`);
+    },
+    addReview: data => {
+      const {courseId, reviewDescription} = data;
+      return createService(`/review`, {reviewDescription, courseId});
+    },
+    readFAQ: data => {
+      const {courseId, offSet, limit} = data;
+      return readService(`/faq?courseId=${courseId}&offset=${offSet}&limit=${limit}`);
+    },
+    setVideoTime: data => {
+      const {courseId, videoId, duration} = data;
+      console.log('----->data', data);
+      const sectionId = '62b43d5009b03c0009d4bb1e';
+      return createService(`/video/history`, {courseId, videoId, duration, sectionId});
     },
   };
 }

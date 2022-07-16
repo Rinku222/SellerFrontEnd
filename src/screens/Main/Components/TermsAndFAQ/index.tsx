@@ -1,5 +1,7 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {StyleSheet, Text} from 'react-native';
+import {useSelector} from 'react-redux';
+import useMainServices from '../../../../services/Main';
 import TabViewExample from '../TabView';
 
 function RenderTab(props: any) {
@@ -16,7 +18,11 @@ function RenderTab(props: any) {
 }
 
 function TermsAndFAQ(props: any) {
-  return <TabViewExample />;
+  const {courseId} = props;
+
+  const {FAQ} = useSelector(s => s.main);
+
+  return <TabViewExample FAQ={FAQ} {...props} />;
 }
 
 const styles = StyleSheet.create({

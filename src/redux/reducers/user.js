@@ -1,6 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {persistReducer} from 'redux-persist';
-import {GET_USER_DETAILS} from '../actions/actionTypes';
+import {GET_USER_DETAILS, UPLOAD_IMAGE} from '../actions/actionTypes';
 
 const persistConfig = {
   key: 'user',
@@ -38,11 +38,27 @@ const reducer = (state = initialState, action = {}) => {
         userLoading: false,
         errorMessage: payload,
       };
+    case `${UPLOAD_IMAGE}_PENDING`:
+      return {
+        ...state,
+        userLoading: true,
+      };
+    case `${UPLOAD_IMAGE}_FULFILLED`: {
+      return {
+        ...state,
+        userLoading: false,
+      };
+    }
+    case `${UPLOAD_IMAGE}_REJECTED`:
+      return {
+        ...state,
+        userLoading: false,
+        errorMessage: payload,
+      };
 
     default:
       return state;
   }
 };
 
-// export default reducer;
 export default persistReducer(persistConfig, reducer);

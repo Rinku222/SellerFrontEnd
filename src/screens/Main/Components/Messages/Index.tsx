@@ -4,7 +4,7 @@ import {View, StyleSheet, Image, TextInput, ScrollView} from 'react-native';
 import {Divider} from 'react-native-paper';
 import {colors} from '../../../../config/colors';
 import UserImage from '../../../../assets/images/laps.png';
-import ReviewsList from '../../../../components/ReviewsList';
+import ReviewsList from '../../../../components/Review';
 
 function Messages(props: any) {
   const {courseBought} = props;

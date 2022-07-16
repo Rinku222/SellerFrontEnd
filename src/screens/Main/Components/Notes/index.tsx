@@ -10,6 +10,7 @@ import {colors} from '../../../../config/colors';
 import ThemeButton from '../../../../components/ThemeButton/ThemeButton';
 import {PDFExample} from '../../../PDF/PDF';
 import useMainScreenActions from '../../../../redux/actions/mainScreenActions';
+import DateConvertor from '../../../../utils/DateConvertor';
 
 const DATA = [];
 
@@ -27,8 +28,6 @@ function AddNote(props) {
   const [stickyTitle, setStickyTitle] = useState('');
   const [description, setDescription] = useState('');
   const [stickyNoteId, setStickyNoteId] = useState('');
-
-  console.log('----->setStickynoteId in addnote ', stickyNoteId);
 
   return (
     <View>
@@ -64,10 +63,6 @@ function RenderNote(props) {
   const {stickyTitle, description, creationTS} = item;
 
   const timestemp = new Date(23456789000);
-  // const formatted = timestemp.format('dd/mm/yyyy hh:MM:ss');
-
-  console.log('----->item', item);
-  console.log('----->timestemp', timestemp);
 
   return (
     <View style={styles.renderNoteMainContainer}>
@@ -132,7 +127,7 @@ function BottomIcon(props: BottomIconProps) {
       ) : (
         <View style={styles.bottomContainer}>
           {/* <Text>28th Dec 2022</Text> */}
-          <Text>{new Date(creationTS).toLocaleDateString('de-DE')}</Text>
+          <Text>{DateConvertor(creationTS)}</Text>
 
           <View style={styles.iconContainer}>
             {/* <TouchableOpacity>
@@ -251,11 +246,12 @@ function Notes(props) {
                 <Text style={styles.buttonText}>Add New Note</Text>
               </TouchableOpacity>
             </View>
-            {notes.map(item => {
+            {notes.map((item, i) => {
               return (
                 <RenderNote
                   handleDeleteNote={handleDeleteNote}
                   item={item}
+                  key={i}
                   noteId={noteId}
                   setNoteId={setNoteId}
                   setShowAddNote={setShowAddNote}

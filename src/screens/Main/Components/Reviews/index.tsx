@@ -1,23 +1,34 @@
 import React, {useState} from 'react';
 import {View, StyleSheet, TouchableOpacity, Image, TextInput, ScrollView} from 'react-native';
 import {Divider} from 'react-native-paper';
+import {useSelector} from 'react-redux';
 import {colors} from '../../../../config/colors';
+// import UserImage from '../../../../assets/images/laps.png';
 import UserImage from '../../../../assets/images/laps.png';
-import ReviewsList from '../../../../components/ReviewsList';
+import Review from '../../../../components/Review';
 import ThemeButton from '../../../../components/ThemeButton/ThemeButton';
 import {StarFilledIcon, StarIcon} from '../../../../assets/svg';
+import useMainScreenActions from '../../../../redux/actions/mainScreenActions';
 
 const data = [1, 2, 3, 4, 5];
 
 function Reviews(props: any) {
-  const {courseBought} = props;
+  const {courseId, readReviews, addReview, reviewed} = props;
 
   const [comment, setComment] = useState('');
   const [rating, setRating] = useState(0);
 
+  const {reviews} = useSelector(s => s.main);
+
+  const handlePress = async () => {
+    await addReview({reviewDescription: comment, courseId});
+    await readReviews({courseId, offSet: 0, limit: 20});
+    setComment('');
+  };
+
   return (
     <ScrollView contentContainerStyle={styles.container} showsVerticalScrollIndicator={false}>
-      {courseBought ? (
+      {!reviewed && (
         <View>
           <View style={styles.subContainer}>
             <Image source={UserImage} style={styles.image} />
@@ -47,19 +58,18 @@ function Reviews(props: any) {
                 onChangeText={v => setComment(v)}
               />
               <View style={styles.button}>
-                <ThemeButton
-                  title="Submit"
-                  onPress={() => console.log('----->submit button pressed')}
-                />
+                <ThemeButton title="Submit" onPress={() => handlePress()} />
               </View>
             </View>
           </View>
           <Divider style={styles.divider} />
         </View>
-      ) : null}
+      )}
 
-      <ReviewsList />
-      {/* <ReviewsList /> */}
+      {reviews &&
+        reviews.map((item, index) => {
+          return <Review key={index} review={item} />;
+        })}
     </ScrollView>
   );
 }

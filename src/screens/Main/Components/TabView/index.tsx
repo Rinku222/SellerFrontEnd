@@ -1,22 +1,22 @@
 import * as React from 'react';
 import {View, StyleSheet, Dimensions, StatusBar, Text, TextPropTypes} from 'react-native';
 import {TabView, SceneMap, TabBar} from 'react-native-tab-view';
+import {useSelector} from 'react-redux';
 import {colors} from '../../../../config/colors';
 import Layout from '../../../../utils/Layout';
 
-function FirstRoute() {
+function FirstRoute(props) {
+  const {terms} = props;
+
   return (
     <View style={styles.container}>
-      <Text>
-        Lorem ipsum dolor sit, amet consectetur adipisicing elit. Ex cupiditate in modi magnam
-        magni, nobis aspernatur ipsum, esse deserunt porro totam culpa architecto nostrum. Voluptas
-        deleniti est facilis iusto possimus et, quisquam harum illum.
-      </Text>
+      <Text>{terms}</Text>
     </View>
   );
 }
 
 function SecondRoute() {
+  const {FAQ} = useSelector(s => s.main);
   return (
     <View style={styles.container}>
       <Text>
@@ -30,14 +30,20 @@ function SecondRoute() {
   );
 }
 
-const initialLayout = {width: Dimensions.get('window').width};
+const renderScene = (params, props) => {
+  const {route} = params;
+  const {terms} = props;
+  switch (route.key) {
+    case 'first':
+      return <FirstRoute terms={terms} />;
+    case 'second':
+      return <SecondRoute />;
+    default:
+      return null;
+  }
+};
 
-const renderScene = SceneMap({
-  first: FirstRoute,
-  second: SecondRoute,
-});
-
-export default function TabViewExample() {
+export default function TabViewExample(props) {
   const [selectedTab, setSelectedTab] = React.useState(0);
 
   const [routes] = React.useState([
@@ -50,7 +56,7 @@ export default function TabViewExample() {
       <TabView
         initialLayout={{width: Layout.window.width}}
         navigationState={{index: selectedTab, routes}}
-        renderScene={renderScene}
+        renderScene={e => renderScene(e, props)}
         renderTabBar={tabBarProps => {
           return (
             <TabBar
@@ -59,6 +65,7 @@ export default function TabViewExample() {
               inactiveColor={colors.black}
               indicatorStyle={styles.indicatorStyle}
               style={{backgroundColor: '#F5F5F5', marginHorizontal: 5}}
+              {...props}
             />
           );
         }}
