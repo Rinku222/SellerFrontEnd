@@ -122,7 +122,7 @@ function MainScreen(props: any) {
   } = descriptions || {};
 
   const {videoUrl, _id} = recentVideo || {};
-  const _sectionId = recentVideo.sectionId || {};
+  const _sectionId = recentVideo?.sectionId || {};
 
   const {getSections, getDescriptions, readReviews, addReview, readFAQ} = useMainScreenActions();
 
@@ -182,6 +182,7 @@ function MainScreen(props: any) {
       case '0':
         return (
           <DocumentsAndVideos
+            {...props}
             courseBought={courseBought}
             courseId={courseId}
             setSectionId={handleSectionId}

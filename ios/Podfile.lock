@@ -282,9 +282,19 @@ PODS:
   - React-jsinspector (0.68.1)
   - React-logger (0.68.1):
     - glog
+  - react-native-blob-util (0.16.0):
+    - React-Core
+  - react-native-document-picker (8.1.1):
+    - React-Core
+  - react-native-image-picker (4.8.4):
+    - React-Core
+  - react-native-image-resizer (1.4.5):
+    - React-Core
   - react-native-netinfo (8.3.0):
     - React-Core
   - react-native-pager-view (5.4.15):
+    - React-Core
+  - react-native-pdf (6.5.0):
     - React-Core
   - react-native-safe-area-context (4.2.5):
     - RCT-Folly
@@ -366,6 +376,8 @@ PODS:
     - React-Core
   - RNCAsyncStorage (1.17.5):
     - React-Core
+  - RNFS (2.20.0):
+    - React-Core
   - RNScreens (3.13.1):
     - React-Core
     - React-RCTImage
@@ -421,8 +433,13 @@ DEPENDENCIES:
   - React-jsiexecutor (from `../node_modules/react-native/ReactCommon/jsiexecutor`)
   - React-jsinspector (from `../node_modules/react-native/ReactCommon/jsinspector`)
   - React-logger (from `../node_modules/react-native/ReactCommon/logger`)
+  - react-native-blob-util (from `../node_modules/react-native-blob-util`)
+  - react-native-document-picker (from `../node_modules/react-native-document-picker`)
+  - react-native-image-picker (from `../node_modules/react-native-image-picker`)
+  - react-native-image-resizer (from `../node_modules/react-native-image-resizer`)
   - "react-native-netinfo (from `../node_modules/@react-native-community/netinfo`)"
   - react-native-pager-view (from `../node_modules/react-native-pager-view`)
+  - react-native-pdf (from `../node_modules/react-native-pdf`)
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
   - react-native-video (from `../node_modules/react-native-video`)
   - React-perflogger (from `../node_modules/react-native/ReactCommon/reactperflogger`)
@@ -439,6 +456,7 @@ DEPENDENCIES:
   - ReactCommon/turbomodule/core (from `../node_modules/react-native/ReactCommon`)
   - RNAWSCognito (from `../node_modules/amazon-cognito-identity-js`)
   - "RNCAsyncStorage (from `../node_modules/@react-native-async-storage/async-storage`)"
+  - RNFS (from `../node_modules/react-native-fs`)
   - RNScreens (from `../node_modules/react-native-screens`)
   - RNSVG (from `../node_modules/react-native-svg`)
   - RNVectorIcons (from `../node_modules/react-native-vector-icons`)
@@ -499,10 +517,20 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/jsinspector"
   React-logger:
     :path: "../node_modules/react-native/ReactCommon/logger"
+  react-native-blob-util:
+    :path: "../node_modules/react-native-blob-util"
+  react-native-document-picker:
+    :path: "../node_modules/react-native-document-picker"
+  react-native-image-picker:
+    :path: "../node_modules/react-native-image-picker"
+  react-native-image-resizer:
+    :path: "../node_modules/react-native-image-resizer"
   react-native-netinfo:
     :path: "../node_modules/@react-native-community/netinfo"
   react-native-pager-view:
     :path: "../node_modules/react-native-pager-view"
+  react-native-pdf:
+    :path: "../node_modules/react-native-pdf"
   react-native-safe-area-context:
     :path: "../node_modules/react-native-safe-area-context"
   react-native-video:
@@ -535,6 +563,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/amazon-cognito-identity-js"
   RNCAsyncStorage:
     :path: "../node_modules/@react-native-async-storage/async-storage"
+  RNFS:
+    :path: "../node_modules/react-native-fs"
   RNScreens:
     :path: "../node_modules/react-native-screens"
   RNSVG:
@@ -576,10 +606,15 @@ SPEC CHECKSUMS:
   React-jsiexecutor: 4a4bae5671b064a2248a690cf75957669489d08c
   React-jsinspector: 218a2503198ff28a085f8e16622a8d8f507c8019
   React-logger: f79dd3cc0f9b44f5611c6c7862badd891a862cf8
-  react-native-netinfo: 3671b091c4843fda5e153612866ef4024b8f5d62
-  react-native-pager-view: b1914469643f40042e65d78cbf3d3dfebd6fb0d9
-  react-native-safe-area-context: ebf8c413eb8b5f7c392a036a315eb7b46b96845f
-  react-native-video: a4c2635d0802f983594b7057e1bce8f442f0ad28
+  react-native-blob-util: 2d49d135d6fe1410c019fb5bff241dac7f12d73d
+  react-native-document-picker: 3c074fa194fddbcd46867c3a1c44b9331bd9dcbc
+  react-native-image-picker: 9f9eb160a4f4fc0702f9d0a60fa453b413258ef8
+  react-native-image-resizer: 506412a2bdd70dde64a61e13505ce10f61a04369
+  react-native-netinfo: ebbcd8fbe1a0ce7035e43cd18c5a545dcb93dd08
+  react-native-pager-view: 15ae71c52a8a40bd8a10505b5c64fb129fc437e2
+  react-native-pdf: de35db0d8f1e5d37e65e887554f7d4bd062af56b
+  react-native-safe-area-context: 923e8a02d3bd88ca7a6b6c9b3db1b94591044b0c
+  react-native-video: 77ce22be7abff9e373527ca10106a99dea3ba56c
   React-perflogger: 30ab8d6db10e175626069e742eead3ebe8f24fd5
   React-RCTActionSheet: 4b45da334a175b24dabe75f856b98fed3dfd6201
   React-RCTAnimation: d6237386cb04500889877845b3e9e9291146bc2e
@@ -593,7 +628,8 @@ SPEC CHECKSUMS:
   React-runtimeexecutor: 7285b499d0339104b2813a1f58ad1ada4adbd6c0
   ReactCommon: bf2888a826ceedf54b99ad1b6182d1bc4a8a3984
   RNAWSCognito: b967f462350ac749f2ff36426f84cdbf5689f576
-  RNCAsyncStorage: 81187912cc9a5c2591ddb161e03e587688afb764
+  RNCAsyncStorage: e405f7684be5a2066f5418bb1a4729129ae4feb3
+  RNFS: 4ac0f0ea233904cb798630b3c077808c06931688
   RNScreens: 40a2cb40a02a609938137a1e0acfbf8fc9eebf19
   RNSVG: 302bfc9905bd8122f08966dc2ce2d07b7b52b9f8
   RNVectorIcons: 7923e585eaeb139b9f4531d25a125a1500162a0b
@@ -601,6 +637,6 @@ SPEC CHECKSUMS:
   Yoga: 17cd9a50243093b547c1e539c749928dd68152da
   YogaKit: f782866e155069a2cca2517aafea43200b01fd5a
 
-PODFILE CHECKSUM: e85997decb797e8138e2df71b23dc3996636e6be
+PODFILE CHECKSUM: d2a2202c3791c9fb1f12328f99e041f251bfb5f2
 
 COCOAPODS: 1.11.3

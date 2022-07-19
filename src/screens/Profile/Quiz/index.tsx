@@ -1,14 +1,30 @@
 import React, {useState} from 'react';
-import {View, StyleSheet, Text, TouchableOpacity} from 'react-native';
+import {View, StyleSheet, Text, TouchableOpacity, ScrollView, Alert} from 'react-native';
+import {Button, Dialog, Divider, Paragraph, Portal, Provider, Subheading} from 'react-native-paper';
 import {PrevArrowIcon, NextArrowIcon} from '../../../assets/svg';
+import {useAlert} from '../../../components/Alert';
 import ThemeButton from '../../../components/ThemeButton/ThemeButton';
 import TopHeader from '../../../components/TopHeader';
 import {colors} from '../../../config/colors';
+// import DialogComponent from './DialogBox';
+
+const ButtonText = [
+  {label: 'A.', value: 'Assam'},
+  {label: 'B.', value: 'Gujarat'},
+  {label: 'C.', value: 'MP'},
+  {label: 'D.', value: 'None'},
+];
 
 const LIST = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 
 function Quiz(props: any) {
   const [active, setActive] = useState(10);
+
+  const [visible, setVisible] = React.useState(false);
+
+  const showDialog = () => setVisible(true);
+
+  const hideDialog = () => setVisible(false);
 
   const handlePrev = () => {
     if (active > 0) {
@@ -18,10 +34,6 @@ function Quiz(props: any) {
 
   const handleNext = () => {
     setActive(active + 1);
-  };
-
-  const handleSave = () => {
-    // save button function
   };
 
   return (
@@ -42,12 +54,53 @@ function Quiz(props: any) {
         </View>
         <View style={styles.contentContainer}>
           <View style={styles.subContainer}>
-            <Text>{active}</Text>
-            <Text>1</Text>
+            <Subheading style={{fontWeight: '700'}}>{active}</Subheading>
+            <ScrollView style={{marginTop: 5}}>
+              <Text style={{lineHeight: 25}}>
+                Lorem ipsum dolor sit amet consectetur adipisicing elit. Odit porro dignissimos ut,
+                possimus corporis exercitationem recusandae, officiis eligendi ipsum quae nulla unde
+                aperiam quidem pariatur. Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                Rerum error aperiam maiores hic blanditiis sint.
+              </Text>
+              <View style={{marginTop: 20, paddingHorizontal: 10}}>
+                {ButtonText.map(item => {
+                  return (
+                    <View
+                      style={{
+                        marginTop: 25,
+                        borderWidth: 1,
+                        padding: 10,
+                        borderRadius: 20,
+                      }}>
+                      <Text>{`${item.label} ${item.value}`}</Text>
+                    </View>
+                  );
+                })}
+              </View>
+            </ScrollView>
           </View>
+
+          <Portal>
+            <Dialog style={{alignItems: 'center'}} visible={visible} onDismiss={hideDialog}>
+              <Dialog.Title
+                style={{
+                  textAlign: 'center',
+                }}>
+                Your Score
+              </Dialog.Title>
+              <Dialog.Content style={{width: '100%'}}>
+                <Paragraph style={{fontSize: 20, textAlign: 'center'}}>8/10</Paragraph>
+                <Divider style={{borderWidth: 1}} />
+              </Dialog.Content>
+
+              <Dialog.Actions style={{alignItems: 'center'}}>
+                <Button onPress={hideDialog}>Done</Button>
+              </Dialog.Actions>
+            </Dialog>
+          </Portal>
           {active === 10 ? (
             <View style={styles.saveButton}>
-              <ThemeButton title="Save" onPress={handleSave} />
+              <ThemeButton title="Save" onPress={showDialog} />
             </View>
           ) : (
             <View style={styles.iconsContainer}>
@@ -93,6 +146,7 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     padding: 10,
     paddingBottom: 30,
+    marginTop: 90,
   },
   numberList: {
     flexDirection: 'row',

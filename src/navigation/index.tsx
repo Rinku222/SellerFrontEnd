@@ -100,7 +100,6 @@ function ProfileStackScreens() {
       />
       <HomeStack.Screen component={About} name="About" options={{gestureEnabled: false}} />
       <HomeStack.Screen component={MyCourses} name="MyCourses" options={{gestureEnabled: false}} />
-      <HomeStack.Screen component={Quiz} name="Quiz" options={{gestureEnabled: false}} />
       <HomeStack.Screen
         component={MyCertificates}
         name="MyCertificates"
@@ -170,6 +169,8 @@ export default function AppNavigator() {
         <AppContainer.Screen component={AppScreens} name="App" options={{gestureEnabled: false}} />
         <AppContainer.Screen component={MainScreen} name="VideosScreen" />
         <AppContainer.Screen component={PDFExample} name="PDFScreen" />
+        <AppContainer.Screen component={Quiz} name="Quiz" />
+
         {/* <AppContainer.Screen component={Home} name="VideosScreen" /> */}
       </AppContainer.Navigator>
     </NavigationContainer>
