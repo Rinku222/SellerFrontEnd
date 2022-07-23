@@ -80,11 +80,14 @@ export async function fileUploadService(
   entityId: string,
   file: any,
 ) {
+  const response = await fetch(file);
+  const blob = await response.blob();
   return new Promise((resolve, reject) => {
     try {
-      // const extension = file.name.split('.').pop();
-      // Storage.put(`${directory}/${entityId}/${entityId}.${extension}`, file, {level: 'private'})
-      Storage.put(`${directory}/${entityId}/${entityId}.${extension}`, file, {level: 'private'})
+      Storage.put(`${directory}/${entityId}/${entityId}.${extension}`, blob, {
+        level: 'private',
+        contentType: `image/${extension}`,
+      })
         .then(result => {
           resolve(result);
         })

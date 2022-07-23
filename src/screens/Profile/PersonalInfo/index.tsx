@@ -1,8 +1,10 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 
 import {View, StyleSheet, Text, TouchableOpacity, Image} from 'react-native';
 import {launchImageLibrary, ImageLibraryOptions} from 'react-native-image-picker';
 import ObjectID from 'bson-objectid';
+import AntDesign from 'react-native-vector-icons/AntDesign';
+import {useSelector} from 'react-redux';
 import Email from '../../../assets/images/Change_email.png';
 import {AboutIcon, EmailIcon, LockIcon, PhoneIcon, UserIcon} from '../../../assets/svg';
 import {getFileExtension} from '../../../components/Download';
@@ -12,25 +14,15 @@ import TopHeader from '../../../components/TopHeader';
 import useImagePicker from '../../../components/useImagePicker';
 import {colors} from '../../../config/colors';
 import useUserActions from '../../../redux/actions/userActions';
-// const options = {
-//   title: 'Select Avatar',
-//   customButtons: [{name: 'fb', title: 'Choose Photo from Facebook'}],
-//   storageOptions: {
-//     skipBackup: true,
-//     path: 'images',
-//   },
-// };
+import {getIdentityId} from '../../../utils';
 
-const LIST = [
-  {icon: <PhoneIcon />, value: '+91 1122112212', path: 'change_phone', border: true},
-  {icon: <EmailIcon />, value: 'rinkupoonia162@gmail.com', path: 'change_email', border: true},
-  {icon: <LockIcon />, value: '*********', path: 'change_password', border: true},
-  {icon: <AboutIcon />, value: 'Help', path: 'about', border: false},
-];
+const s3BaseUrl = 'https://s3.ap-south-1.amazonaws.com/';
+
+const s3Bucket = 'medical-learning-development';
 
 function Row(props: any) {
   const {data, navigation} = props;
-  const {icon, value, path, border} = data;
+  const {icon, value, path, border, edit} = data;
 
   return (
     // eslint-disable-next-line react-native/no-inline-styles
@@ -39,7 +31,7 @@ function Row(props: any) {
         {icon}
         <Text style={styles.text}>{value}</Text>
       </View>
-      {border ? (
+      {border && !edit ? (
         <TouchableOpacity>
           <Text style={{color: colors.primary}} onPress={() => navigation.navigate(path)}>
             Edit
@@ -51,62 +43,76 @@ function Row(props: any) {
 }
 
 function PersonalInfo(props: any) {
-  const {openImagePicker} = useImagePicker();
-  const snackbar = useSnackbar();
+  const {uploadProfileImage, getUserData, updateUserData} = useUserActions();
 
-  const {uploadProfileImage} = useUserActions();
+  const {user} = useSelector(s => s.user);
 
-  // const onChoose = v => {
-  //   handleFileUpload(v);
-  // };
+  const {_id, displayName, email, phone, profileUrl} = user || {};
 
-  // const handleFileUpload = async file => {
-  //   const {name} = file;
-  //   const extension = getFileExtension(file.name);
-  //   file.name = `${name}.${extension}`;
-  //   // const formData = new FormData();
-  //   // formData.append('folder_id', folderId);
-  //   // formData.append('myfile[]', file);
-  //   // formData.append('project_id', project_id);
-  //   // await uploadRDFile(formData);
-  //   // toggleDialog();
-  //   snackbar.showMessage({
-  //     message: 'File Uploaded successfully!',
-  //     variant: 'success',
-  //   });
-  //   // loadFiles();
-  // };
+  const LIST = [
+    {
+      icon: <AntDesign name="user" size={20} />,
+      value: displayName,
+      path: 'change_name',
+      border: true,
+    },
+    {icon: <PhoneIcon />, value: `+91 ${phone}`, path: 'change_phone', border: true},
+    {
+      icon: <EmailIcon />,
+      value: email,
+      path: 'change_email',
+      border: true,
+      edit: true,
+    },
+    {icon: <LockIcon />, value: '*********', path: 'change_password', border: true},
+    {icon: <AboutIcon />, value: 'Help', path: 'about', border: false},
+  ];
+
+  console.log('----->user', user);
+
+  const loadData = async () => {
+    await getUserData();
+  };
+
+  useEffect(() => {
+    loadData();
+  }, []);
 
   const handleProfilePress = () => {
-    console.log('----->pressed');
-
     const entityId = ObjectID();
 
     const options: ImageLibraryOptions = {
       mediaType: 'photo',
       quality: 0.8,
     };
-    launchImageLibrary(options, response => {
-      const {uri, fileName, type} = response?.assets[0];
-      console.log('Response = ', response);
-      console.log('response.assets.uri = ', response.assets[0].uri);
-      const extension = response.assets[0].uri.split('.').pop();
 
-      const file = {
-        uri,
-        name: fileName,
-        type,
-      };
+    launchImageLibrary(options, async response => {
+      if (response && response?.assets && response?.assets.length) {
+        const {uri, fileName, type} = response?.assets[0] || {};
+        const extension = uri?.split('.').pop();
 
-      console.log('----->file', file);
+        const file = {
+          name: fileName,
+          uri,
+          type,
+        };
+        const result = await uploadProfileImage({
+          directory: 'user-assets',
+          entityId,
+          extension,
+          file: uri,
+        });
 
-      console.log('----->extension', extension);
-      uploadProfileImage({
-        directory: 'user-assets',
-        entityId,
-        extension,
-        file: response.assets[0].uri,
-      });
+        // const identityId = await getIdentityId();
+        // console.log('----->identityId', identityId);
+
+        // const newUrl = `${s3BaseUrl + s3Bucket}/private/${identityId}/${result?.value}`;
+
+        // console.log('----->newUrl', newUrl);
+        // await updateUserData({profileUrl: newUrl});
+        // await updateUserData({displayName: 'Rinku Poonia'});
+        // await getUserData();
+      }
     });
   };
 
@@ -119,12 +125,18 @@ function PersonalInfo(props: any) {
           </View>
           <View style={styles.profileIcon}>
             <TouchableOpacity style={styles.userIcon} onPress={() => handleProfilePress()}>
-              <View style={{padding: 30}}>
-                <UserIcon color={colors.white} height={50} width={50} />
-              </View>
-              <View style={styles.editText}>
-                <Text style={{color: colors.white}}>Edit</Text>
-              </View>
+              {profileUrl ? (
+                <Image source={{uri: profileUrl}} style={styles.profileImage} />
+              ) : (
+                <View>
+                  <View style={{padding: 30}}>
+                    <UserIcon color={colors.white} height={50} width={50} />
+                  </View>
+                  <View style={styles.editText}>
+                    <Text style={{color: colors.white}}>Edit</Text>
+                  </View>
+                </View>
+              )}
             </TouchableOpacity>
           </View>
         </View>
@@ -138,11 +150,9 @@ function PersonalInfo(props: any) {
         </View>
       </View>
 
-      {/* <Image source={Email} style={{width: 100, height: 100}} /> */}
-
-      <View style={styles.buttonView}>
+      {/* <View style={styles.buttonView}>
         <ThemeButton style={{paddingHorizontal: 30}} title="Save" />
-      </View>
+      </View> */}
     </View>
   );
 }
@@ -165,6 +175,12 @@ const styles = StyleSheet.create({
   list: {
     marginHorizontal: 20,
     marginTop: 30,
+  },
+  profileImage: {
+    width: 110,
+    height: 110,
+    overflow: 'hidden',
+    borderRadius: 100,
   },
   header: {
     marginTop: -20,
