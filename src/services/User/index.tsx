@@ -1,13 +1,18 @@
-import {fileUploadService} from '../HttpService/HttpService';
+import {fileUploadService, readService, updateService} from '../HttpService/HttpService';
 
 export default function useUserServices() {
   return {
     uploadProfileImage: data => {
       const {directory, entityId, file, extension} = data;
 
-      console.log('----->data in services', data);
-
       return fileUploadService(directory, extension, entityId, file);
+    },
+    getUserData: () => {
+      return readService(`/mentee`);
+    },
+    updateUserData: data => {
+      console.log('----->data inside update user', data);
+      return updateService(`/mentee`, {}, data);
     },
   };
 }

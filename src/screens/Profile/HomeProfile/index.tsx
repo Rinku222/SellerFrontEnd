@@ -5,6 +5,8 @@ import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import UserImage from '../../../assets/images/laps.png';
 import {UserIcon, CertificateIcon, ShareIcon, AboutIcon, CourseIcon} from '../../../assets/svg';
 import {colors} from '../../../config/colors';
+import loadingVariable from '../../../redux/selector';
+import {Loader} from '../../../../App';
 
 const List = [
   {
@@ -43,6 +45,12 @@ function RenderRow(props: any) {
 }
 
 function HomeProfile(props: any) {
+  const loading = loadingVariable();
+
+  if (loading) {
+    return <Loader />;
+  }
+
   return (
     <View>
       <Image source={UserImage} style={styles.profileImage} />

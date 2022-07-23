@@ -6,7 +6,7 @@ import useUserServices from '../../services/User';
 export default function useUserActions() {
   const dispatch = useDispatch();
 
-  const {uploadProfileImage} = useUserServices();
+  const {uploadProfileImage, getUserData, updateUserData} = useUserServices();
 
   return {
     getUserDetails: params =>
@@ -42,7 +42,35 @@ export default function useUserActions() {
         payload: async () => {
           try {
             const result = await uploadProfileImage(params);
-            console.log('----->result', result);
+            console.log('----->result.data', result);
+            // const identityId=await getIdentityId();
+            // const url=
+            // let audioUrl = s3BaseUrl + s3Bucket + "/private/" + identityId + "/" + res.key;}
+            return result.key;
+          } catch (error) {
+            console.log('----->error in UPLOAD_IMAGE action', error);
+          }
+        },
+      }),
+    getUserData: () =>
+      dispatch({
+        type: types.GET_USER_DATA,
+        payload: async () => {
+          try {
+            const result = await getUserData();
+            return result.data;
+          } catch (error) {
+            console.log('----->error in UPLOAD_IMAGE action', error);
+          }
+        },
+      }),
+    updateUserData: params =>
+      dispatch({
+        type: types.UPDATE_USER_DATA,
+        payload: async () => {
+          try {
+            const result = await updateUserData(params);
+            return result.data;
           } catch (error) {
             console.log('----->error in UPLOAD_IMAGE action', error);
           }
