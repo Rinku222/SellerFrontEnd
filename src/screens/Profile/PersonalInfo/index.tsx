@@ -68,8 +68,6 @@ function PersonalInfo(props: any) {
     {icon: <AboutIcon />, value: 'Help', path: 'about', border: false},
   ];
 
-  console.log('----->user', user);
-
   const loadData = async () => {
     await getUserData();
   };
@@ -102,16 +100,6 @@ function PersonalInfo(props: any) {
           extension,
           file: uri,
         });
-
-        // const identityId = await getIdentityId();
-        // console.log('----->identityId', identityId);
-
-        // const newUrl = `${s3BaseUrl + s3Bucket}/private/${identityId}/${result?.value}`;
-
-        // console.log('----->newUrl', newUrl);
-        // await updateUserData({profileUrl: newUrl});
-        // await updateUserData({displayName: 'Rinku Poonia'});
-        // await getUserData();
       }
     });
   };

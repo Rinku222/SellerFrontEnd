@@ -16,6 +16,9 @@ export default function useMainScreenActions() {
     readReviews,
     addReview,
     readFAQ,
+    readAssessment,
+    submitAssessment,
+    updateAssessment,
   } = useMainServices();
 
   return {
@@ -52,7 +55,6 @@ export default function useMainScreenActions() {
         type: types.GET_DESCRIPTIONS,
         payload: async () => {
           try {
-            console.log('----->params in get getDescriptions', params);
             const response = await getDescriptions(params);
             const {data} = response;
 
@@ -67,7 +69,6 @@ export default function useMainScreenActions() {
         type: types.ADD_NOTE,
         payload: async () => {
           try {
-            console.log('----->params in get getDescriptions', params);
             const response = await addNote(params);
             const {data} = response;
 
@@ -82,7 +83,6 @@ export default function useMainScreenActions() {
         type: types.READ_NOTES,
         payload: async () => {
           try {
-            console.log('----->params in get getDescriptions', params);
             const response = await readNotes(params);
             const {data} = response;
 
@@ -97,7 +97,6 @@ export default function useMainScreenActions() {
         type: types.DELETE_NOTE,
         payload: async () => {
           try {
-            console.log('----->params in get getDescriptions', params);
             const response = await deleteNote(params);
             const {data} = response;
 
@@ -112,7 +111,6 @@ export default function useMainScreenActions() {
         type: types.UPDATE_NOTE,
         payload: async () => {
           try {
-            console.log('----->params in get getDescriptions', params);
             const response = await updateNote(params);
             const {data} = response;
 
@@ -178,5 +176,55 @@ export default function useMainScreenActions() {
           }
         },
       }),
+    readAssessment: params =>
+      dispatch({
+        type: types.READ_ASSESSMENT,
+        payload: async () => {
+          try {
+            const response = await readAssessment(params);
+            const {data} = response;
+
+            return Promise.resolve(data);
+          } catch (error) {
+            console.log('----->error in reducer', error);
+          }
+        },
+      }),
+    submitAssessment: params =>
+      dispatch({
+        type: types.SUBMIT_ASSESSMENT,
+        payload: async () => {
+          try {
+            const response = await submitAssessment(params);
+            const {data} = response;
+
+            return Promise.resolve(data);
+          } catch (error) {
+            console.log('----->error in reducer', error);
+          }
+        },
+      }),
+    updateAssessment: params =>
+      dispatch({
+        type: types.SUBMIT_ASSESSMENT,
+        payload: async () => {
+          try {
+            const response = await updateAssessment(params);
+            const {data} = response;
+
+            return Promise.resolve(data);
+          } catch (error) {
+            console.log('----->error in reducer', error);
+          }
+        },
+      }),
+    setCourseId: params => {
+      console.log('----->params in setcourse', params);
+      const {courseId} = params;
+      dispatch({
+        type: types.SET_COURSE_ID,
+        payload: courseId,
+      });
+    },
   };
 }

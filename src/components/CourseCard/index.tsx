@@ -1,12 +1,14 @@
 import React from 'react';
 import {TouchableOpacity, View, Image, Text, StyleSheet} from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import {useSelector} from 'react-redux';
 import {AboutIcon, PlayVideoIcon, AchievementIcon} from '../../assets/svg';
 import {colors} from '../../config/colors';
 import {getShadow} from '../../utils';
 import useWishlistActions from '../../redux/actions/wishlistActions';
 import homeActions from '../../redux/actions/homeActions';
 import useSearchActions from '../../redux/actions/searchActions';
+import useMainScreenActions from '../../redux/actions/mainScreenActions';
 
 // cards-heart
 
@@ -78,10 +80,11 @@ function RenderCourseBar(props) {
 }
 
 function CourseCard(props) {
-  const {course, data, myCourse, searchName = '', selected = '', onPress} = props;
+  const {course, data, myCourse, searchName = '', selected = '', onPress, navigation} = props;
 
   const {addWishlist, getWishlist, deleteWishlist} = useWishlistActions();
   const {getAllSearchedCourses} = useSearchActions();
+  const {setCourseId} = useMainScreenActions();
 
   const {getHomeCourses} = homeActions();
 
@@ -122,7 +125,13 @@ function CourseCard(props) {
   };
 
   return (
-    <TouchableOpacity style={styles.cardMainContainer} onPress={onPress}>
+    <TouchableOpacity
+      style={styles.cardMainContainer}
+      onPress={async () => {
+        // onPress();
+        await setCourseId({courseId});
+        navigation.navigate('VideosScreen');
+      }}>
       <View style={styles.topImageView}>
         <Image
           source={{

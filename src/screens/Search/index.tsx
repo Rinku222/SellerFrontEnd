@@ -35,7 +35,7 @@ function RenderCourses(props) {
         numColumns={2}
         renderItem={({item}) => (
           <View style={{margin: 5, width: '47%'}}>
-            <CourseCard data={item} />
+            <CourseCard data={item} {...props} />
           </View>
         )}
       />
@@ -43,7 +43,7 @@ function RenderCourses(props) {
   );
 }
 
-function Search() {
+function Search(props) {
   const {getAllCourseCategories, getAllSearchedCourses} = searchActions();
 
   const [searchText, setSearchText] = useState('');
@@ -118,7 +118,7 @@ function Search() {
         </View>
       ) : (
         <View style={styles.renderCourse}>
-          <RenderCourses course={course} />
+          <RenderCourses course={course} {...props} />
         </View>
       )}
     </View>

@@ -11,7 +11,6 @@ export default function useUserServices() {
       return readService(`/mentee`);
     },
     updateUserData: data => {
-      console.log('----->data inside update user', data);
       return updateService(`/mentee`, {}, data);
     },
   };

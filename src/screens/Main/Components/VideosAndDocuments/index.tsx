@@ -53,20 +53,28 @@ function Tabs(props: any) {
 
 function AssignmentSection(props: any) {
   const {navigation} = props;
+  const {assessment} = useSelector(s => s.main);
+  console.log('----->assessment', assessment);
+  const {assessmentTitle, attendStatus} = assessment || {};
+
+  console.log('----->attendedStatus', attendStatus);
+
+  const {attendedCount, totalMarks, totalQuestions} = attendStatus || {};
+
   return (
     <TouchableOpacity
       style={styles.assignmentContainer}
       onPress={() => navigation.navigate('Quiz')}>
       <View>
         <View style={styles.assignmentSection}>
-          <Text style={styles.assignmentText}>Assignment</Text>
-          <View style={styles.creditsContainer}>
-            <Text style={styles.creditsText}>Credits 00</Text>
-            <Caption>/20</Caption>
-          </View>
+          <Text style={styles.assignmentText}>{assessmentTitle}</Text>
         </View>
         <View style={styles.attempts}>
-          <Caption>Attempts: 00/04</Caption>
+          <Caption>Attempts:{attendedCount}</Caption>
+          <View style={styles.creditsContainer}>
+            <Text style={styles.creditsText}>Credits {totalMarks}</Text>
+            <Caption>/{totalQuestions}</Caption>
+          </View>
         </View>
       </View>
 
@@ -82,8 +90,6 @@ function DropDownSection(props: any) {
 
   const {_id, courseId, description, sectionId, thumbnailUrl, transcript, videoTitle, videoUrl} =
     item;
-
-  console.log('----->_id', _id);
 
   const [show, setShow] = useState(false);
 
@@ -180,17 +186,21 @@ function DropDownList(props: any) {
     setVideoId,
     setSectionId,
     addRecentVideo,
+    readAssessment,
   } = props;
 
   const {sectionTitle, credits, _id} = item;
 
   const [expanded, setExpanded] = useState(false);
+  const selector = useSelector(s => s.main.assessment);
 
   const handlePress = async () => {
     if (courseBought) {
       setExpanded(!expanded);
     }
     if (!expanded) {
+      await readAssessment({courseId, sectionId: _id});
+
       await getVideos({courseId, sectionId: _id, limit: 20, offset: 0});
     }
   };
@@ -234,10 +244,8 @@ function DropDownList(props: any) {
 function DocumentsAndVideos(props: any) {
   const {courseBought, courseId} = props;
 
-  console.log('-------->props', props);
-
   const {sections, videoLoading} = useSelector(s => s.main);
-  const {getVideos, addRecentVideo} = useMainScreenActions();
+  const {getVideos, addRecentVideo, readAssessment} = useMainScreenActions();
 
   const {videos} = useSelector(s => s.main);
 
@@ -252,6 +260,7 @@ function DocumentsAndVideos(props: any) {
             {...props}
             addRecentVideo={addRecentVideo}
             getVideos={getVideos}
+            readAssessment={readAssessment}
             videoLoading={videoLoading}
             videos={videos}
           />
@@ -384,6 +393,8 @@ const styles = StyleSheet.create({
   },
   attempts: {
     padding: 5,
+    display: 'flex',
+    flexDirection: 'row',
   },
 });
 

@@ -28,9 +28,7 @@ export default function useUserActions() {
         type: types.GET_NEW_TOKEN,
         payload: async () => {
           try {
-            // user.signInUserSession.idToken.jwtToken
             console.log('----->payload called');
-            // return Promise.resolve(response);
           } catch (error) {
             console.log('----->error in reducer', error);
           }
@@ -42,10 +40,6 @@ export default function useUserActions() {
         payload: async () => {
           try {
             const result = await uploadProfileImage(params);
-            console.log('----->result.data', result);
-            // const identityId=await getIdentityId();
-            // const url=
-            // let audioUrl = s3BaseUrl + s3Bucket + "/private/" + identityId + "/" + res.key;}
             return result.key;
           } catch (error) {
             console.log('----->error in UPLOAD_IMAGE action', error);

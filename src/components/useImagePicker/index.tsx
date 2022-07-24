@@ -20,7 +20,6 @@ const CAMERA_OPTIONS = {
 const processImage = res => {
   const {assets} = res;
   if (!assets?.length) {
-    console.log('ImagePicker Error: ', res);
     return {};
   }
   const data = {
@@ -33,14 +32,12 @@ const processImage = res => {
 const handleImagePicker = ({type, onChoose}) => {
   launchImageLibrary(CAMERA_OPTIONS, res => {
     const data = processImage(res);
-    console.log('-----> data', data);
     onChoose(data);
   });
 };
 const handleCamera = ({type, onChoose}) => {
   launchCamera(CAMERA_OPTIONS, res => {
     const data = processImage(res);
-    console.log('-----> data', data);
     onChoose(data);
   });
 };
@@ -67,7 +64,6 @@ async function processFiles(res) {
     // const stat = await RNFS.stat(DEST_PATH);
     const processedUri = Platform.OS === 'ios' ? res.uri : `file:///${res.uri}`;
     const data = {uri: processedUri, type, name};
-    console.log('----->data ', data);
     return data;
   } catch (error) {
     console.log('-----> error', error);
@@ -87,12 +83,10 @@ const handleFilePicker = async ({type, multiple, onChoose}) => {
       data = await Promise.all(res.map(async item => processFiles(item)));
     } else {
       const res = await DocumentPicker.pick({type: fileTypes});
-      console.log('----->res ', res);
       data = await processFiles(res[0]);
     }
     onChoose(data);
   } catch (err) {
-    console.log('----->err ', err);
     if (DocumentPicker.isCancel(err)) {
       // User cancelled the picker, exit any dialogs or menus and move on
     } else {

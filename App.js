@@ -7,7 +7,7 @@ import {Provider as PaperProvider} from 'react-native-paper';
 import AppNavigator from './src/navigation';
 import awsConfig from './src/config/amplifyConfig/awsConfig';
 import {store} from './src/redux/store';
-import {AlertProvider} from './src/components/Alert';
+// import {AlertProvider} from './src/components/Alert';
 
 Amplify.configure(awsConfig);
 
@@ -27,11 +27,11 @@ function App() {
   return (
     <StoreProvider store={store}>
       <PaperProvider>
-        <AlertProvider>
-          <Suspense fallback={<Loader />}>
-            <AppNavigator />
-          </Suspense>
-        </AlertProvider>
+        {/* <AlertProvider> */}
+        <Suspense fallback={<Loader />}>
+          <AppNavigator />
+        </Suspense>
+        {/* </AlertProvider> */}
       </PaperProvider>
     </StoreProvider>
   );

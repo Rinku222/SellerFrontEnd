@@ -56,10 +56,38 @@ export default function useMainServices() {
       return readService(`/faq?courseId=${courseId}&offset=${offSet}&limit=${limit}`);
     },
     setVideoTime: data => {
-      const {courseId, videoId, duration} = data;
-      console.log('----->data', data);
-      const sectionId = '62b43d5009b03c0009d4bb1e';
+      const {courseId, sectionId, videoId, duration} = data;
+      // const sectionId = '62b43d5009b03c0009d4bb1e';
       return createService(`/video/history`, {courseId, videoId, duration, sectionId});
+    },
+    readAssessment: data => {
+      const {courseId, sectionId} = data;
+      return readService(`/assessment?courseId=${courseId}&sectionId=${sectionId}`);
+    },
+    submitAssessment: data => {
+      const {questions, assessmentId} = data;
+      const newArray = questions.map((item, index) => {
+        const picked = (({questionId, optionId}) => ({questionId, optionId}))(item);
+        return picked;
+      });
+
+      return createService(`/assessment/answer`, {questions: newArray, assessmentId});
+    },
+    updateAssessment: data => {
+      const {questions, assessmentId, sessionId} = data;
+      const newArray = questions.map((item, index) => {
+        const picked = (({questionId, optionId}) => ({questionId, optionId}))(item);
+        return picked;
+      });
+
+      return updateService(
+        `/assessment/answer?sessionId=${sessionId}`,
+        {},
+        {
+          questions: newArray,
+          assessmentId,
+        },
+      );
     },
   };
 }

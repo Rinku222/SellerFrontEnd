@@ -32,10 +32,7 @@ export async function createService(endpoint: string, body = {}, params = {}) {
       return res;
     })
     .catch(error => {
-      console.log(`create data error is${JSON.stringify(error)}`);
       if (error.response) {
-        console.log(error.response);
-        console.log('server responded');
         return error.response;
       }
     });

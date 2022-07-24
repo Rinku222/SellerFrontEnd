@@ -10,6 +10,8 @@ import {screenHeight} from '../../config/globalStyles';
 import {colors} from '../../config/colors';
 import {createService, Authorization} from '../../services/HttpService/HttpService';
 import useUserActions from '../../redux/actions/userActions';
+import {Loader} from '../../../App';
+// import
 
 const ANIMATION_DURATION = 500;
 
@@ -26,6 +28,7 @@ function Login(props) {
   const [confirmPasswordForSignUp, setConfirmPasswordForSignUp] = useState('');
   const [confirmPasswordForSignUpError, setConfirmPasswordForSignUpError] = useState('');
   const [passwordForSignUpError, setPasswordForSignUpError] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const [emailPhoneForLogin, setEmailPhoneForLogin] = useState('');
   const [passwordForLogin, setPasswordForLogin] = useState('');
@@ -149,8 +152,8 @@ function Login(props) {
   const renderLogin = () => {
     async function signIn() {
       try {
+        setLoading(true);
         const user = await Auth.signIn(emailPhoneForLogin, passwordForLogin);
-        console.log('----->user in sign in', user);
         await getUserDetails({emailPhoneForLogin, passwordForLogin});
         const Authorization1 = user.signInUserSession.idToken.jwtToken;
 
@@ -158,7 +161,7 @@ function Login(props) {
           Authorization1,
         });
       } catch (error) {
-        console.log('----->error', error);
+        setLoading(false);
         if (error.name === 'UserNotConfirmedException') {
           navigation.navigate('mail_verification', {
             emailPhoneForSignUp: emailPhoneForLogin,
@@ -223,6 +226,7 @@ function Login(props) {
 
       if (valid) {
         try {
+          setLoading(true);
           const {user} = await Auth.signUp({
             username: emailPhoneForSignUp,
             password: confirmPasswordForSignUp,
@@ -234,8 +238,6 @@ function Login(props) {
           });
 
           if (user) {
-            console.log('----->user', user);
-
             const body = {
               displayName: nameForSignUp,
               email: emailPhoneForLogin,
@@ -253,9 +255,10 @@ function Login(props) {
               otherParam: 'anything you want here',
             });
           }
+          setLoading(false);
         } catch (error) {
-          console.log('error signing up:', JSON.stringify(error));
-          console.log('error error up:', error);
+          // console.log('error signing up:', JSON.stringify(error));
+          // console.log('error error up:', error);
         }
       }
     };
@@ -313,6 +316,10 @@ function Login(props) {
       </>
     );
   };
+
+  if (loading) {
+    return <Loader />;
+  }
 
   return (
     <View style={styles.container}>

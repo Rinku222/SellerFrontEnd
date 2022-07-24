@@ -35,3 +35,7 @@ export const UPDATE_NOTE = 'UPDATE_NOTE';
 export const READ_REVIEWS = 'READ_REVIEWS';
 export const ADD_REVIEW = 'ADD_REVIEW';
 export const READ_FAQ = 'READ_FAQ';
+export const READ_ASSESSMENT = 'READ_ASSESSMENT';
+export const SUBMIT_ASSESSMENT = 'SUBMIT_ASSESSMENT';
+export const UPDATE_ASSESSMENT = 'UPDATE_ASSESSMENT';
+export const SET_COURSE_ID = 'SET_COURSE_ID';

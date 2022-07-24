@@ -60,12 +60,7 @@ function Video(props) {
         ListEmptyComponent={() => <RenderEmpty navigation={navigation} />}
         renderItem={({item}) => (
           <View style={{margin: 5}}>
-            <CourseCard
-              course
-              myCourse
-              data={item}
-              onPress={() => navigation.navigate('VideosScreen', {courseId: item.courseId})}
-            />
+            <CourseCard course myCourse data={item} {...props} />
           </View>
         )}
       />

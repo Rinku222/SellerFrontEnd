@@ -16,7 +16,7 @@ function MyCertificates(props) {
             data={DATA}
             keyExtractor={item => item.toString()}
             numColumns={2}
-            renderItem={() => <CourseCard />}
+            renderItem={item => <CourseCard data={item} {...props} />}
           />
         </ScrollView>
       </View>

@@ -102,8 +102,6 @@ function BottomIcon(props: BottomIconProps) {
 
   const handlePress = async () => {
     if (noteId) {
-      console.log('----->call update api');
-      console.log('----->noteId', noteId);
       await updateNote({stickynoteId: noteId, stickyTitle, description, videoId});
     } else {
       await addNote({stickyTitle, description, videoId});
