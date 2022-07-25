@@ -3,6 +3,8 @@
 export const GET_USER_DETAILS = 'GET_USER_DETAILS';
 export const GET_NEW_TOKEN = 'GET_NEW_TOKEN';
 export const UPLOAD_IMAGE = 'UPLOAD_IMAGE';
+export const GET_USER_DATA = 'GET_USER_DATA';
+export const UPDATE_USER_DATA = 'UPDATE_USER_DATA';
 
 // For Home Screen
 
@@ -33,3 +35,7 @@ export const UPDATE_NOTE = 'UPDATE_NOTE';
 export const READ_REVIEWS = 'READ_REVIEWS';
 export const ADD_REVIEW = 'ADD_REVIEW';
 export const READ_FAQ = 'READ_FAQ';
+export const READ_ASSESSMENT = 'READ_ASSESSMENT';
+export const SUBMIT_ASSESSMENT = 'SUBMIT_ASSESSMENT';
+export const UPDATE_ASSESSMENT = 'UPDATE_ASSESSMENT';
+export const SET_COURSE_ID = 'SET_COURSE_ID';

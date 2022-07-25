@@ -70,13 +70,15 @@ function OnGoingCourses(props) {
   );
 }
 
-function RenderRecommended({recommended}) {
+function RenderRecommended(props) {
+  const {recommended} = props;
+
   return (
     <ScrollView horizontal style={{marginTop: 10}}>
       <View style={{flexDirection: 'row'}}>
         {recommended?.map(item => (
           <View style={{width: 200, margin: 5}}>
-            <CourseCard data={item} />
+            <CourseCard data={item} {...props} />
           </View>
         ))}
       </View>
@@ -84,7 +86,7 @@ function RenderRecommended({recommended}) {
   );
 }
 
-function Home({route}) {
+function Home(props) {
   const firstName = useSelector(s => s.user.userData?.username) || '';
 
   const loading = loadingVariable();
@@ -115,7 +117,7 @@ function Home({route}) {
         <View style={{flex: 1}}>
           <OnGoingCourses subscribedCourses={subscribedCourses} />
           <View>
-            <RenderRecommended recommended={allCourses} />
+            <RenderRecommended recommended={allCourses} {...props} />
           </View>
         </View>
       </ScrollView>

@@ -71,7 +71,6 @@ export async function downloadFile(params) {
       return {base64, dir: downloadDir};
     })
     .catch(async error => {
-      console.log('-----> error', error);
       throw error;
     });
 }
@@ -93,16 +92,7 @@ export async function downloadPdf(data, fileUrl, getBase64) {
   return RNFetchBlob.config(options)
     .fetch('POST', fileUrl, {Authorization}, data)
     .then(async res => {
-      // Alert after successful downloading
       console.log('-------->res', res);
-      // const downloadDir = normalizeFilePath(res.data);
-      // let base64;
-      // if (getBase64) {
-      //   const base64Data = await RNFS.readFile(downloadDir, 'base64');
-      //   const mimeType = mime.lookup(file.file_name);
-      //   base64 = `data:${mimeType};base64,${base64Data}`;
-      // }
-      // return {base64, dir: downloadDir};
     })
     .catch(async error => {
       console.log('-----> error', error);

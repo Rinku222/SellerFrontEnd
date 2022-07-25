@@ -1,16 +1,14 @@
 import React, {useState} from 'react';
 import {View, StyleSheet, Text, TouchableOpacity, Image, ScrollView} from 'react-native';
-import {ActivityIndicator, List} from 'react-native-paper';
+import {ActivityIndicator, Caption, List} from 'react-native-paper';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {useSelector} from 'react-redux';
 import {colors} from '../../../../config/colors';
 import {getShadow} from '../../../../config/globalStyles';
-import UserImage from '../../../../assets/images/laps.png';
 import {DownArrowIcon, PlayVideoIcon, UpArrowIcon} from '../../../../assets/svg';
 import useMainScreenActions from '../../../../redux/actions/mainScreenActions';
-import {ADD_RECENT_VIDEO} from '../../../../redux/actions/actionTypes';
 
-function Tabs(props) {
+function Tabs(props: any) {
   const {description, transcript} = props;
   const [selected, setSelected] = useState(1);
 
@@ -53,26 +51,45 @@ function Tabs(props) {
   );
 }
 
-function DropDownSection(props) {
+function AssignmentSection(props: any) {
+  const {navigation} = props;
+  const {assessment} = useSelector(s => s.main);
+  console.log('----->assessment', assessment);
+  const {assessmentTitle, attendStatus} = assessment || {};
+
+  console.log('----->attendedStatus', attendStatus);
+
+  const {attendedCount, totalMarks, totalQuestions} = attendStatus || {};
+
+  return (
+    <TouchableOpacity
+      style={styles.assignmentContainer}
+      onPress={() => navigation.navigate('Quiz')}>
+      <View>
+        <View style={styles.assignmentSection}>
+          <Text style={styles.assignmentText}>{assessmentTitle}</Text>
+        </View>
+        <View style={styles.attempts}>
+          <Caption>Attempts:{attendedCount}</Caption>
+          <View style={styles.creditsContainer}>
+            <Text style={styles.creditsText}>Credits {totalMarks}</Text>
+            <Caption>/{totalQuestions}</Caption>
+          </View>
+        </View>
+      </View>
+
+      <PlayVideoIcon height={30} width={30} />
+    </TouchableOpacity>
+  );
+}
+
+function DropDownSection(props: any) {
   const completed = '20%';
 
   const {item, setVideo, setVideoId, addRecentVideo, setSectionId} = props;
 
-  const {
-    _id,
-    courseId,
-    description,
-    documentUrl,
-    duration,
-    order,
-    sectionId,
-    thumbnailUrl,
-    transcript,
-    videoTitle,
-    videoUrl,
-  } = item;
-
-  console.log('----->_id', _id);
+  const {_id, courseId, description, sectionId, thumbnailUrl, transcript, videoTitle, videoUrl} =
+    item;
 
   const [show, setShow] = useState(false);
 
@@ -99,6 +116,7 @@ function DropDownSection(props) {
             <PlayVideoIcon height={30} width={30} />
           </View>
         </TouchableOpacity>
+
         <TouchableOpacity style={styles.dropDownSubContainer} onPress={() => setShow(!show)}>
           <View style={styles.videoTitle}>
             <Text style={styles.videoTitleText}>{videoTitle}</Text>
@@ -109,6 +127,7 @@ function DropDownSection(props) {
           </View>
           <View style={styles.videoStatusBar}>
             <View
+              // eslint-disable-next-line react-native/no-inline-styles
               style={{
                 height: 8,
                 width: completed,
@@ -123,6 +142,7 @@ function DropDownSection(props) {
           </View>
         </TouchableOpacity>
       </View>
+
       <View>{show ? <Tabs description={description} transcript={transcript} /> : null}</View>
     </View>
   );
@@ -166,17 +186,21 @@ function DropDownList(props: any) {
     setVideoId,
     setSectionId,
     addRecentVideo,
+    readAssessment,
   } = props;
 
   const {sectionTitle, credits, _id} = item;
 
   const [expanded, setExpanded] = useState(false);
+  const selector = useSelector(s => s.main.assessment);
 
   const handlePress = async () => {
     if (courseBought) {
       setExpanded(!expanded);
     }
     if (!expanded) {
+      await readAssessment({courseId, sectionId: _id});
+
       await getVideos({courseId, sectionId: _id, limit: 20, offset: 0});
     }
   };
@@ -210,6 +234,8 @@ function DropDownList(props: any) {
             );
           })
         )}
+
+        <AssignmentSection {...props} />
       </List.Accordion>
     </View>
   );
@@ -219,7 +245,7 @@ function DocumentsAndVideos(props: any) {
   const {courseBought, courseId} = props;
 
   const {sections, videoLoading} = useSelector(s => s.main);
-  const {getVideos, addRecentVideo} = useMainScreenActions();
+  const {getVideos, addRecentVideo, readAssessment} = useMainScreenActions();
 
   const {videos} = useSelector(s => s.main);
 
@@ -234,6 +260,7 @@ function DocumentsAndVideos(props: any) {
             {...props}
             addRecentVideo={addRecentVideo}
             getVideos={getVideos}
+            readAssessment={readAssessment}
             videoLoading={videoLoading}
             videos={videos}
           />
@@ -335,6 +362,39 @@ const styles = StyleSheet.create({
     backgroundColor: colors.themeGray,
     borderRadius: 10,
     position: 'relative',
+  },
+  assignmentContainer: {
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    backgroundColor: colors.backgroundGrey,
+    ...getShadow(1),
+    borderRadius: 5,
+    // marginBottom: 5,
+    paddingHorizontal: 20,
+    margin: 10,
+    alignItems: 'center',
+  },
+  assignmentSection: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 5,
+  },
+  assignmentText: {
+    fontSize: 13,
+  },
+  creditsContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  creditsText: {
+    marginLeft: 20,
+    fontSize: 13,
+  },
+  attempts: {
+    padding: 5,
+    display: 'flex',
+    flexDirection: 'row',
   },
 });
 

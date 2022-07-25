@@ -1,17 +1,7 @@
-import React, {useCallback, useEffect, useLayoutEffect, useRef, useState} from 'react';
-import {
-  View,
-  StyleSheet,
-  Text,
-  Animated,
-  TouchableWithoutFeedback,
-  ScrollView,
-  Image,
-  TouchableOpacity,
-} from 'react-native';
+import React, {useEffect, useRef, useState} from 'react';
+import {View, StyleSheet, Text, Animated, TouchableWithoutFeedback, ScrollView} from 'react-native';
 import {NavigationState, SceneRendererProps, TabView} from 'react-native-tab-view';
 import VideoPlayer from 'react-native-video-controls';
-import Feather from 'react-native-vector-icons/Feather';
 import {useSelector} from 'react-redux';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {colors} from '../../config/colors';
@@ -24,10 +14,8 @@ import Reviews from './Components/Reviews';
 import TermsAndFAQ from './Components/TermsAndFAQ';
 import DocumentsAndVideos from './Components/VideosAndDocuments';
 import {UsersIcon} from '../../assets/svg';
-import LikeImage from '../../assets/images/likeImage.png';
 import useMainScreenActions from '../../redux/actions/mainScreenActions';
 import useMainServices from '../../services/Main';
-import {readService} from '../../services/HttpService/HttpService';
 
 type Route = {
   key: string;
@@ -96,7 +84,9 @@ function MainScreen(props: any) {
   const {route} = props;
   const {params} = route;
 
-  const {courseId} = params;
+  // const {courseId} = params;
+
+  const courseId = useSelector(s => s.main.courseId);
 
   const {setVideoTime} = useMainServices();
 
@@ -122,7 +112,7 @@ function MainScreen(props: any) {
   } = descriptions || {};
 
   const {videoUrl, _id} = recentVideo || {};
-  const _sectionId = recentVideo.sectionId || {};
+  const _sectionId = recentVideo?.sectionId || {};
 
   const {getSections, getDescriptions, readReviews, addReview, readFAQ} = useMainScreenActions();
 
@@ -134,10 +124,8 @@ function MainScreen(props: any) {
 
   const courseBought = true;
 
-  console.log('----->sectionId', sectionId);
-
   const loadData = async () => {
-    await getDescriptions({courseId, offset: 0, limit: 20});
+    getDescriptions({courseId, offset: 0, limit: 20});
     getSections({courseId, offset: 0, limit: 20});
     readReviews({courseId, offset: 0, limit: 20});
     readFAQ({courseId, offSet: 0, limit: 20});
@@ -182,6 +170,7 @@ function MainScreen(props: any) {
       case '0':
         return (
           <DocumentsAndVideos
+            {...props}
             courseBought={courseBought}
             courseId={courseId}
             setSectionId={handleSectionId}

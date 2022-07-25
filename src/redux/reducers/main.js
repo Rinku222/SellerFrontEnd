@@ -12,10 +12,15 @@ import {
   READ_REVIEWS,
   ADD_REVIEW,
   READ_FAQ,
+  READ_ASSESSMENT,
+  SUBMIT_ASSESSMENT,
+  UPDATE_ASSESSMENT,
+  SET_COURSE_ID,
 } from '../actions/actionTypes';
 
 const initialState = {
   mainLoading: false,
+  courseId: '',
   videoLoading: false,
   sections: [],
   videos: [],
@@ -23,7 +28,9 @@ const initialState = {
   descriptions: {},
   reviews: [],
   FAQ: [],
+  assessment: {},
   errorMessage: undefined,
+  assessmentResult: {},
 };
 
 const reducer = (state = initialState, action = {}) => {
@@ -31,6 +38,12 @@ const reducer = (state = initialState, action = {}) => {
 
   switch (type) {
     // RESET data on project change
+
+    case 'SET_COURSE_ID':
+      return {
+        ...state,
+        courseId: payload,
+      };
 
     case `${GET_SECTIONS}_PENDING`:
       return {
@@ -50,6 +63,7 @@ const reducer = (state = initialState, action = {}) => {
         mainLoading: false,
         errorMessage: payload,
       };
+
     case `${GET_VIDEOS}_PENDING`:
       return {
         ...state,
@@ -117,6 +131,60 @@ const reducer = (state = initialState, action = {}) => {
       };
     }
     case `${READ_REVIEWS}_REJECTED`:
+      return {
+        ...state,
+        mainLoading: false,
+        errorMessage: payload,
+      };
+    case `${READ_ASSESSMENT}_PENDING`:
+      return {
+        ...state,
+        mainLoading: true,
+      };
+    case `${READ_ASSESSMENT}_FULFILLED`: {
+      return {
+        ...state,
+        mainLoading: false,
+        assessment: payload,
+      };
+    }
+    case `${READ_ASSESSMENT}_REJECTED`:
+      return {
+        ...state,
+        mainLoading: false,
+        errorMessage: payload,
+      };
+    case `${SUBMIT_ASSESSMENT}_PENDING`:
+      return {
+        ...state,
+        mainLoading: true,
+      };
+    case `${SUBMIT_ASSESSMENT}_FULFILLED`: {
+      return {
+        ...state,
+        mainLoading: false,
+        assessmentResult: payload,
+      };
+    }
+    case `${SUBMIT_ASSESSMENT}_REJECTED`:
+      return {
+        ...state,
+        mainLoading: false,
+        errorMessage: payload,
+      };
+    case `${UPDATE_ASSESSMENT}_PENDING`:
+      return {
+        ...state,
+        mainLoading: true,
+      };
+    case `${UPDATE_ASSESSMENT}_FULFILLED`: {
+      return {
+        ...state,
+        mainLoading: false,
+        assessmentResult: payload,
+      };
+    }
+    case `${UPDATE_ASSESSMENT}_REJECTED`:
       return {
         ...state,
         mainLoading: false,

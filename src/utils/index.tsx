@@ -1,3 +1,5 @@
+import {Auth} from 'aws-amplify';
+
 export function getShadow(depth: number) {
   return {
     shadowColor: '#000',
@@ -10,3 +12,11 @@ export function getShadow(depth: number) {
     elevation: depth,
   };
 }
+
+export const getIdentityId = async () => {
+  return Auth.currentUserCredentials().then(res => {
+    return res.identityId;
+  });
+};
+
+const s3BaseUrl = 'https://s3.ap-south-1.amazonaws.com/';

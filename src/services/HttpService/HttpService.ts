@@ -32,10 +32,7 @@ export async function createService(endpoint: string, body = {}, params = {}) {
       return res;
     })
     .catch(error => {
-      console.log(`create data error is${JSON.stringify(error)}`);
       if (error.response) {
-        console.log(error.response);
-        console.log('server responded');
         return error.response;
       }
     });
@@ -80,11 +77,14 @@ export async function fileUploadService(
   entityId: string,
   file: any,
 ) {
+  const response = await fetch(file);
+  const blob = await response.blob();
   return new Promise((resolve, reject) => {
     try {
-      // const extension = file.name.split('.').pop();
-      // Storage.put(`${directory}/${entityId}/${entityId}.${extension}`, file, {level: 'private'})
-      Storage.put(`${directory}/${entityId}/${entityId}.${extension}`, file, {level: 'private'})
+      Storage.put(`${directory}/${entityId}/${entityId}.${extension}`, blob, {
+        level: 'private',
+        contentType: `image/${extension}`,
+      })
         .then(result => {
           resolve(result);
         })

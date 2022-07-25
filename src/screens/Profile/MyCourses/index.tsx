@@ -28,7 +28,7 @@ function MyCourses(props) {
             data={courses}
             keyExtractor={item => item.toString()}
             numColumns={2}
-            renderItem={({item}) => <CourseCard course data={item} />}
+            renderItem={({item}) => <CourseCard course data={item} {...props} />}
           />
         </ScrollView>
       </View>
