@@ -1,7 +1,7 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {View, Text, Image, StyleSheet, ScrollView, TouchableOpacity} from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import {Button, Paragraph, Dialog, Portal, Provider} from 'react-native-paper';
+import {Button, Paragraph, Dialog, Portal, Provider, ActivityIndicator} from 'react-native-paper';
 import {useSelector} from 'react-redux';
 import {colors} from '../../config/colors';
 import UserImage from '../../assets/images/laps.png';
@@ -14,11 +14,15 @@ function RenderRow(props) {
 
   const {_id, amount, courseId, courseTitle, coverImageUrl, duration, totalLession} = data;
 
+  const [loader, setLoader] = useState(false);
+
   const {deleteWishlist, getWishlist} = useWishlistActions();
 
   const handleDeleteWishlist = async () => {
+    setLoader(true);
     await deleteWishlist({wishlistId: _id});
     await getWishlist();
+    setLoader(false);
   };
 
   return (
@@ -32,9 +36,13 @@ function RenderRow(props) {
       <View style={styles.subContainer}>
         <View style={styles.itemHeading}>
           <Text style={styles.colorBlack}>{courseTitle}</Text>
-          <TouchableOpacity onPress={handleDeleteWishlist}>
-            <MaterialCommunityIcons color={colors.primary} name="cards-heart" size={20} />
-          </TouchableOpacity>
+          {loader ? (
+            <ActivityIndicator animating color={colors.primary} size="small" />
+          ) : (
+            <TouchableOpacity onPress={handleDeleteWishlist}>
+              <MaterialCommunityIcons color={colors.primary} name="cards-heart" size={20} />
+            </TouchableOpacity>
+          )}
         </View>
         <View style={styles.itemReview}>
           <MaterialCommunityIcons color={colors.primary} name="star" size={20} />
@@ -69,9 +77,9 @@ function WishList() {
     loadData();
   }, []);
 
-  if (loading) {
-    return <Loader />;
-  }
+  // if (loading) {
+  //   return <Loader />;
+  // }
 
   return (
     <View style={styles.mainContainer}>

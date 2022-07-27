@@ -77,7 +77,7 @@ function Reviews(props: any) {
 const styles = StyleSheet.create({
   container: {
     padding: 10,
-    flexGrow: 1,
+    // flexGrow: 1,
     justifyContent: 'space-around',
     marginBottom: 20,
   },

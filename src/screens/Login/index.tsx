@@ -156,6 +156,7 @@ function Login(props) {
         const user = await Auth.signIn(emailPhoneForLogin, passwordForLogin);
         await getUserDetails({emailPhoneForLogin, passwordForLogin});
         const Authorization1 = user.signInUserSession.idToken.jwtToken;
+        setLoading(false);
 
         navigation.navigate('App', {
           Authorization1,
@@ -257,6 +258,7 @@ function Login(props) {
           }
           setLoading(false);
         } catch (error) {
+          setLoading(false);
           // console.log('error signing up:', JSON.stringify(error));
           // console.log('error error up:', error);
         }
@@ -317,9 +319,11 @@ function Login(props) {
     );
   };
 
-  if (loading) {
-    return <Loader />;
-  }
+  // console.log('----->loading', loading);
+
+  // if (loading) {
+  //   return <Loader />;
+  // }
 
   return (
     <View style={styles.container}>

@@ -39,7 +39,7 @@ export default function useWishlistActions() {
       }),
     deleteWishlist: params =>
       dispatch({
-        type: types.ADD_WISHLIST,
+        type: types.DELETE_WISHLIST,
         payload: async () => {
           try {
             const response = await deleteWishlist(params);

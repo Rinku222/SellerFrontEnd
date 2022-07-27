@@ -5,16 +5,11 @@ import {launchImageLibrary, ImageLibraryOptions} from 'react-native-image-picker
 import ObjectID from 'bson-objectid';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import {useSelector} from 'react-redux';
-import Email from '../../../assets/images/Change_email.png';
 import {AboutIcon, EmailIcon, LockIcon, PhoneIcon, UserIcon} from '../../../assets/svg';
-import {getFileExtension} from '../../../components/Download';
-import useSnackbar from '../../../components/SnackBar';
-import ThemeButton from '../../../components/ThemeButton/ThemeButton';
 import TopHeader from '../../../components/TopHeader';
-import useImagePicker from '../../../components/useImagePicker';
 import {colors} from '../../../config/colors';
 import useUserActions from '../../../redux/actions/userActions';
-import {getIdentityId} from '../../../utils';
+import {generatedProfileUrl, getIdentityId} from '../../../utils';
 
 const s3BaseUrl = 'https://s3.ap-south-1.amazonaws.com/';
 
@@ -43,11 +38,11 @@ function Row(props: any) {
 }
 
 function PersonalInfo(props: any) {
-  const {uploadProfileImage, getUserData, updateUserData} = useUserActions();
+  const {uploadProfileImage, getUserData, updateUserData, updateProfileImage} = useUserActions();
 
   const {user} = useSelector(s => s.user);
 
-  const {_id, displayName, email, phone, profileUrl} = user || {};
+  const {_id, displayName, email, phone, profileUrl, s3Url} = user || {};
 
   const LIST = [
     {
@@ -73,12 +68,10 @@ function PersonalInfo(props: any) {
   };
 
   useEffect(() => {
-    loadData();
+    // loadData();
   }, []);
 
   const handleProfilePress = () => {
-    const entityId = ObjectID();
-
     const options: ImageLibraryOptions = {
       mediaType: 'photo',
       quality: 0.8,
@@ -94,12 +87,32 @@ function PersonalInfo(props: any) {
           uri,
           type,
         };
-        const result = await uploadProfileImage({
-          directory: 'user-assets',
-          entityId,
-          extension,
-          file: uri,
-        });
+        // await getUserData();
+
+        if (s3Url) {
+          console.log('----->inside if');
+          const array = s3Url.split('/');
+          const entityId = array[7];
+          const result = await uploadProfileImage({
+            directory: 'user-assets',
+            entityId,
+            extension,
+            file: uri,
+          });
+
+          const newUrl = generatedProfileUrl(entityId, result?.key);
+
+          console.log('----->new url data', newUrl);
+        } else {
+          const entityId = ObjectID();
+          const result = await uploadProfileImage({
+            directory: 'user-assets',
+            entityId,
+            extension,
+            file: uri,
+          });
+        }
+        await getUserData();
       }
     });
   };
@@ -113,6 +126,7 @@ function PersonalInfo(props: any) {
           </View>
           <View style={styles.profileIcon}>
             <TouchableOpacity style={styles.userIcon} onPress={() => handleProfilePress()}>
+              {console.log('----->profileUrl', profileUrl)}
               {profileUrl ? (
                 <Image source={{uri: profileUrl}} style={styles.profileImage} />
               ) : (

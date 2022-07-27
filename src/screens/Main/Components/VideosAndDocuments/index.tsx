@@ -104,7 +104,7 @@ function DropDownSection(props: any) {
               setVideoId(_id);
               setSectionId(sectionId);
             }
-            await addRecentVideo({courseId, videoId: _id, sectionId});
+            await addRecentVideo({courseId, videoId: _id});
           }}>
           <Image
             source={{

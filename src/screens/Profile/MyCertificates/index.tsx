@@ -4,7 +4,7 @@ import TopHeader from '../../../components/TopHeader';
 import {CertificateIcon} from '../../../assets/svg';
 import CourseCard from '../../../components/CourseCard';
 
-const DATA = [1, 2, 4, 5, 3];
+const DATA = [1, 2, 4, 5, 3, 9];
 
 function MyCertificates(props) {
   return (

@@ -17,6 +17,7 @@ const DATA = [];
 type BottomIconProps = {
   edit: boolean;
   setEdit: (edit: boolean) => void;
+  videoId: string;
 };
 
 type ParaGraphIconProps = {
@@ -87,24 +88,27 @@ function BottomIcon(props: BottomIconProps) {
     description,
     stickyTitle,
     videoId,
-    addNote,
+    // addNote,
     handleDeleteNote,
     item,
     showAddNote,
     setShowAddNote,
     noteId,
     setNoteId,
-    updateNote,
+    // updateNote,
     creationTS,
   } = props;
+
+  const {readNotes, updateNote, addNote} = useMainScreenActions();
 
   const {_id} = item || {};
 
   const handlePress = async () => {
     if (noteId) {
-      await updateNote({stickynoteId: noteId, stickyTitle, description, videoId});
+      updateNote({stickynoteId: noteId, stickyTitle, description, videoId});
     } else {
       await addNote({stickyTitle, description, videoId});
+      await readNotes({videoId, limit: 20, offset: 0});
     }
     setEdit(false);
   };
@@ -124,18 +128,9 @@ function BottomIcon(props: BottomIconProps) {
         </View>
       ) : (
         <View style={styles.bottomContainer}>
-          {/* <Text>28th Dec 2022</Text> */}
           <Text>{DateConvertor(creationTS)}</Text>
 
           <View style={styles.iconContainer}>
-            {/* <TouchableOpacity>
-              <MaterialCommunityIcons
-                color={colors.themeBlack}
-                name="share-variant-outline"
-                size={20}
-                style={styles.icons}
-              />
-            </TouchableOpacity> */}
             <TouchableOpacity
               onPress={() => {
                 handleDeleteNote(_id);
@@ -166,13 +161,6 @@ function ParaGraphHeader(props: ParaGraphIconProps) {
 
   return (
     <View style={styles.paraGraphContainer}>
-      {/* <View style={styles.pagraphTitle}>
-        <Text style={styles.text}>
-          {'  '}Module 1{'  '}
-        </Text>
-        <Text style={styles.text}>Page 6{'   '}</Text>
-        <Text style={styles.text}>Paragraph 2</Text>
-      </View> */}
       {edit ? (
         <TextInput
           dense
@@ -351,9 +339,6 @@ const styles = StyleSheet.create({
     padding: 0,
     backgroundColor: colors.white,
   },
-  text: {
-    color: colors.black,
-  },
   icons: {
     marginHorizontal: 5,
   },
@@ -362,15 +347,6 @@ const styles = StyleSheet.create({
   },
   paraGraphContainerText: {
     marginVertical: 10,
-  },
-  pagraphTitle: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: colors.whiteShade,
-    height: 30,
-    borderRadius: 5,
-    borderWidth: 1,
-    borderColor: colors.lightGrey,
   },
   bottomContainer: {
     flexDirection: 'row',

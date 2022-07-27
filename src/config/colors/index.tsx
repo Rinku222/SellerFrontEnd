@@ -6,6 +6,7 @@ export const colors = {
   lightGrey: '#707070',
   placeholderGray: '#888888',
   themeShadow: '#00000029',
+  borderGray: '#FFF7F2',
 
   primaryButtonBackground: '#91358F',
   themeBlackText: '#787878',

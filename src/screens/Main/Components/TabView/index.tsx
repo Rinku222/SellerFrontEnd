@@ -1,5 +1,13 @@
 import * as React from 'react';
-import {View, StyleSheet, Dimensions, StatusBar, Text, TextPropTypes} from 'react-native';
+import {
+  View,
+  StyleSheet,
+  Dimensions,
+  StatusBar,
+  Text,
+  TextPropTypes,
+  ScrollView,
+} from 'react-native';
 import {TabView, SceneMap, TabBar} from 'react-native-tab-view';
 import {useSelector} from 'react-redux';
 import {colors} from '../../../../config/colors';
@@ -19,13 +27,17 @@ function SecondRoute() {
   const {FAQ} = useSelector(s => s.main);
   return (
     <View style={styles.container}>
-      <Text>
-        Lorem ipsum dolor, sit amet consectetur adipisicing elit. Laudantium voluptates repellat
-        libero cum eligendi nam recusandae architecto voluptate repudiandae officiis corrupti
-        corporis doloremque accusamus nemo illum mollitia voluptas quia, minima voluptatibus
-        asperiores. Ab enim, officia eius officiis temporibus, quod neque doloremque tempora
-        excepturi velit veniam, sit numquam? Inventore, nihil velit?
-      </Text>
+      <Text style={{color: colors.black, marginBottom: 10, fontWeight: 'bold'}}>Questions</Text>
+      <ScrollView>
+        {FAQ.map((item, index) => {
+          return (
+            <View style={{marginBottom: 10}}>
+              <Text style={{marginBottom: 5, color: colors.black}}>Q. {item?.question}</Text>
+              <Text style={{color: colors.black}}>{item?.answer}</Text>
+            </View>
+          );
+        })}
+      </ScrollView>
     </View>
   );
 }

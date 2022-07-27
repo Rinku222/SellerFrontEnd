@@ -86,9 +86,41 @@ export async function fileUploadService(
         contentType: `image/${extension}`,
       })
         .then(result => {
+          console.log('then ', result);
           resolve(result);
+          return result;
         })
         .catch(err => {
+          console.log('error ', err);
+          reject(err);
+        });
+    } catch (error) {
+      reject(error);
+    }
+  });
+}
+
+export async function fileUpdateService(path: string, file: any, extension: string) {
+  const response = await fetch(file);
+  const blob = await response.blob();
+  return new Promise((resolve, reject) => {
+    try {
+      Storage.put(
+        'https://s3.ap-south-1.amazonaws.com/medical-learning-development/private/ap-south-1:835f24ab-b08b-4754-940e-64110d7338a3/user-assets/62dfcef8010384ee4f5c6e89',
+        // path,
+        blob,
+        {
+          level: 'private',
+          contentType: `image/${extension}`,
+        },
+      )
+        .then(result => {
+          console.log('then ', result);
+          resolve(result);
+          return result;
+        })
+        .catch(err => {
+          console.log('error ', err);
           reject(err);
         });
     } catch (error) {

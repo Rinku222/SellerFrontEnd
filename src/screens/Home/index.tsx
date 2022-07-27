@@ -13,13 +13,14 @@ import CourseCard from '../../components/CourseCard';
 import homeActions from '../../redux/actions/homeActions';
 import {Loader} from '../../../App';
 import loadingVariable from '../../redux/selector';
+import useUserActions from '../../redux/actions/userActions';
 
 function TopRow({firstName}) {
   return (
     <View style={styles.topRow}>
       <Text style={styles.hugeText}>
         Hey
-        <Text style={{color: colors.themeYellow}}>{firstName}</Text>
+        <Text style={{color: colors.themeYellow}}> {firstName}</Text>
       </Text>
       <TouchableOpacity style={{padding: 4}}>
         <CartIcon />
@@ -87,17 +88,23 @@ function RenderRecommended(props) {
 }
 
 function Home(props) {
-  const firstName = useSelector(s => s.user.userData?.username) || '';
+  // const firstName = useSelector(s => s.user.userData?.username) || '';
 
   const loading = loadingVariable();
 
   const {allCourses, subscribedCourses} = useSelector(s => s.home);
 
+  const {user} = useSelector(s => s.user);
+
+  const {_id, displayName, email, phone, profileUrl} = user || {};
+
   const {getHomeCourses, getAllSubscribedCourses} = homeActions();
+  const {getUserData} = useUserActions();
 
   const loadData = async () => {
-    await getHomeCourses({offset: 0, limit: 10});
-    await getAllSubscribedCourses();
+    getHomeCourses({offset: 0, limit: 10});
+    getAllSubscribedCourses();
+    getUserData();
   };
 
   useEffect(() => {
@@ -110,7 +117,7 @@ function Home(props) {
 
   return (
     <ScrollView style={styles.container}>
-      <TopRow firstName={firstName} />
+      <TopRow firstName={displayName} />
       <ScrollView contentContainerStyle={{flex: 1, paddingTop: 40}}>
         <OfferCard />
         <Text style={styles.labelText}>Ongoing Course</Text>

@@ -1,7 +1,8 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {TouchableOpacity, View, Image, Text, StyleSheet} from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {useSelector} from 'react-redux';
+import {ActivityIndicator} from 'react-native-paper';
 import {AboutIcon, PlayVideoIcon, AchievementIcon} from '../../assets/svg';
 import {colors} from '../../config/colors';
 import {getShadow} from '../../utils';
@@ -82,6 +83,8 @@ function RenderCourseBar(props) {
 function CourseCard(props) {
   const {course, data, myCourse, searchName = '', selected = '', onPress, navigation} = props;
 
+  const [wishlistLoader, setWishlistLoader] = useState(false);
+
   const {addWishlist, getWishlist, deleteWishlist} = useWishlistActions();
   const {getAllSearchedCourses} = useSearchActions();
   const {setCourseId} = useMainScreenActions();
@@ -110,9 +113,13 @@ function CourseCard(props) {
 
   const handleWishlistPress = async () => {
     if (wishListed) {
-      await {wishlistId: wishListId};
+      setWishlistLoader(true);
+      await deleteWishlist({courseId: _id});
+      setWishlistLoader(false);
     } else {
+      setWishlistLoader(true);
       await addWishlist({courseId: _id});
+      setWishlistLoader(false);
     }
     getWishlist();
     getHomeCourses({offset: 0, limit: 10});
@@ -143,6 +150,13 @@ function CourseCard(props) {
           <View style={styles.videoIcon}>
             <PlayVideoIcon height={30} width={30} />
           </View>
+        ) : wishlistLoader ? (
+          <ActivityIndicator
+            animating
+            color={colors.primary}
+            size="small"
+            style={styles.wishlistIcon}
+          />
         ) : (
           <TouchableOpacity style={styles.wishlistIcon} onPress={() => handleWishlistPress()}>
             {wishListed ? (
@@ -194,7 +208,7 @@ const styles = StyleSheet.create({
     padding: 8,
     width: '100%',
     backgroundColor: colors.white,
-    // margin: 5,
+    margin: 5,
     borderRadius: 10,
     flex: 0.5,
     ...getShadow(10),

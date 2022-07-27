@@ -6,7 +6,7 @@ import useUserServices from '../../services/User';
 export default function useUserActions() {
   const dispatch = useDispatch();
 
-  const {uploadProfileImage, getUserData, updateUserData} = useUserServices();
+  const {uploadProfileImage, getUserData, updateUserData, updateProfileImage} = useUserServices();
 
   return {
     getUserDetails: params =>
@@ -40,6 +40,20 @@ export default function useUserActions() {
         payload: async () => {
           try {
             const result = await uploadProfileImage(params);
+            console.log('----->result.key', result.key);
+            return result.key;
+          } catch (error) {
+            console.log('----->error in UPLOAD_IMAGE action', error);
+          }
+        },
+      }),
+    updateProfileImage: params =>
+      dispatch({
+        type: types.UPDATE_IMAGE,
+        payload: async () => {
+          try {
+            const result = await updateProfileImage(params);
+            console.log('----->result.key', result.key);
             return result.key;
           } catch (error) {
             console.log('----->error in UPLOAD_IMAGE action', error);

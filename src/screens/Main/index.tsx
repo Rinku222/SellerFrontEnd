@@ -1,5 +1,13 @@
 import React, {useEffect, useRef, useState} from 'react';
-import {View, StyleSheet, Text, Animated, TouchableWithoutFeedback, ScrollView} from 'react-native';
+import {
+  View,
+  StyleSheet,
+  Text,
+  Animated,
+  TouchableWithoutFeedback,
+  ScrollView,
+  TouchableOpacity,
+} from 'react-native';
 import {NavigationState, SceneRendererProps, TabView} from 'react-native-tab-view';
 import VideoPlayer from 'react-native-video-controls';
 import {useSelector} from 'react-redux';
@@ -16,6 +24,7 @@ import DocumentsAndVideos from './Components/VideosAndDocuments';
 import {UsersIcon} from '../../assets/svg';
 import useMainScreenActions from '../../redux/actions/mainScreenActions';
 import useMainServices from '../../services/Main';
+import useWishlistActions from '../../redux/actions/wishlistActions';
 
 type Route = {
   key: string;
@@ -94,7 +103,6 @@ function MainScreen(props: any) {
 
   const totalDuration = useRef(0);
   const currentTime = useRef(0);
-  const videoRef = useRef();
 
   const {
     categoryId,
@@ -112,27 +120,44 @@ function MainScreen(props: any) {
   } = descriptions || {};
 
   const {videoUrl, _id} = recentVideo || {};
+
+  const videoDuration = recentVideo?.duration;
   const _sectionId = recentVideo?.sectionId || {};
+  const videoRef = useRef(videoDuration);
 
   const {getSections, getDescriptions, readReviews, addReview, readFAQ} = useMainScreenActions();
+  const {addWishlist, deleteWishlist} = useWishlistActions();
 
   const [selectedTab, setSelectedTab] = useState(0);
   const [video, setVideo] = useState(videoUrl || '');
-  const [videoId, setVideoId] = useState();
+  const [videoId, setVideoId] = useState('');
   const [sectionId, setSectionId] = useState();
   const [paused, setPaused] = useState(true);
 
   const courseBought = true;
 
-  const loadData = async () => {
+  const handleWishlistPress = async () => {
+    if (wishListed) {
+      await deleteWishlist({courseId});
+    } else {
+      await addWishlist({courseId});
+    }
     getDescriptions({courseId, offset: 0, limit: 20});
+  };
+
+  const loadData = async () => {
+    await getDescriptions({courseId, offset: 0, limit: 20});
     getSections({courseId, offset: 0, limit: 20});
     readReviews({courseId, offset: 0, limit: 20});
     readFAQ({courseId, offSet: 0, limit: 20});
-    if (duration) {
-      videoRef?.current?.seekTo?.(duration / 1000);
+    if (videoDuration) {
+      videoRef?.current?.seekTo?.(videoDuration / 1000);
     }
   };
+
+  useEffect(() => {
+    loadData();
+  }, [courseId, videoId]);
 
   useEffect(() => {
     if (_id && _id !== videoId) {
@@ -142,11 +167,7 @@ function MainScreen(props: any) {
   }, [_id, videoId]);
 
   useEffect(() => {
-    loadData();
-  }, [courseId, videoId]);
-
-  useEffect(() => {
-    if (paused) {
+    if (paused && currentTime.current !== 0) {
       setVideoTime({courseId, sectionId, videoId, duration: currentTime.current * 1000});
     }
   }, [courseId, paused, videoId]);
@@ -206,8 +227,11 @@ function MainScreen(props: any) {
         <VideoPlayer
           paused={paused}
           ref={videoRef}
-          source={{uri: video}}
+          source={{
+            uri: 'https://storage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
+          }}
           style={styles.videos}
+          onBuffer={buffer => console.log('----->buffer', buffer)}
           onEnd={() => setPaused(true)}
           onError={err => console.log('----->err', err)}
           onPause={() => setPaused(true)}
@@ -228,11 +252,13 @@ function MainScreen(props: any) {
               paddingTop: 10,
             }}>
             <Text style={styles.header}>{courseTitle}</Text>
-            {wishListed ? (
-              <MaterialCommunityIcons color={colors.primary} name="cards-heart" size={20} />
-            ) : (
-              <MaterialCommunityIcons name="cards-heart-outline" size={20} />
-            )}
+            <TouchableOpacity onPress={() => handleWishlistPress()}>
+              {wishListed ? (
+                <MaterialCommunityIcons color={colors.primary} name="cards-heart" size={20} />
+              ) : (
+                <MaterialCommunityIcons name="cards-heart-outline" size={20} />
+              )}
+            </TouchableOpacity>
           </View>
           <View style={{flexDirection: 'row', marginBottom: 10, paddingHorizontal: 5}}>
             <Text style={{paddingRight: 10}}>{duration}</Text>
@@ -300,6 +326,8 @@ const styles = StyleSheet.create({
     bottom: 0,
     right: 0,
     left: 0,
+    // backgroundColor: '#000',
+    // height: 400,
   },
   mainContainer: {
     flexGrow: 1,

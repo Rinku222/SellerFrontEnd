@@ -15,9 +15,9 @@ export default function useMainServices() {
       );
     },
     addRecentVideo: data => {
-      const {courseId, videoId, sectionId} = data;
+      const {courseId, videoId} = data;
 
-      return createService(`/video/recent`, {courseId, videoId, sectionId});
+      return createService(`/video/recent`, {courseId, videoId});
     },
     getDescriptions: data => {
       const {limit, courseId, offset} = data;

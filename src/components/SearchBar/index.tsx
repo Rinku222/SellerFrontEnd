@@ -3,6 +3,7 @@ import _ from 'lodash';
 import {useTranslation} from 'react-i18next';
 import {Keyboard, ScrollView, StyleSheet, TouchableOpacity, View} from 'react-native';
 import {Divider, Menu, Searchbar, withTheme} from 'react-native-paper';
+import OutsideClickHandler from 'react-outside-click-handler';
 import {getShadow} from '../../utils';
 import {colors} from '../../config/colors';
 

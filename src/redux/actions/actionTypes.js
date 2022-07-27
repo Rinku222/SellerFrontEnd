@@ -3,6 +3,7 @@
 export const GET_USER_DETAILS = 'GET_USER_DETAILS';
 export const GET_NEW_TOKEN = 'GET_NEW_TOKEN';
 export const UPLOAD_IMAGE = 'UPLOAD_IMAGE';
+export const UPDATE_IMAGE = 'UPDATE_IMAGE';
 export const GET_USER_DATA = 'GET_USER_DATA';
 export const UPDATE_USER_DATA = 'UPDATE_USER_DATA';
 

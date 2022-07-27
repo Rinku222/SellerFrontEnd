@@ -20,3 +20,12 @@ export const getIdentityId = async () => {
 };
 
 const s3BaseUrl = 'https://s3.ap-south-1.amazonaws.com/';
+const s3Bucket = 'medical-learning-development';
+
+export const generatedProfileUrl = (identityId, key) => {
+  const audioUrl = `${s3BaseUrl + s3Bucket}/private/${identityId}/${key}`;
+  console.log('----->audioUrl', audioUrl);
+  return audioUrl;
+};
+
+// res.key
