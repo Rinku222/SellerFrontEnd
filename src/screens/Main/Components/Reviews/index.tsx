@@ -3,12 +3,10 @@ import {View, StyleSheet, TouchableOpacity, Image, TextInput, ScrollView} from '
 import {Divider} from 'react-native-paper';
 import {useSelector} from 'react-redux';
 import {colors} from '../../../../config/colors';
-// import UserImage from '../../../../assets/images/laps.png';
 import UserImage from '../../../../assets/images/laps.png';
 import Review from '../../../../components/Review';
 import ThemeButton from '../../../../components/ThemeButton/ThemeButton';
 import {StarFilledIcon, StarIcon} from '../../../../assets/svg';
-import useMainScreenActions from '../../../../redux/actions/mainScreenActions';
 
 const data = [1, 2, 3, 4, 5];
 
@@ -77,7 +75,6 @@ function Reviews(props: any) {
 const styles = StyleSheet.create({
   container: {
     padding: 10,
-    // flexGrow: 1,
     justifyContent: 'space-around',
     marginBottom: 20,
   },

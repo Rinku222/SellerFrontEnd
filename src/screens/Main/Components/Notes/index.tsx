@@ -116,7 +116,7 @@ function BottomIcon(props: BottomIconProps) {
   return (
     <View style={styles.paraGraphContainer}>
       {edit ? (
-        <View style={{flexDirection: 'row', justifyContent: 'flex-end'}}>
+        <View style={{flexDirection: 'row', justifyContent: 'flex-end', marginTop: 10}}>
           <View style={styles.deleteButton}>
             <Button color="#a8a8a8" mode="outlined" onPress={() => setShowAddNote(false)}>
               Cancel
@@ -210,7 +210,7 @@ function Notes(props) {
   };
 
   return (
-    <View style={{flex: 1, flexGrow: 1}}>
+    <View style={{flex: 1, flexGrow: 1, backgroundColor: colors.backgroundGrey}}>
       {notes.length > 0 ? (
         showAddNote ? (
           <AddNote
@@ -295,17 +295,15 @@ const styles = StyleSheet.create({
     borderRadius: 10,
   },
   renderNoteMainContainer: {
+    flexGrow: 1,
     padding: 10,
-    borderWidth: 1,
-    borderRadius: 5,
-    borderColor: colors.greyTheme,
-    borderBottomWidth: 0,
-    shadowColor: colors.black,
-    shadowOffset: {width: 0, height: 2},
-    shadowOpacity: 0.9,
-    shadowRadius: 10,
-    elevation: 3,
+    // borderRadius: 5,
     marginBottom: 10,
+    backgroundColor: '#fff',
+    ...getShadow(5),
+    paddingHorizontal: 15,
+    margin: 10,
+    borderRadius: 5,
   },
   emptyMinContainer: {
     height: '100%',

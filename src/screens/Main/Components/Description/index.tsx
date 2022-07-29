@@ -14,7 +14,7 @@ function DescriptionText(props) {
   return (
     <View style={styles.descriptionContainer}>
       <Text style={styles.descriptionHeader}>About the Course</Text>
-      <Text>{description}</Text>
+      <Text style={styles.black}>{description}</Text>
     </View>
   );
 }
@@ -97,6 +97,9 @@ const styles = StyleSheet.create({
     borderRadius: 7,
     marginRight: 10,
     // marginRight: 10,
+  },
+  black: {
+    color: colors.black,
   },
   descriptionContainer: {
     margin: 5,

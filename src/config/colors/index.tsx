@@ -12,6 +12,7 @@ export const colors = {
   themeBlackText: '#787878',
   themeDarkBlackText: '#363636',
   skyBlue: '#1877F2',
+  textGrey: '#363636',
 
   themeVeryLightPink: '#FEE5FD',
   themeYellow: '#08d2ea',

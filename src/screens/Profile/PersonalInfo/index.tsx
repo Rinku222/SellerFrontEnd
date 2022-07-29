@@ -1,19 +1,29 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 
 import {View, StyleSheet, Text, TouchableOpacity, Image} from 'react-native';
 import {launchImageLibrary, ImageLibraryOptions} from 'react-native-image-picker';
 import ObjectID from 'bson-objectid';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import {useSelector} from 'react-redux';
+import {TextInput} from 'react-native-paper';
+import {Formik} from 'formik';
+import * as Yup from 'yup';
 import {AboutIcon, EmailIcon, LockIcon, PhoneIcon, UserIcon} from '../../../assets/svg';
 import TopHeader from '../../../components/TopHeader';
 import {colors} from '../../../config/colors';
 import useUserActions from '../../../redux/actions/userActions';
 import {generatedProfileUrl, getIdentityId} from '../../../utils';
+import {fileUploadService} from '../../../services/HttpService/HttpService';
 
-const s3BaseUrl = 'https://s3.ap-south-1.amazonaws.com/';
+const schema = Yup.object().shape({
+  name: Yup.string()
+    .required('First Name name is required')
+    .matches(/^[aA-zZ\s]+$/, 'Enter a valid name'),
+});
 
-const s3Bucket = 'medical-learning-development';
+function Edit(name) {
+  return <Text style={{color: colors.primary}}>{name || 'Edit'}</Text>;
+}
 
 function Row(props: any) {
   const {data, navigation} = props;
@@ -21,19 +31,36 @@ function Row(props: any) {
 
   return (
     // eslint-disable-next-line react-native/no-inline-styles
-    <View style={[styles.rowContainer, {borderWidth: border ? 1 : 0}]}>
-      <View style={styles.icon}>
-        {icon}
-        <Text style={styles.text}>{value}</Text>
-      </View>
-      {border && !edit ? (
-        <TouchableOpacity>
-          <Text style={{color: colors.primary}} onPress={() => navigation.navigate(path)}>
-            Edit
-          </Text>
-        </TouchableOpacity>
-      ) : null}
-    </View>
+
+    <TextInput
+      activeOutlineColor="#707070"
+      activeUnderlineColor="transparent"
+      editable={false}
+      left={<TextInput.Icon name={() => icon} />}
+      outlineColor="black"
+      right={
+        border && !edit ? (
+          <TextInput.Icon name={() => Edit()} onPress={() => navigation.navigate(path)} />
+        ) : null
+      }
+      selectionColor="red"
+      style={{
+        height: 40,
+        marginBottom: 20,
+        justifyContent: 'center',
+        borderWidth: border ? 1 : 0,
+        backgroundColor: 'transparent',
+      }}
+      theme={{
+        colors: {
+          text: colors.textGrey,
+        },
+      }}
+      underlineColor="transparent"
+      underlineColorAndroid="transparent"
+      value={value}
+      onChangeText={text => console.log('----->changes', text)}
+    />
   );
 }
 
@@ -45,12 +72,6 @@ function PersonalInfo(props: any) {
   const {_id, displayName, email, phone, profileUrl, s3Url} = user || {};
 
   const LIST = [
-    {
-      icon: <AntDesign name="user" size={20} />,
-      value: displayName,
-      path: 'change_name',
-      border: true,
-    },
     {icon: <PhoneIcon />, value: `+91 ${phone}`, path: 'change_phone', border: true},
     {
       icon: <EmailIcon />,
@@ -63,13 +84,26 @@ function PersonalInfo(props: any) {
     {icon: <AboutIcon />, value: 'Help', path: 'about', border: false},
   ];
 
+  const [editName, setEditName] = useState(true);
+
   const loadData = async () => {
     await getUserData();
   };
 
   useEffect(() => {
     // loadData();
+    // console.log('----->api call');
+    // updateUserData({profileUrl: ''});
   }, []);
+
+  const handleUserSave = async (name: string) => {
+    console.log('----->handleUserSave');
+    setEditName(!editName);
+    if (displayName !== name) {
+      await updateUserData({displayName: name});
+      await getUserData();
+    }
+  };
 
   const handleProfilePress = () => {
     const options: ImageLibraryOptions = {
@@ -87,31 +121,40 @@ function PersonalInfo(props: any) {
           uri,
           type,
         };
-        // await getUserData();
 
-        if (s3Url) {
-          console.log('----->inside if');
-          const array = s3Url.split('/');
-          const entityId = array[7];
-          const result = await uploadProfileImage({
-            directory: 'user-assets',
-            entityId,
-            extension,
-            file: uri,
-          });
+        // const array = s3Url?.split('/');
+        // const entityId = array?.[7];
 
-          const newUrl = generatedProfileUrl(entityId, result?.key);
+        // if (s3Url && entityId !== 'undefined') {
+        //   console.log('----->inside if');
+        //   console.log('-----> entityId', entityId);
 
-          console.log('----->new url data', newUrl);
-        } else {
-          const entityId = ObjectID();
-          const result = await uploadProfileImage({
-            directory: 'user-assets',
-            entityId,
-            extension,
-            file: uri,
-          });
-        }
+        //   const result = await uploadProfileImage({
+        //     directory: 'user-assets',
+        //     entityId: '62dfcef8010384ee4f5c6e89',
+        //     // entityId,
+        //     extension,
+        //     file: uri,
+        //   });
+
+        //   console.log('----->result', result);
+
+        //   const newUrl = generatedProfileUrl(entityId, result?.key);
+
+        //   // updateUserData({profileUrl: newUrl});
+
+        //   console.log('----->new url data', newUrl);
+        // } else {
+        const entityId = ObjectID();
+        console.log('----->entityId', entityId);
+        const result = await uploadProfileImage({
+          directory: 'user-assets',
+          entityId,
+          extension,
+          file: uri,
+        });
+        console.log('----->result', result);
+        // }
         await getUserData();
       }
     });
@@ -126,7 +169,6 @@ function PersonalInfo(props: any) {
           </View>
           <View style={styles.profileIcon}>
             <TouchableOpacity style={styles.userIcon} onPress={() => handleProfilePress()}>
-              {console.log('----->profileUrl', profileUrl)}
               {profileUrl ? (
                 <Image source={{uri: profileUrl}} style={styles.profileImage} />
               ) : (
@@ -145,16 +187,67 @@ function PersonalInfo(props: any) {
         <View style={styles.header}>
           <Text style={{color: colors.themeYellow}}>Personal Info</Text>
         </View>
+        <Formik
+          initialValues={{name: displayName || ''}}
+          validationSchema={schema}
+          onSubmit={async values => handleUserSave(values.name)}>
+          {({
+            values,
+            errors,
+            touched,
+            handleChange,
+            handleBlur,
+            handleSubmit,
+            isSubmitting,
+            setFieldValue,
+          }) => (
+            <View>
+              {console.log('----->editName', editName)}
+              <TextInput
+                activeOutlineColor="#707070"
+                activeUnderlineColor="transparent"
+                editable={editName}
+                left={
+                  <TextInput.Icon name={() => <AntDesign color="black" name="user" size={18} />} />
+                }
+                name="name"
+                outlineColor="black"
+                right={
+                  <TextInput.Icon
+                    name={() => Edit(editName ? 'Save' : 'Edit')}
+                    onPress={() => (editName ? handleSubmit() : setEditName(!editName))}
+                  />
+                }
+                style={{
+                  marginHorizontal: 20,
+                  height: 40,
+                  marginTop: 30,
+                  justifyContent: 'center',
+                  borderWidth: 1,
+                  backgroundColor: 'transparent',
+                }}
+                theme={{
+                  colors: {
+                    text: colors.textGrey,
+                  },
+                }}
+                underlineColor="transparent"
+                underlineColorAndroid="transparent"
+                value={values.name}
+                onChangeText={text => setFieldValue('name', text)}
+              />
+              {errors.name && (
+                <Text style={{color: 'red', marginHorizontal: 20}}>{errors.name}</Text>
+              )}
+            </View>
+          )}
+        </Formik>
         <View style={styles.list}>
           {LIST.map(item => {
             return <Row data={item} key={item.path} {...props} />;
           })}
         </View>
       </View>
-
-      {/* <View style={styles.buttonView}>
-        <ThemeButton style={{paddingHorizontal: 30}} title="Save" />
-      </View> */}
     </View>
   );
 }
@@ -176,7 +269,7 @@ const styles = StyleSheet.create({
   },
   list: {
     marginHorizontal: 20,
-    marginTop: 30,
+    marginTop: 20,
   },
   profileImage: {
     width: 110,

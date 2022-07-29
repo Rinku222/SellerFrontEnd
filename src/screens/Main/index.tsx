@@ -243,7 +243,7 @@ function MainScreen(props: any) {
         />
       </View>
 
-      <View style={{backgroundColor: '#000', flexGrow: 1}}>
+      <View style={{backgroundColor: colors.black, flexGrow: 1}}>
         <View style={styles.container}>
           <View
             style={{
@@ -298,6 +298,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     marginBottom: 5,
     paddingHorizontal: 5,
+    color: colors.black,
   },
   scoreContainer: {
     justifyContent: 'space-between',

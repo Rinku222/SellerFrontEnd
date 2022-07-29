@@ -103,37 +103,37 @@ const reducer = (state = initialState, action = {}) => {
     case `${READ_NOTES}_PENDING`:
       return {
         ...state,
-        mainLoading: true,
+        // mainLoading: true,
       };
     case `${READ_NOTES}_FULFILLED`: {
       return {
         ...state,
-        mainLoading: false,
+        // mainLoading: false,
         notes: payload.stickynote,
       };
     }
     case `${READ_NOTES}_REJECTED`:
       return {
         ...state,
-        mainLoading: false,
+        // mainLoading: false,
         errorMessage: payload,
       };
     case `${READ_REVIEWS}_PENDING`:
       return {
         ...state,
-        mainLoading: true,
+        // mainLoading: true,
       };
     case `${READ_REVIEWS}_FULFILLED`: {
       return {
         ...state,
-        mainLoading: false,
+        // mainLoading: false,
         reviews: payload.review,
       };
     }
     case `${READ_REVIEWS}_REJECTED`:
       return {
         ...state,
-        mainLoading: false,
+        // mainLoading: false,
         errorMessage: payload,
       };
     case `${READ_ASSESSMENT}_PENDING`:
@@ -193,19 +193,19 @@ const reducer = (state = initialState, action = {}) => {
     case `${READ_FAQ}_PENDING`:
       return {
         ...state,
-        mainLoading: true,
+        // mainLoading: true,
       };
     case `${READ_FAQ}_FULFILLED`: {
       return {
         ...state,
-        mainLoading: false,
+        // mainLoading: false,
         FAQ: payload.faq,
       };
     }
     case `${READ_FAQ}_REJECTED`:
       return {
         ...state,
-        mainLoading: false,
+        // mainLoading: false,
         errorMessage: payload,
       };
     case `${ADD_NOTE}_PENDING`:

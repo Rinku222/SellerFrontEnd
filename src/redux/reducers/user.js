@@ -50,14 +50,14 @@ const reducer = (state = initialState, action = {}) => {
     case `${UPDATE_USER_DATA}_PENDING`:
       return {
         ...state,
-        userLoading: true,
+        // userLoading: true,
       };
     case `${UPLOAD_IMAGE}_FULFILLED`:
     case `${UPDATE_IMAGE}_FULFILLED`:
     case `${UPDATE_USER_DATA}_FULFILLED`: {
       return {
         ...state,
-        userLoading: false,
+        // userLoading: false,
       };
     }
     case `${UPLOAD_IMAGE}_REJECTED`:
@@ -65,25 +65,25 @@ const reducer = (state = initialState, action = {}) => {
     case `${UPDATE_USER_DATA}_REJECTED`:
       return {
         ...state,
-        userLoading: false,
+        // userLoading: false,
         errorMessage: payload,
       };
     case `${GET_USER_DATA}_PENDING`:
       return {
         ...state,
-        userLoading: true,
+        // userLoading: true,
       };
     case `${GET_USER_DATA}_FULFILLED`: {
       return {
         ...state,
         user: payload,
-        userLoading: false,
+        // userLoading: false,
       };
     }
     case `${GET_USER_DATA}_REJECTED`:
       return {
         ...state,
-        userLoading: false,
+        // userLoading: false,
         errorMessage: payload,
       };
 

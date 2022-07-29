@@ -135,7 +135,6 @@ function CourseCard(props) {
     <TouchableOpacity
       style={styles.cardMainContainer}
       onPress={async () => {
-        // onPress();
         await setCourseId({courseId});
         navigation.navigate('VideosScreen');
       }}>
@@ -246,6 +245,7 @@ const styles = StyleSheet.create({
   bottomRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
+    marginBottom: 10,
   },
   image: {
     width: 30,

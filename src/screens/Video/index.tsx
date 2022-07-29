@@ -59,7 +59,7 @@ function Video(props) {
         keyExtractor={item => item.id}
         ListEmptyComponent={() => <RenderEmpty navigation={navigation} />}
         renderItem={({item}) => (
-          <View style={{margin: 5}}>
+          <View style={{marginRight: 10}}>
             <CourseCard course myCourse data={item} {...props} />
           </View>
         )}

@@ -18,7 +18,7 @@ function FirstRoute(props) {
 
   return (
     <View style={styles.container}>
-      <Text>{terms}</Text>
+      <Text style={styles.black}>{terms}</Text>
     </View>
   );
 }
@@ -27,12 +27,14 @@ function SecondRoute() {
   const {FAQ} = useSelector(s => s.main);
   return (
     <View style={styles.container}>
-      <Text style={{color: colors.black, marginBottom: 10, fontWeight: 'bold'}}>Questions</Text>
       <ScrollView>
+        <Text style={{color: colors.black, marginBottom: 20, fontWeight: 'bold'}}>Questions</Text>
         {FAQ.map((item, index) => {
           return (
-            <View style={{marginBottom: 10}}>
-              <Text style={{marginBottom: 5, color: colors.black}}>Q. {item?.question}</Text>
+            <View style={{marginBottom: 20}}>
+              <Text style={{marginBottom: 10, color: colors.black, fontWeight: 'bold'}}>
+                Q. {item?.question}
+              </Text>
               <Text style={{color: colors.black}}>{item?.answer}</Text>
             </View>
           );
@@ -91,6 +93,9 @@ const styles = StyleSheet.create({
   container: {
     margin: 10,
     flexGrow: 1,
+  },
+  black: {
+    color: colors.black,
   },
   tabContainer: {
     flexGrow: 1,
