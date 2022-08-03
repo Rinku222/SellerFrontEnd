@@ -1,4 +1,4 @@
-import {createService, readService} from '../HttpService/HttpService';
+import {createService, readService, deleteService} from '../HttpService/HttpService';
 
 export default function useHomeServices() {
   return {
@@ -6,8 +6,15 @@ export default function useHomeServices() {
       const {offset, limit, searchText = '', streamId = ''} = data;
 
       return readService(
-        `/course?offset=${offset}&limit=${limit}&searchText=${searchText}&streamId=${streamId}`,
+        `/mentee/course?offset=${offset}&limit=${limit}&searchText=${searchText}&streamId=${streamId}`,
       );
+    },
+    getCart: data => {
+      return readService(`/userCart?offset=0&limit=100`);
+    },
+    deleteCartCourse: data => {
+      const {userCartId} = data;
+      return deleteService(`/userCart?userCartId=${userCartId}`);
     },
   };
 }

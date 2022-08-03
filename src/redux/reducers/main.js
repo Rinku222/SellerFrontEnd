@@ -16,6 +16,8 @@ import {
   SUBMIT_ASSESSMENT,
   UPDATE_ASSESSMENT,
   SET_COURSE_ID,
+  ADD_TO_CART,
+  GET_CART,
 } from '../actions/actionTypes';
 
 const initialState = {
@@ -139,19 +141,19 @@ const reducer = (state = initialState, action = {}) => {
     case `${READ_ASSESSMENT}_PENDING`:
       return {
         ...state,
-        mainLoading: true,
+        // mainLoading: true,
       };
     case `${READ_ASSESSMENT}_FULFILLED`: {
       return {
         ...state,
-        mainLoading: false,
+        // mainLoading: false,
         assessment: payload,
       };
     }
     case `${READ_ASSESSMENT}_REJECTED`:
       return {
         ...state,
-        mainLoading: false,
+        // mainLoading: false,
         errorMessage: payload,
       };
     case `${SUBMIT_ASSESSMENT}_PENDING`:
@@ -237,6 +239,22 @@ const reducer = (state = initialState, action = {}) => {
         mainLoading: false,
         errorMessage: payload,
       };
+
+    case `${ADD_TO_CART}_PENDING`: {
+      return {
+        ...state,
+      };
+    }
+    case `${ADD_TO_CART}_FULFILLED`: {
+      return {
+        ...state,
+      };
+    }
+    case `${ADD_TO_CART}_REJECTED`: {
+      return {
+        ...state,
+      };
+    }
 
     default:
       return state;

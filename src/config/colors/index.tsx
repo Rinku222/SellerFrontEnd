@@ -13,6 +13,7 @@ export const colors = {
   themeDarkBlackText: '#363636',
   skyBlue: '#1877F2',
   textGrey: '#363636',
+  tableBorder: '#BBBBBB',
 
   themeVeryLightPink: '#FEE5FD',
   themeYellow: '#08d2ea',

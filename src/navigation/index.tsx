@@ -25,6 +25,8 @@ import Forgot from '../screens/ForgotPassword';
 import NewPassword from '../screens/NewPassword';
 import Search from '../screens/Search';
 import Video from '../screens/Video';
+import Step1 from '../screens/Cart/Step1';
+import Step2 from '../screens/Cart/Step2';
 
 const AppContainer = createNativeStackNavigator();
 const AuthStack = createNativeStackNavigator();
@@ -170,6 +172,8 @@ export default function AppNavigator() {
         <AppContainer.Screen component={MainScreen} name="VideosScreen" />
         <AppContainer.Screen component={PDFExample} name="PDFScreen" />
         <AppContainer.Screen component={Quiz} name="Quiz" />
+        <AppContainer.Screen component={Step1} name="Step1" />
+        <AppContainer.Screen component={Step2} name="Step2" />
 
         {/* <AppContainer.Screen component={Home} name="VideosScreen" /> */}
       </AppContainer.Navigator>

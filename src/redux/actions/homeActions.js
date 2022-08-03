@@ -7,7 +7,7 @@ import useSubscribedCourseServices from '../../services/SubsribedCourses';
 export default function useSalesActions() {
   const dispatch = useDispatch();
   // const {_err, _res} = useResProcessor();
-  const {getAllCourses} = useHomeServices();
+  const {getAllCourses, getCart, deleteCartCourse} = useHomeServices();
   const {getSubscribedCourses} = useSubscribedCourseServices();
 
   return {
@@ -17,6 +17,34 @@ export default function useSalesActions() {
         payload: async () => {
           try {
             const response = await getAllCourses(params);
+            const {data} = response;
+
+            return Promise.resolve(data);
+          } catch (error) {
+            console.log('----->error in reducer', error);
+          }
+        },
+      }),
+    getCart: params =>
+      dispatch({
+        type: types.GET_CART,
+        payload: async () => {
+          try {
+            const response = await getCart(params);
+            const {data} = response;
+
+            return Promise.resolve(data);
+          } catch (error) {
+            console.log('----->error in reducer', error);
+          }
+        },
+      }),
+    deleteCartCourse: params =>
+      dispatch({
+        type: types.DELETE_CART_COURSE,
+        payload: async () => {
+          try {
+            const response = await deleteCartCourse(params);
             const {data} = response;
 
             return Promise.resolve(data);

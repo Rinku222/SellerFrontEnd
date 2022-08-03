@@ -159,9 +159,9 @@ const renderTitle = (item, setVideo, setVideoId, addRecentVideo, courseId, setSe
   />
 );
 
-const renderIcon = (v, courseBought, credits) => (
+const renderIcon = (v: boolean, condition: boolean, credits: number) => (
   <View style={{flexDirection: 'row', alignItems: 'center'}}>
-    {courseBought ? (
+    {condition ? (
       <Text style={{color: colors.black, marginRight: 10}}>
         Credits 0/ <Text>{credits}</Text>
       </Text>
@@ -177,6 +177,7 @@ const renderIcon = (v, courseBought, credits) => (
 function DropDownList(props: any) {
   const {
     courseBought,
+    condition,
     item,
     courseId,
     getVideos,
@@ -187,37 +188,42 @@ function DropDownList(props: any) {
     setSectionId,
     addRecentVideo,
     readAssessment,
+    selectedSection,
+    setSelectedSection,
+    index,
   } = props;
 
   const {sectionTitle, credits, _id} = item;
 
-  const [expanded, setExpanded] = useState(false);
+  const [expanded, setExpanded] = useState(selectedSection === index);
   const selector = useSelector(s => s.main.assessment);
 
-  const handlePress = async () => {
-    if (courseBought) {
-      setExpanded(!expanded);
-    }
-    if (!expanded) {
-      await readAssessment({courseId, sectionId: _id});
+  const [loader, setLoader] = useState(false);
 
+  const handlePress = async () => {
+    if (condition && selectedSection !== index) {
+      setSelectedSection(index);
+      setLoader(true);
+      await readAssessment({courseId, sectionId: _id});
       await getVideos({courseId, sectionId: _id, limit: 20, offset: 0});
+      setLoader(false);
     }
   };
 
   return (
     <View style={styles.accordionContainer}>
       <List.Accordion
-        expanded={expanded}
-        right={() => renderIcon(expanded, courseBought, credits)}
+        // expanded={expanded}
+        expanded={selectedSection === index}
+        right={() => renderIcon(selectedSection === index, condition, credits)}
         title={
           <View style={styles.accordionTitle}>
             <Text>{sectionTitle}</Text>
           </View>
         }
         titleStyle={styles.text}
-        onPress={() => handlePress(expanded)}>
-        {videoLoading ? (
+        onPress={() => handlePress()}>
+        {loader ? (
           <View style={{marginVertical: 20}}>
             <ActivityIndicator color={colors.primary} />
           </View>
@@ -244,6 +250,8 @@ function DropDownList(props: any) {
 function DocumentsAndVideos(props: any) {
   const {courseBought, courseId} = props;
 
+  const [selectedSection, setSelectedSection] = useState(-1);
+
   const {sections, videoLoading} = useSelector(s => s.main);
   const {getVideos, addRecentVideo, readAssessment} = useMainScreenActions();
 
@@ -254,13 +262,17 @@ function DocumentsAndVideos(props: any) {
       {sections?.map((item, index) => {
         return (
           <DropDownList
+            condition={index < 1 ? true : courseBought}
             courseBought={index < 2 ? true : courseBought}
             item={item}
             key={index}
             {...props}
             addRecentVideo={addRecentVideo}
             getVideos={getVideos}
+            index={index}
             readAssessment={readAssessment}
+            selectedSection={selectedSection}
+            setSelectedSection={setSelectedSection}
             videoLoading={videoLoading}
             videos={videos}
           />
@@ -273,6 +285,7 @@ function DocumentsAndVideos(props: any) {
 const styles = StyleSheet.create({
   container: {
     marginTop: 5,
+    // marginBottom: 60,
   },
 
   accordionContainer: {

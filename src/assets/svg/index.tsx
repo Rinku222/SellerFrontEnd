@@ -21,6 +21,10 @@ import DownArrow from './DownArrow.svg';
 import Info from './infoIcon.svg';
 import Warning from './warning.svg';
 import Users from './users.svg';
+import Delete from './delete.svg';
+import EmptyCart from './emptyCart.svg';
+import BlueTick from './blue-tick.svg';
+import BigLock from './bigLock.svg';
 
 export interface ISVGProps {
   color?: string;
@@ -90,4 +94,16 @@ export function WarningIcon(props: ISVGProps) {
 }
 export function UsersIcon(props: ISVGProps) {
   return <Users {...props} name="usersIcon" />;
+}
+export function DeleteIcon(props: ISVGProps) {
+  return <Delete {...props} name="deleteIcon" />;
+}
+export function EmptyCartIcon(props: ISVGProps) {
+  return <EmptyCart {...props} name="emptyCart" />;
+}
+export function BlueTickIcon(props: ISVGProps) {
+  return <BlueTick {...props} name="blueTick" />;
+}
+export function BigLockIcon(props: ISVGProps) {
+  return <BigLock {...props} name="bigLock" />;
 }

@@ -1,10 +1,16 @@
-import {GET_HOME_COURSES, GET_ALL_SUBSCRIBED_COURSES} from '../actions/actionTypes';
+import {
+  GET_HOME_COURSES,
+  GET_ALL_SUBSCRIBED_COURSES,
+  GET_CART,
+  DELETE_CART_COURSE,
+} from '../actions/actionTypes';
 
 const initialState = {
   homeLoading: false,
   allCourses: [],
   subscribedCourses: [],
   errorMessage: undefined,
+  cart: [],
 };
 
 const reducer = (state = initialState, action = {}) => {
@@ -31,6 +37,24 @@ const reducer = (state = initialState, action = {}) => {
         homeLoading: false,
         errorMessage: payload,
       };
+    case `${DELETE_CART_COURSE}_PENDING`:
+      return {
+        ...state,
+        // homeLoading: true,
+      };
+    case `${DELETE_CART_COURSE}_FULFILLED`: {
+      return {
+        ...state,
+        // homeLoading: false,
+        // allCourses: payload.course,
+      };
+    }
+    case `${DELETE_CART_COURSE}_REJECTED`:
+      return {
+        ...state,
+        // homeLoading: false,
+        errorMessage: payload,
+      };
 
     case `${GET_ALL_SUBSCRIBED_COURSES}_PENDING`:
       return {
@@ -51,6 +75,24 @@ const reducer = (state = initialState, action = {}) => {
         errorMessage: payload,
       };
 
+    case `${GET_CART}_PENDING`:
+      return {
+        ...state,
+        // mainLoading: true,
+      };
+    case `${GET_CART}_FULFILLED`: {
+      return {
+        ...state,
+        // mainLoading: false,
+        cart: payload.userCart,
+      };
+    }
+    case `${GET_CART}_REJECTED`:
+      return {
+        ...state,
+        // mainLoading: false,
+        errorMessage: payload,
+      };
     default:
       return state;
   }

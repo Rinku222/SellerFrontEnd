@@ -10,6 +10,8 @@ import {
 } from 'react-native';
 import {TabView, SceneMap, TabBar} from 'react-native-tab-view';
 import {useSelector} from 'react-redux';
+import LinearGradient from 'react-native-linear-gradient';
+import {BigLockIcon} from '../../../../assets/svg';
 import {colors} from '../../../../config/colors';
 import Layout from '../../../../utils/Layout';
 
@@ -59,6 +61,7 @@ const renderScene = (params, props) => {
 
 export default function TabViewExample(props) {
   const [selectedTab, setSelectedTab] = React.useState(0);
+  const {courseBought} = props;
 
   const [routes] = React.useState([
     {key: 'first', title: 'Terms'},
@@ -85,6 +88,20 @@ export default function TabViewExample(props) {
         }}
         onIndexChange={setSelectedTab}
       />
+      {!courseBought ? (
+        <LinearGradient
+          colors={['#FFFFFFB3', '#BBBBBB', '#808080']}
+          style={{
+            position: 'absolute',
+            bottom: 60,
+            left: 0,
+            right: 0,
+            alignItems: 'center',
+            paddingVertical: 30,
+          }}>
+          <BigLockIcon />
+        </LinearGradient>
+      ) : null}
     </View>
   );
 }
@@ -100,6 +117,7 @@ const styles = StyleSheet.create({
   tabContainer: {
     flexGrow: 1,
     marginTop: 15,
+    position: 'relative',
   },
   indicatorStyle: {
     backgroundColor: colors.themeBlue,

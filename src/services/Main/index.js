@@ -64,6 +64,11 @@ export default function useMainServices() {
       const {courseId, sectionId} = data;
       return readService(`/assessment?courseId=${courseId}&sectionId=${sectionId}`);
     },
+    addToCart: data => {
+      const {courseId} = data;
+      return createService(`/userCart`, {courseId});
+    },
+
     submitAssessment: data => {
       const {questions, assessmentId} = data;
       const newArray = questions.map((item, index) => {

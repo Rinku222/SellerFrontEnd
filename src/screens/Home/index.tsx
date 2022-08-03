@@ -7,7 +7,6 @@ import OfferCard from '../../components/OfferCard';
 import OgoingCourseCard from '../../components/OngoingCourseCard';
 import {styles} from './styles';
 import {screenWidth} from '../../config/globalStyles';
-
 import {CartIcon, WarningIcon} from '../../assets/svg';
 import CourseCard from '../../components/CourseCard';
 import homeActions from '../../redux/actions/homeActions';
@@ -15,15 +14,16 @@ import {Loader} from '../../../App';
 import loadingVariable from '../../redux/selector';
 import useUserActions from '../../redux/actions/userActions';
 
-function TopRow({firstName}) {
+function TopRow({firstName, cartLength, navigation}) {
   return (
     <View style={styles.topRow}>
       <Text style={styles.hugeText}>
         Hey
         <Text style={{color: colors.themeYellow}}> {firstName}</Text>
       </Text>
-      <TouchableOpacity style={{padding: 4}}>
-        <CartIcon />
+      <TouchableOpacity style={{padding: 4}} onPress={() => navigation.navigate('Step1')}>
+        <CartIcon style={styles.cartIcon} />
+        <Text style={styles.cartLength}>{cartLength}</Text>
       </TouchableOpacity>
     </View>
   );
@@ -88,23 +88,22 @@ function RenderRecommended(props) {
 }
 
 function Home(props) {
-  // const firstName = useSelector(s => s.user.userData?.username) || '';
-
   const loading = loadingVariable();
 
-  const {allCourses, subscribedCourses} = useSelector(s => s.home);
+  const {allCourses, subscribedCourses, cart} = useSelector(s => s.home);
 
   const {user} = useSelector(s => s.user);
 
   const {_id, displayName, email, phone, profileUrl} = user || {};
 
-  const {getHomeCourses, getAllSubscribedCourses} = homeActions();
+  const {getHomeCourses, getAllSubscribedCourses, getCart} = homeActions();
   const {getUserData} = useUserActions();
 
   const loadData = async () => {
     getHomeCourses({offset: 0, limit: 10});
     getAllSubscribedCourses();
     getUserData();
+    getCart();
   };
 
   useEffect(() => {
@@ -117,7 +116,7 @@ function Home(props) {
 
   return (
     <ScrollView style={styles.container}>
-      <TopRow firstName={displayName} />
+      <TopRow cartLength={cart.length} firstName={displayName} {...props} />
       <ScrollView contentContainerStyle={{flex: 1, paddingTop: 40}}>
         <OfferCard />
         <Text style={styles.labelText}>Ongoing Course</Text>

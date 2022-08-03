@@ -40,7 +40,6 @@ export default function useUserActions() {
         payload: async () => {
           try {
             const result = await uploadProfileImage(params);
-            console.log('----->result.key', result.key);
             return result.key;
           } catch (error) {
             console.log('----->error in UPLOAD_IMAGE action', error);
