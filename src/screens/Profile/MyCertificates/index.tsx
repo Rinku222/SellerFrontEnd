@@ -11,14 +11,14 @@ function MyCertificates(props) {
     <View style={styles.container}>
       <View>
         <TopHeader icon={<CertificateIcon />} title="My Certificate" {...props} />
-        <ScrollView>
-          <FlatList
-            data={DATA}
-            keyExtractor={item => item.toString()}
-            numColumns={2}
-            renderItem={item => <CourseCard data={item} {...props} />}
-          />
-        </ScrollView>
+        {/* <ScrollView> */}
+        <FlatList
+          data={DATA}
+          keyExtractor={item => item.toString()}
+          numColumns={2}
+          renderItem={item => <CourseCard data={item} {...props} />}
+        />
+        {/* </ScrollView> */}
       </View>
     </View>
   );

@@ -77,8 +77,8 @@ function RenderRecommended(props) {
   return (
     <ScrollView horizontal style={{marginTop: 10}}>
       <View style={{flexDirection: 'row'}}>
-        {recommended?.map(item => (
-          <View style={{width: 200, margin: 5}}>
+        {recommended?.map((item, index) => (
+          <View key={index} style={{width: 200, margin: 5}}>
             <CourseCard data={item} {...props} />
           </View>
         ))}

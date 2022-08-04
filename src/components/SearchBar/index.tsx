@@ -36,14 +36,14 @@ function SearchDropdown(props: any) {
             nestedScrollEnabled
             contentContainerStyle={styles.scrollContainer}
             keyboardShouldPersistTaps="handled">
-            {options.map(({label, value}) => {
+            {options.map(({label, index: number}) => {
               return (
                 <TouchableOpacity
-                  key={value}
+                  key={index}
                   onPress={() => {
                     Keyboard.dismiss();
                     onChangeText(label);
-                    onSelect(value);
+                    onSelect(index);
                   }}>
                   <Menu.Item title={label} />
                   <Divider />

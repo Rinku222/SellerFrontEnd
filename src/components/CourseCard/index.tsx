@@ -167,19 +167,23 @@ function CourseCard(props) {
         )}
       </View>
       <View style={styles.content}>
-        <View style={{flexDirection: 'row', justifyContent: 'space-between', flexWrap: 'wrap'}}>
-          <Text style={styles.heading}>{courseTitle}</Text>
-          <View style={styles.subheading}>
-            <Image source={{uri: profileUrl}} style={styles.image} />
-            <Text>{name}</Text>
-          </View>
+        <View style={{flexDirection: 'column', justifyContent: 'space-between', flexWrap: 'wrap'}}>
+          <Text numberOfLines={2} style={styles.heading}>
+            {courseTitle}
+          </Text>
         </View>
 
         {!myCourse && (
           <View
             style={{
               alignItems: 'flex-end',
+              justifyContent: 'space-between',
+              flexDirection: 'row',
             }}>
+            <View style={styles.subheading}>
+              <Image source={{uri: profileUrl}} style={styles.image} />
+              <Text>{name}</Text>
+            </View>
             <Text style={{fontWeight: 'bold', marginBottom: 10}}>₹{amount}/-</Text>
           </View>
         )}
@@ -233,6 +237,8 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     marginTop: 12,
     width: 140,
+    flex: 1,
+    height: 40,
   },
   subheading: {
     flexDirection: 'row',

@@ -33,7 +33,7 @@ function SecondRoute() {
         <Text style={{color: colors.black, marginBottom: 20, fontWeight: 'bold'}}>Questions</Text>
         {FAQ.map((item, index) => {
           return (
-            <View style={{marginBottom: 20}}>
+            <View key={index} style={{marginBottom: 20}}>
               <Text style={{marginBottom: 10, color: colors.black, fontWeight: 'bold'}}>
                 Q. {item?.question}
               </Text>

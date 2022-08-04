@@ -57,8 +57,8 @@ function Step1(props) {
           style={{
             position: 'absolute',
             bottom: 70,
-            right: 80,
-            left: 80,
+            right: 40,
+            left: 40,
             zIndex: 5,
             paddingVertical: 5,
             borderRadius: 8,

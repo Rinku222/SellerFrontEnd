@@ -38,17 +38,21 @@ function OrderSummary(props) {
         </View>
         {cart.map((item, index) => {
           return (
-            <View style={{justifyContent: 'space-between', flexDirection: 'row'}}>
-              <Text>{item.courseTitle}</Text>
+            <View
+              key={index}
+              style={{justifyContent: 'space-between', flexDirection: 'row', marginBottom: 5}}>
+              <Text numberOfLines={1} style={{flex: 1}}>
+                {item.courseTitle}
+              </Text>
               <Text style={{width: '20%', alignItems: 'center'}}>₹{item.amount}/-</Text>
             </View>
           );
         })}
       </View>
       <View style={{padding: 10}}>
-        {bottomData.map(item => {
+        {bottomData.map((item, index) => {
           return (
-            <View>
+            <View key={index}>
               {item.value ? (
                 <View
                   style={{flexDirection: 'row', justifyContent: 'space-between', marginBottom: 5}}>
@@ -82,17 +86,26 @@ function Step2(props) {
   const total = subTotal - discount;
 
   return (
-    <View style={{position: 'relative'}}>
+    <View style={{position: 'relative', flex: 1}}>
       <TopHeader {...props} />
 
       <View style={styles.cardMainContainer}>
-        <Text style={{fontWeight: 'bold', color: colors.black, marginBottom: 5}}>Your Price</Text>
+        {/* <Text style={{fontWeight: 'bold', color: colors.black, marginBottom: 5}}>Your Price</Text>
         <View style={{flexDirection: 'row', alignItems: 'center'}}>
           <BlueTickIcon style={{width: 100, height: 100}} />
           <Text style={{fontWeight: 'bold', fontSize: 18, color: colors.black, marginLeft: 5}}>
             ₹{total}/-
           </Text>
-        </View>
+        </View> */}
+        <Text
+          style={{
+            fontWeight: 'bold',
+            fontSize: 20,
+            color: colors.black,
+            margin: 5,
+          }}>
+          Checkout
+        </Text>
         <OrderSummary cart={cart} discount={discount} subTotal={subTotal} total={total} />
       </View>
       <Button
@@ -102,8 +115,8 @@ function Step2(props) {
         style={{
           position: 'absolute',
           bottom: 70,
-          right: 80,
-          left: 80,
+          right: 40,
+          left: 40,
           zIndex: 5,
           paddingVertical: 5,
           borderRadius: 8,

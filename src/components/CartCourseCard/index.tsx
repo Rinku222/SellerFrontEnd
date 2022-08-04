@@ -56,8 +56,16 @@ function CartCourseCard(props) {
             height: 80,
           }}>
           <View
-            style={{alignItems: 'center', justifyContent: 'space-between', flexDirection: 'row'}}>
-            <Text style={{color: colors.black, fontWeight: 'bold'}}>{courseTitle}</Text>
+            style={{
+              alignItems: 'flex-start',
+              justifyContent: 'space-between',
+              flexDirection: 'row',
+            }}>
+            <Text
+              numberOfLines={2}
+              style={{color: colors.black, fontWeight: 'bold', flex: 1, height: 40}}>
+              {courseTitle}
+            </Text>
             {loader ? (
               <ActivityIndicator
                 animating

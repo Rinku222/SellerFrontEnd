@@ -65,12 +65,15 @@ function RenderRow(props) {
 function WishList() {
   const {wishlist} = useSelector(s => s.wishlist);
 
-  const loading = loadingVariable();
+  // const loading = loadingVariable();
+  const [loader, setLoader] = useState(false);
 
   const {getWishlist} = useWishlistActions();
 
   const loadData = async () => {
-    getWishlist();
+    setLoader(true);
+    await getWishlist();
+    setLoader(false);
   };
 
   useEffect(() => {
@@ -83,14 +86,27 @@ function WishList() {
 
   return (
     <View style={styles.mainContainer}>
-      <View style={styles.heading}>
-        <Text style={styles.colorBlack}>All Saved Program</Text>
-      </View>
-      <ScrollView showsVerticalScrollIndicator={false} style={styles.scrollView}>
-        {wishlist.map((item, i) => {
-          return <RenderRow data={item} key={i} />;
-        })}
-      </ScrollView>
+      {loader ? (
+        <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+          <ActivityIndicator
+            animating
+            color={colors.primary}
+            size="small"
+            // style={styles.wishlistIcon}
+          />
+        </View>
+      ) : (
+        <View>
+          <View style={styles.heading}>
+            <Text style={styles.colorBlack}>All Saved Program</Text>
+          </View>
+          <ScrollView showsVerticalScrollIndicator={false} style={styles.scrollView}>
+            {wishlist.map((item, i) => {
+              return <RenderRow data={item} key={i} />;
+            })}
+          </ScrollView>
+        </View>
+      )}
     </View>
   );
 }
@@ -98,6 +114,7 @@ function WishList() {
 const styles = StyleSheet.create({
   mainContainer: {
     padding: 10,
+    flexGrow: 1,
   },
   scrollView: {
     marginBottom: 50,

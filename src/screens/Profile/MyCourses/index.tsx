@@ -23,14 +23,12 @@ function MyCourses(props) {
     <View style={styles.container}>
       <View>
         <TopHeader icon={<CourseIcon />} title="My Courses" {...props} />
-        <ScrollView>
-          <FlatList
-            data={courses}
-            keyExtractor={item => item.toString()}
-            numColumns={2}
-            renderItem={({item}) => <CourseCard course data={item} {...props} />}
-          />
-        </ScrollView>
+        <FlatList
+          data={courses}
+          keyExtractor={item => item.toString()}
+          numColumns={2}
+          renderItem={({item}) => <CourseCard course data={item} {...props} />}
+        />
       </View>
     </View>
   );

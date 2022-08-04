@@ -89,6 +89,7 @@ function Quiz(props: any) {
 
                   return (
                     <TouchableOpacity
+                      key={index}
                       style={{
                         marginTop: 25,
                         borderWidth: 1,

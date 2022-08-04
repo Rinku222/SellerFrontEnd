@@ -245,6 +245,7 @@ function MainScreen(props: any) {
     <View style={styles.mainContainer1}>
       <View style={styles.videoContainer}>
         <VideoPlayer
+          navigator={navigation}
           paused={paused}
           ref={videoRef}
           source={{

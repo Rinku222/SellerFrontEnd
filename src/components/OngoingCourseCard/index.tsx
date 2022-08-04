@@ -14,7 +14,9 @@ function OngoingCourseCard(props) {
         style={styles.leftImageStyle}
       />
       <View style={{marginLeft: 11}}>
-        <Text style={styles.titleText}>{programName}</Text>
+        <Text numberOfLines={2} style={styles.titleText}>
+          {programName}
+        </Text>
         <View style={styles.creatorRow}>
           <Image
             source={{
@@ -52,11 +54,14 @@ const styles = StyleSheet.create({
   leftImageStyle: {
     width: 83,
     height: 75,
+    borderRadius: 8,
   },
   titleText: {
     fontSize: 16,
     color: colors.themeDarkBlackText,
     marginBottom: 12,
+    flex: 1,
+    height: 40,
   },
   creatorRow: {
     flexDirection: 'row',
