@@ -18,6 +18,8 @@ import {
   SET_COURSE_ID,
   ADD_TO_CART,
   GET_CART,
+  READ_MESSAGES,
+  ADD_MESSAGES,
 } from '../actions/actionTypes';
 
 const initialState = {
@@ -33,6 +35,7 @@ const initialState = {
   assessment: {},
   errorMessage: undefined,
   assessmentResult: {},
+  messages: {messages: []},
 };
 
 const reducer = (state = initialState, action = {}) => {
@@ -205,6 +208,45 @@ const reducer = (state = initialState, action = {}) => {
       };
     }
     case `${READ_FAQ}_REJECTED`:
+      return {
+        ...state,
+        // mainLoading: false,
+        errorMessage: payload,
+      };
+    case `${ADD_MESSAGES}_PENDING`:
+      return {
+        ...state,
+        // mainLoading: true,
+      };
+    case `${ADD_MESSAGES}_FULFILLED`: {
+      return {
+        ...state,
+        messages: {
+          messages: [],
+        },
+      };
+    }
+    case `${ADD_MESSAGES}_REJECTED`:
+      return {
+        ...state,
+        // mainLoading: false,
+        errorMessage: payload,
+      };
+    case `${READ_MESSAGES}_PENDING`:
+      return {
+        ...state,
+        // mainLoading: true,
+      };
+    case `${READ_MESSAGES}_FULFILLED`: {
+      return {
+        ...state,
+        messages: {
+          messages: [...state.messages.messages, ...payload.messages],
+          count: payload.count,
+        },
+      };
+    }
+    case `${READ_MESSAGES}_REJECTED`:
       return {
         ...state,
         // mainLoading: false,

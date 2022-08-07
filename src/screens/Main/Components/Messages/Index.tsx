@@ -1,45 +1,113 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 
-import {View, StyleSheet, Image, TextInput, ScrollView} from 'react-native';
-import {Divider} from 'react-native-paper';
+import {View, StyleSheet, Image, ScrollView, Text, TouchableOpacity} from 'react-native';
+import {ActivityIndicator, Divider, TextInput} from 'react-native-paper';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import {useSelector} from 'react-redux';
 import {colors} from '../../../../config/colors';
 import UserImage from '../../../../assets/images/laps.png';
 import ReviewsList from '../../../../components/Review';
+import {LockIcon, SendIcon} from '../../../../assets/svg';
+import Message from '../../../../components/Message';
+import useMainScreenActions from '../../../../redux/actions/mainScreenActions';
+
+function RightIcon(onSubmit) {
+  return (
+    <TouchableOpacity onPress={onSubmit}>
+      <SendIcon />
+    </TouchableOpacity>
+  );
+}
 
 function Messages(props: any) {
-  const {courseBought} = props;
-  const [comment, setComment] = useState('hello');
+  const {courseBought, courseId} = props;
+  const [message, setMessage] = useState('');
+
+  const [loader, setLoader] = useState(false);
+  const [offSet, setOffset] = useState(0);
+
+  const {messages = [], count = 0} = useSelector(s => s.main.messages);
+
+  const {readMessages, addMessage} = useMainScreenActions();
+
+  useEffect(() => {
+    console.log('----->inside useeffect');
+  }, []);
+
+  const onSubmit = async () => {
+    console.log('----->onSubmit called', message);
+    await addMessage({courseId, message});
+    await readMessages({courseId, offSet: 0});
+    setOffset(0);
+    setMessage('');
+  };
+
+  const isCloseToBottom = ({layoutMeasurement, contentOffset, contentSize}) => {
+    const paddingToBottom = 1;
+    return layoutMeasurement.height + contentOffset.y >= contentSize.height - paddingToBottom;
+  };
 
   return (
-    <ScrollView contentContainerStyle={styles.container} showsVerticalScrollIndicator={false}>
+    <ScrollView
+      contentContainerStyle={styles.container}
+      showsVerticalScrollIndicator={false}
+      onScroll={async ({nativeEvent}) => {
+        if (isCloseToBottom(nativeEvent) && !loader && offSet + 10 < count) {
+          console.log('----->function call on bottom');
+          setLoader(true);
+          await readMessages({courseId, offSet: offSet + 10});
+          setLoader(false);
+          setOffset(offSet + 10);
+        }
+      }}>
       {courseBought ? (
         <View>
           <View style={styles.imageContainer}>
             <Image source={UserImage} style={styles.image} />
             <TextInput
-              multiline
-              numberOfLines={4}
-              placeholder="useless placeholder"
+              // multiline
+              activeOutlineColor={colors.black}
+              activeUnderlineColor="transparent"
+              mode="outlined"
+              outlineColor={colors.black}
+              // numberOfLines={3}
+              placeholder="Message"
+              // secureTextEntry={newPassword}
+              right={
+                <TextInput.Icon
+                  name={() => RightIcon(onSubmit)}
+                  onPress={() => console.log('----->icon pressed')}
+                />
+              }
               style={styles.input}
-              value={comment}
-              onChangeText={v => setComment(v)}
+              value={message}
+              onChangeText={v => setMessage(v)}
             />
           </View>
           <Divider style={styles.divider} />
         </View>
       ) : null}
 
-      <ReviewsList />
+      {messages?.map((item, index) => {
+        return (
+          <View key={index}>
+            <Message data={item} />
+          </View>
+        );
+      })}
+      {loader ? (
+        <View style={{marginVertical: 10}}>
+          <ActivityIndicator animating color={colors.primary} size="small" />
+        </View>
+      ) : null}
     </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    // padding: 10,
     flexGrow: 1,
     marginTop: 5,
-    // justifyContent: 'space-around',
   },
   imageContainer: {
     flexDirection: 'row',
@@ -49,15 +117,15 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     borderRadius: 20,
+    alignItems: 'center',
   },
   input: {
-    height: 40,
     margin: 12,
-    borderWidth: 1,
-    padding: 10,
-    borderColor: colors.lightGrey,
     flexGrow: 1,
+    // borderWidth: 1,
     borderRadius: 5,
+    // height: 50,
+    // backgroundColor: colors.white,
   },
   divider: {
     height: 3,

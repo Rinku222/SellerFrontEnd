@@ -20,6 +20,8 @@ export default function useMainScreenActions() {
     submitAssessment,
     updateAssessment,
     addToCart,
+    readMessages,
+    addMessage,
   } = useMainServices();
 
   return {
@@ -225,6 +227,34 @@ export default function useMainScreenActions() {
         payload: async () => {
           try {
             const response = await addToCart(params);
+            const {data} = response;
+
+            return Promise.resolve(data);
+          } catch (error) {
+            console.log('----->error in reducer', error);
+          }
+        },
+      }),
+    readMessages: params =>
+      dispatch({
+        type: types.READ_MESSAGES,
+        payload: async () => {
+          try {
+            const response = await readMessages(params);
+            const {data} = response;
+
+            return Promise.resolve(data);
+          } catch (error) {
+            console.log('----->error in reducer', error);
+          }
+        },
+      }),
+    addMessage: params =>
+      dispatch({
+        type: types.ADD_MESSAGES,
+        payload: async () => {
+          try {
+            const response = await addMessage(params);
             const {data} = response;
 
             return Promise.resolve(data);

@@ -120,6 +120,7 @@ function MainScreen(props: any) {
     reviewed,
     terms,
     subscribed,
+    whishListId,
     insideCart,
   } = descriptions || {};
 
@@ -129,7 +130,8 @@ function MainScreen(props: any) {
   const _sectionId = recentVideo?.sectionId || '';
   const videoRef = useRef(videoDuration);
 
-  const {getSections, getDescriptions, readReviews, addReview, readFAQ} = useMainScreenActions();
+  const {getSections, getDescriptions, readReviews, addReview, readFAQ, readMessages} =
+    useMainScreenActions();
   const {addWishlist, deleteWishlist} = useWishlistActions();
   const {getCart} = homeActions();
 
@@ -144,7 +146,7 @@ function MainScreen(props: any) {
 
   const handleWishlistPress = async () => {
     if (wishListed) {
-      await deleteWishlist({courseId});
+      await deleteWishlist({wishlistId: whishListId});
     } else {
       await addWishlist({courseId});
     }
@@ -156,6 +158,7 @@ function MainScreen(props: any) {
     getSections({courseId, offset: 0, limit: 20});
     readReviews({courseId, offset: 0, limit: 20});
     readFAQ({courseId, offSet: 0, limit: 20});
+    readMessages({courseId, offSet: 0, limit: 10});
     if (videoDuration) {
       videoRef?.current?.seekTo?.(videoDuration / 1000);
     }
@@ -224,7 +227,7 @@ function MainScreen(props: any) {
       case '3':
         return <Notes courseBought={courseBought} videoId={videoId} {...props} />;
       case '4':
-        return <Messages courseBought={courseBought} {...props} />;
+        return <Messages courseBought={courseBought} courseId={courseId} {...props} />;
       case '5':
         return (
           <Reviews

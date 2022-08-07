@@ -56,7 +56,7 @@ function Video(props) {
       <FlatList
         data={subscribedCourses}
         extraData={subscribedCourses}
-        keyExtractor={item => item.id}
+        keyExtractor={item => item._id}
         ListEmptyComponent={() => <RenderEmpty navigation={navigation} />}
         renderItem={({item}) => (
           <View style={{marginRight: 10}}>
@@ -71,6 +71,7 @@ function Video(props) {
 const styles = StyleSheet.create({
   mainContainer: {
     flexGrow: 1,
+    // marginBottom: 50,
   },
   header: {
     flexDirection: 'row',

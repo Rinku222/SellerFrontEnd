@@ -64,6 +64,14 @@ export default function useMainServices() {
       const {courseId, sectionId} = data;
       return readService(`/assessment?courseId=${courseId}&sectionId=${sectionId}`);
     },
+    readMessages: data => {
+      const {courseId, offSet, limit} = data;
+      return readService(`/chat?offset=${offSet}&limit=10&courseId=${courseId}`);
+    },
+    addMessage: data => {
+      const {courseId, message} = data;
+      return createService(`/chat?offset=0&limit=10&courseId=${courseId}`, {message, courseId});
+    },
     addToCart: data => {
       const {courseId} = data;
       return createService(`/userCart`, {courseId});

@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="23" height="24" viewBox="0 0 23 24">
+  <g id="Group_504" data-name="Group 504" transform="translate(0 0.489)">
+    <ellipse id="Ellipse_114" data-name="Ellipse 114" cx="11.5" cy="12" rx="11.5" ry="12" transform="translate(0 -0.489)" fill="#285892"/>
+    <g id="navigation-arrow" transform="translate(1.8 -0.489)">
+      <rect id="Rectangle_4370" data-name="Rectangle 4370" width="17" height="19" transform="translate(0.2 0)" fill="none"/>
+      <path id="Path_652" data-name="Path 652" d="M49.769,37.567,45.7,47.423a.593.593,0,0,1-1.054-.017l-1.637-4.459a.488.488,0,0,0-.368-.3L37.34,41.27a.447.447,0,0,1-.021-.885l11.742-3.411a.633.633,0,0,1,.576.11A.414.414,0,0,1,49.769,37.567Z" transform="translate(-34.88 -29.75)" fill="none" stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+    </g>
+  </g>
+</svg>
