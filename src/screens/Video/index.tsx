@@ -54,6 +54,7 @@ function Video(props) {
       ) : null}
 
       <FlatList
+        contentContainerStyle={styles.mainContainer}
         data={subscribedCourses}
         extraData={subscribedCourses}
         keyExtractor={item => item._id}
@@ -76,7 +77,7 @@ const styles = StyleSheet.create({
   header: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'space-around',
     marginVertical: 10,
   },
   headerText: {

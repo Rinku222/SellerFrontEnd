@@ -6,6 +6,7 @@ import {BlueTickIcon} from '../../../assets/svg';
 import TopHeader from '../../../components/TopHeader';
 import {colors} from '../../../config/colors';
 import {getShadow} from '../../../utils';
+import Payment from '../../../components/Payment';
 
 function OrderSummary(props) {
   const {cart, subTotal, discount, total} = props;
@@ -77,6 +78,7 @@ function OrderSummary(props) {
 }
 
 function Step2(props) {
+  const {navigation} = props;
   const {cart} = useSelector(s => s.home);
 
   const discount = 0;
@@ -90,13 +92,6 @@ function Step2(props) {
       <TopHeader {...props} />
 
       <View style={styles.cardMainContainer}>
-        {/* <Text style={{fontWeight: 'bold', color: colors.black, marginBottom: 5}}>Your Price</Text>
-        <View style={{flexDirection: 'row', alignItems: 'center'}}>
-          <BlueTickIcon style={{width: 100, height: 100}} />
-          <Text style={{fontWeight: 'bold', fontSize: 18, color: colors.black, marginLeft: 5}}>
-            ₹{total}/-
-          </Text>
-        </View> */}
         <Text
           style={{
             fontWeight: 'bold',
@@ -121,7 +116,7 @@ function Step2(props) {
           paddingVertical: 5,
           borderRadius: 8,
         }}
-        onPress={() => navigation.navigate('Step2')}>
+        onPress={() => Payment(navigation, total)}>
         Continue to pay ₹{total}/-
       </Button>
     </View>
