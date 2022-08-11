@@ -3,6 +3,7 @@ import {
   readService,
   updateService,
   fileUpdateService,
+  createService,
 } from '../HttpService/HttpService';
 
 export default function useUserServices() {
@@ -23,6 +24,10 @@ export default function useUserServices() {
     },
     updateUserData: (data: any) => {
       return updateService(`/mentee`, {}, data);
+    },
+    addMentee: (data: any) => {
+      const {displayName, email, phone, profileUrl} = data;
+      return createService(`/mentee`, data);
     },
   };
 }

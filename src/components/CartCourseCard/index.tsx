@@ -5,6 +5,7 @@ import {colors} from '../../config/colors';
 import {getShadow} from '../../utils';
 import homeActions from '../../redux/actions/homeActions';
 import {DeleteIcon} from '../../assets/svg';
+import Price from '../Price';
 
 function CartCourseCard(props) {
   const {course} = props;
@@ -86,7 +87,7 @@ function CartCourseCard(props) {
         </View>
       </View>
       <View style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
-        <Text style={{fontWeight: 'bold', color: colors.black}}>₹{amount}/-</Text>
+        <Text style={{fontWeight: 'bold', color: colors.black}}>{Price(amount)}</Text>
         <View style={{display: 'flex', flexDirection: 'row', marginLeft: 80, alignItems: 'center'}}>
           <Image
             source={{

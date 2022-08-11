@@ -50,6 +50,7 @@ function Messages(props: any) {
   return (
     <ScrollView
       contentContainerStyle={styles.container}
+      keyboardShouldPersistTaps="handled"
       showsVerticalScrollIndicator={false}
       onScroll={async ({nativeEvent}) => {
         if (isCloseToBottom(nativeEvent) && !loader && offSet + 10 < count) {
@@ -66,6 +67,7 @@ function Messages(props: any) {
             <Image source={UserImage} style={styles.image} />
             <TextInput
               // multiline
+              dense
               activeOutlineColor={colors.black}
               activeUnderlineColor="transparent"
               mode="outlined"
@@ -76,7 +78,8 @@ function Messages(props: any) {
               right={
                 <TextInput.Icon
                   name={() => RightIcon(onSubmit)}
-                  onPress={() => console.log('----->icon pressed')}
+                  // onPress={onSubmit}
+                  // onPress={() => console.log('----->icon pressed')}
                 />
               }
               style={styles.input}
@@ -122,7 +125,7 @@ const styles = StyleSheet.create({
   input: {
     margin: 12,
     flexGrow: 1,
-    // borderWidth: 1,
+    padding: 0,
     borderRadius: 5,
     // height: 50,
     // backgroundColor: colors.white,

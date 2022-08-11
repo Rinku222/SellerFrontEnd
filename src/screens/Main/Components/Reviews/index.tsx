@@ -74,7 +74,7 @@ function Reviews(props: any) {
 
 const styles = StyleSheet.create({
   container: {
-    padding: 10,
+    paddingVertical: 10,
     justifyContent: 'space-around',
     marginBottom: 20,
   },

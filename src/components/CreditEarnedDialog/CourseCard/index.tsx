@@ -10,6 +10,7 @@ import {getShadow} from '../../../utils';
 import {readService, Authorization} from '../../../services/HttpService/HttpService';
 import useWishlistActions from '../../../redux/actions/wishlistActions';
 import homeActions from '../../../redux/actions/homeActions';
+import Price from '../../Price';
 
 // cards-heart
 
@@ -143,7 +144,7 @@ function CourseCard(props) {
             style={{
               alignItems: 'flex-end',
             }}>
-            <Text style={{fontWeight: 'bold', marginBottom: 10}}>₹{amount}/-</Text>
+            <Text style={{fontWeight: 'bold', marginBottom: 10}}>{Price(amount)}</Text>
           </View>
         )}
         <View style={styles.bottomRow}>

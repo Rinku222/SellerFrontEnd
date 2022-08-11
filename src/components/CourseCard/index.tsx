@@ -10,6 +10,7 @@ import useWishlistActions from '../../redux/actions/wishlistActions';
 import homeActions from '../../redux/actions/homeActions';
 import useSearchActions from '../../redux/actions/searchActions';
 import useMainScreenActions from '../../redux/actions/mainScreenActions';
+import Price from '../Price';
 
 // cards-heart
 
@@ -184,7 +185,7 @@ function CourseCard(props) {
               <Image source={{uri: profileUrl}} style={styles.image} />
               <Text>{name}</Text>
             </View>
-            <Text style={{fontWeight: 'bold', marginBottom: 10}}>₹{amount}/-</Text>
+            <Text style={{fontWeight: 'bold', marginBottom: 10}}>{Price(amount)}</Text>
           </View>
         )}
         <View style={styles.bottomRow}>

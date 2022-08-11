@@ -6,6 +6,7 @@ export const UPLOAD_IMAGE = 'UPLOAD_IMAGE';
 export const UPDATE_IMAGE = 'UPDATE_IMAGE';
 export const GET_USER_DATA = 'GET_USER_DATA';
 export const UPDATE_USER_DATA = 'UPDATE_USER_DATA';
+export const ADD_MENTEE = 'ADD_MENTEE';
 
 // For Home Screen
 

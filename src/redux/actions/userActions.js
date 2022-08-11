@@ -6,7 +6,8 @@ import useUserServices from '../../services/User';
 export default function useUserActions() {
   const dispatch = useDispatch();
 
-  const {uploadProfileImage, getUserData, updateUserData, updateProfileImage} = useUserServices();
+  const {uploadProfileImage, getUserData, updateUserData, updateProfileImage, addMentee} =
+    useUserServices();
 
   return {
     getUserDetails: params =>
@@ -65,6 +66,18 @@ export default function useUserActions() {
         payload: async () => {
           try {
             const result = await getUserData();
+            return result.data;
+          } catch (error) {
+            console.log('----->error in UPLOAD_IMAGE action', error);
+          }
+        },
+      }),
+    addMentee: params =>
+      dispatch({
+        type: types.ADD_MENTEE,
+        payload: async () => {
+          try {
+            const result = await addMentee(params);
             return result.data;
           } catch (error) {
             console.log('----->error in UPLOAD_IMAGE action', error);

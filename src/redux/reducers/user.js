@@ -6,6 +6,7 @@ import {
   GET_USER_DATA,
   UPDATE_USER_DATA,
   UPDATE_IMAGE,
+  ADD_MENTEE,
 } from '../actions/actionTypes';
 
 const persistConfig = {
@@ -47,12 +48,14 @@ const reducer = (state = initialState, action = {}) => {
       };
     case `${UPLOAD_IMAGE}_PENDING`:
     case `${UPDATE_IMAGE}_PENDING`:
+    case `${ADD_MENTEE}_PENDING`:
     case `${UPDATE_USER_DATA}_PENDING`:
       return {
         ...state,
         // userLoading: true,
       };
     case `${UPLOAD_IMAGE}_FULFILLED`:
+    case `${ADD_MENTEE}_FULFILLED`:
     case `${UPDATE_IMAGE}_FULFILLED`:
     case `${UPDATE_USER_DATA}_FULFILLED`: {
       return {
@@ -61,6 +64,7 @@ const reducer = (state = initialState, action = {}) => {
       };
     }
     case `${UPLOAD_IMAGE}_REJECTED`:
+    case `${ADD_MENTEE}_REJECTED`:
     case `${UPDATE_IMAGE}_REJECTED`:
     case `${UPDATE_USER_DATA}_REJECTED`:
       return {

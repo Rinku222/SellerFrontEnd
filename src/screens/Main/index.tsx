@@ -27,6 +27,7 @@ import useMainScreenActions from '../../redux/actions/mainScreenActions';
 import useMainServices from '../../services/Main';
 import useWishlistActions from '../../redux/actions/wishlistActions';
 import homeActions from '../../redux/actions/homeActions';
+import Price from '../../components/Price';
 
 type Route = {
   key: string;
@@ -93,11 +94,10 @@ const renderTabBar = (props: SceneRendererProps & {navigationState: State}) => (
 
 function MainScreen(props: any) {
   const {route, navigation} = props;
-  const {params} = route;
 
   // const {courseId} = params;
 
-  const courseId = useSelector(s => s.main.courseId);
+  const {courseId} = useSelector(s => s.main);
 
   const {setVideoTime, addToCart} = useMainServices();
 
@@ -166,7 +166,7 @@ function MainScreen(props: any) {
 
   useEffect(() => {
     loadData();
-  }, [courseId, videoId]);
+  }, [courseId]);
 
   useEffect(() => {
     if (_id && _id !== videoId) {
@@ -252,7 +252,8 @@ function MainScreen(props: any) {
           paused={paused}
           ref={videoRef}
           source={{
-            uri: 'https://storage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
+            uri:
+              video || 'https://storage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
           }}
           style={styles.videos}
           onBuffer={buffer => console.log('----->buffer', buffer)}
@@ -317,7 +318,7 @@ function MainScreen(props: any) {
               )}
             </TouchableOpacity>
           </View>
-          <View style={{flexDirection: 'row', marginBottom: 10, paddingHorizontal: 5}}>
+          <View style={{flexDirection: 'row', marginBottom: 8, paddingHorizontal: 5}}>
             <Text style={{paddingRight: 10}}>{duration}</Text>
             <Text style={{paddingHorizontal: 10}}>{totalLession} Lessons</Text>
             <View style={{flexDirection: 'row', paddingHorizontal: 10}}>
@@ -325,6 +326,9 @@ function MainScreen(props: any) {
               <UsersIcon />
             </View>
           </View>
+          {!subscribed ? (
+            <Text style={{paddingHorizontal: 5, marginBottom: 12}}>{Price(700)}</Text>
+          ) : null}
           <View style={styles.mainContainer}>
             <TabView
               initialLayout={{width: Layout.window.width}}
@@ -353,7 +357,7 @@ const styles = StyleSheet.create({
   header: {
     fontWeight: 'bold',
     fontSize: 16,
-    marginBottom: 5,
+    marginBottom: 10,
     paddingHorizontal: 5,
     color: colors.black,
   },

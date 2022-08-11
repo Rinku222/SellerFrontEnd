@@ -153,7 +153,10 @@ function Login(props) {
     async function signIn() {
       try {
         setLoading(true);
+
         const user = await Auth.signIn(emailPhoneForLogin, passwordForLogin);
+        console.log('----->user in signup', user);
+
         await getUserDetails({emailPhoneForLogin, passwordForLogin});
         const Authorization1 = user.signInUserSession.idToken.jwtToken;
         setLoading(false);
@@ -162,6 +165,7 @@ function Login(props) {
           Authorization1,
         });
       } catch (error) {
+        console.log('----->error in signup', error);
         setLoading(false);
         if (error.name === 'UserNotConfirmedException') {
           navigation.navigate('mail_verification', {
@@ -241,7 +245,7 @@ function Login(props) {
           if (user) {
             const body = {
               displayName: nameForSignUp,
-              email: emailPhoneForLogin,
+              email: emailPhoneForSignUp,
               phone: phoneForSignUp,
             };
 
@@ -250,17 +254,25 @@ function Login(props) {
             });
 
             navigation.navigate('mail_verification', {
-              itemId: 86,
               emailPhoneForSignUp,
               passwordForSignUp,
-              otherParam: 'anything you want here',
+              displayName: nameForSignUp,
+              phone: phoneForSignUp,
             });
           }
           setLoading(false);
         } catch (error) {
           setLoading(false);
+          if (error.message === 'User already exists') {
+            navigation.navigate('mail_verification', {
+              emailPhoneForSignUp,
+              passwordForSignUp,
+              displayName: nameForSignUp,
+              phone: phoneForSignUp,
+            });
+          }
           // console.log('error signing up:', JSON.stringify(error));
-          // console.log('error error up:', error);
+          console.log('error error up:', error.message);
         }
       }
     };
@@ -282,6 +294,7 @@ function Login(props) {
           value={emailPhoneForSignUp}
           onChangeText={onEmailPhoneChangeForSignUp}
         />
+        {console.log('----->emailPhoneForSignUp', emailPhoneForSignUp)}
         <InputBox
           secureTextEntry
           errorText={passwordForSignUpError}

@@ -8,6 +8,7 @@ import UserImage from '../../assets/images/laps.png';
 import useWishlistActions from '../../redux/actions/wishlistActions';
 import {Loader} from '../../../App';
 import loadingVariable from '../../redux/selector';
+import Price from '../../components/Price';
 
 function RenderRow(props) {
   const {data} = props;
@@ -55,7 +56,7 @@ function RenderRow(props) {
         </View>
         <View style={styles.itemLessons}>
           <Text>{totalLession} Lesson</Text>
-          <Text style={[styles.colorBlack, styles.bold]}>₹{amount}/-</Text>
+          <Text style={[styles.colorBlack, styles.bold]}>{Price(amount)}</Text>
         </View>
       </View>
     </TouchableOpacity>

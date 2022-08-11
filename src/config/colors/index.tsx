@@ -14,6 +14,7 @@ export const colors = {
   skyBlue: '#1877F2',
   textGrey: '#363636',
   tableBorder: '#BBBBBB',
+  borderColor: '#CCCCCC',
 
   themeVeryLightPink: '#FEE5FD',
   themeYellow: '#08d2ea',

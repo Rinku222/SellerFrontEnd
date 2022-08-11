@@ -7,6 +7,7 @@ import TopHeader from '../../../components/TopHeader';
 import {colors} from '../../../config/colors';
 import {getShadow} from '../../../utils';
 import Payment from '../../../components/Payment';
+import Price from '../../../components/Price';
 
 function OrderSummary(props) {
   const {cart, subTotal, discount, total} = props;
@@ -45,7 +46,7 @@ function OrderSummary(props) {
               <Text numberOfLines={1} style={{flex: 1}}>
                 {item.courseTitle}
               </Text>
-              <Text style={{width: '20%', alignItems: 'center'}}>₹{item.amount}/-</Text>
+              <Text style={{width: '20%', alignItems: 'center'}}>{Price(item.amount)}</Text>
             </View>
           );
         })}
@@ -65,7 +66,7 @@ function OrderSummary(props) {
                       fontWeight: 'bold',
                       color: colors.black,
                     }}>
-                    ₹{item.value}/-
+                    {Price(item.value)}
                   </Text>
                 </View>
               ) : null}
@@ -117,7 +118,7 @@ function Step2(props) {
           borderRadius: 8,
         }}
         onPress={() => Payment(navigation, total)}>
-        Continue to pay ₹{total}/-
+        Continue to pay {Price(total)}
       </Button>
     </View>
   );

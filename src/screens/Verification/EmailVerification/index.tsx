@@ -10,9 +10,11 @@ import useUserActions from '../../../redux/actions/userActions';
 function VerificationMail(props) {
   const [otp, setOtp] = useState({1: '', 2: '', 3: '', 4: '', 5: '', 6: ''});
   const {navigation, route} = props;
-  const {emailPhoneForSignUp, passwordForSignUp} = route.params;
+  const {emailPhoneForSignUp, passwordForSignUp, displayName, phone} = route.params;
 
-  const {getUserDetails} = useUserActions();
+  console.log('----->emailPhoneForSignUp in verification', emailPhoneForSignUp);
+
+  const {getUserDetails, addMentee} = useUserActions();
 
   const inputOne = useRef();
   const inputTwo = useRef();
@@ -26,11 +28,48 @@ function VerificationMail(props) {
   async function confirmSignUp() {
     try {
       const user = await Auth.confirmSignUp(emailPhoneForSignUp, code.replace(/,/g, ''));
+      console.log('----->user', user);
+      // success
       if (user) {
-        await getUserDetails({
-          emailPhoneForLogin: emailPhoneForSignUp,
-          passwordForLogin: passwordForSignUp,
-        });
+        // await getUserDetails({
+        //   emailPhoneForLogin: emailPhoneForSignUp,
+        //   passwordForLogin: passwordForSignUp,
+        // });
+
+        try {
+          // setLoading(true);
+
+          const login = await Auth.signIn(emailPhoneForSignUp, passwordForSignUp);
+          console.log('----->user in signup', login);
+
+          // await getUserDetails({emailPhoneForSignUp, passwordForSignUp});
+          // const Authorization1 = login.signInUserSession.idToken.jwtToken;
+          // setLoading(false);
+
+          // navigation.navigate('App', {
+          //   Authorization1,
+          // });
+        } catch (error) {
+          console.log('----->error in signup', error);
+          // setLoading(false);
+          console.log('----->error', error);
+        }
+
+        console.log('----->emailPhoneForSignUp', emailPhoneForSignUp);
+
+        await addMentee({displayName, email: emailPhoneForSignUp, phone, profileUrl: ''});
+
+        // logout
+        try {
+          await Auth.signOut();
+        } catch (err) {
+          console.log('----->err in signout', err);
+        }
+        try {
+          await Auth.signIn(emailPhoneForSignUp, passwordForSignUp);
+        } catch (err) {
+          console.log('----->err in signIn', err);
+        }
 
         navigation.navigate('App');
       }

@@ -30,11 +30,11 @@ function SecondRoute() {
   return (
     <View style={styles.container}>
       <ScrollView>
-        <Text style={{color: colors.black, marginBottom: 20, fontWeight: 'bold'}}>Questions</Text>
+        <Text style={{color: colors.black, marginBottom: 18, fontWeight: 'bold'}}>Questions</Text>
         {FAQ.map((item, index) => {
           return (
             <View key={index} style={{marginBottom: 20}}>
-              <Text style={{marginBottom: 10, color: colors.black, fontWeight: 'bold'}}>
+              <Text style={{marginBottom: 8, color: colors.black, fontWeight: 'bold'}}>
                 Q. {item?.question}
               </Text>
               <Text style={{color: colors.black}}>{item?.answer}</Text>
