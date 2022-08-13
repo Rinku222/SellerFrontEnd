@@ -6,6 +6,8 @@ import {fontSizes} from '../../config/globalStyles';
 import TreeSvgXml from '../../assets/svg/TreeSvg';
 
 function OfferCard(props) {
+  const {navigation} = props;
+
   return (
     <View style={styles.cardContainer}>
       <View style={styles.treeSvgStyle}>
@@ -13,7 +15,7 @@ function OfferCard(props) {
       </View>
       <Text style={styles.lightText}>Special offer only for you</Text>
       <Text style={styles.hugeText}>30% off</Text>
-      <TouchableOpacity style={styles.yellowButton}>
+      <TouchableOpacity style={styles.yellowButton} onPress={() => navigation.navigate('search')}>
         <Text style={{color: 'white'}}>View course</Text>
       </TouchableOpacity>
     </View>

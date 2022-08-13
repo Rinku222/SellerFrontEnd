@@ -25,13 +25,12 @@ function Payment(navigation: any, total: number) {
   };
   RazorpayCheckout.open(options)
     .then(data => {
-      // handle success
-      console.log('----->handle success');
+      console.log('----->data', data);
+      navigation.navigate('Transaction_Success');
     })
     .catch(error => {
-      // handle failure
-      // alert(`Error: ${error.code} | ${error.description}`);
-      console.log('----->handle failure');
+      console.log('----->error', error);
+      navigation.navigate('Transaction_Failed');
     });
 }
 

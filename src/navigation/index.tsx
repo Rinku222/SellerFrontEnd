@@ -27,6 +27,8 @@ import Search from '../screens/Search';
 import Video from '../screens/Video';
 import Step1 from '../screens/Cart/Step1';
 import Step2 from '../screens/Cart/Step2';
+import Failed from '../screens/Transaction/Failed';
+import Success from '../screens/Transaction/Success';
 
 const AppContainer = createNativeStackNavigator();
 const AuthStack = createNativeStackNavigator();
@@ -174,6 +176,8 @@ export default function AppNavigator() {
         <AppContainer.Screen component={Quiz} name="Quiz" />
         <AppContainer.Screen component={Step1} name="Step1" />
         <AppContainer.Screen component={Step2} name="Step2" />
+        <AppContainer.Screen component={Failed} name="Transaction_Failed" />
+        <AppContainer.Screen component={Success} name="Transaction_Success" />
 
         {/* <AppContainer.Screen component={Home} name="VideosScreen" /> */}
       </AppContainer.Navigator>

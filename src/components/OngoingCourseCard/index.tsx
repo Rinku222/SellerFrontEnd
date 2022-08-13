@@ -1,12 +1,26 @@
 import React from 'react';
 import {TouchableOpacity, View, Image, Text, StyleSheet} from 'react-native';
 import {colors} from '../../config/colors';
+import useMainScreenActions from '../../redux/actions/mainScreenActions';
 
 function OngoingCourseCard(props) {
-  const {programName = 'NA', creatorName = 'NA', creatorUrl, courseImage} = props;
+  const {
+    programName = 'NA',
+    creatorName = 'NA',
+    creatorUrl,
+    courseImage,
+    navigation,
+    courseId,
+  } = props;
+  const {setCourseId} = useMainScreenActions();
+
+  const handlePress = async () => {
+    await setCourseId({courseId});
+    navigation.navigate('VideosScreen');
+  };
 
   return (
-    <View style={styles.cardContainer}>
+    <TouchableOpacity style={styles.cardContainer} onPress={() => handlePress()}>
       <Image
         source={{
           uri: courseImage,
@@ -30,7 +44,7 @@ function OngoingCourseCard(props) {
       <TouchableOpacity style={styles.playIconContainer}>
         <Image source={require('../../assets/images/play.png')} style={styles.playIcon} />
       </TouchableOpacity>
-    </View>
+    </TouchableOpacity>
   );
 }
 

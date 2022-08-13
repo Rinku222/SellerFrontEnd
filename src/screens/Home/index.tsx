@@ -4,7 +4,7 @@ import Carousel from 'react-native-snap-carousel';
 import {useSelector} from 'react-redux';
 import {colors} from '../../config/colors';
 import OfferCard from '../../components/OfferCard';
-import OgoingCourseCard from '../../components/OngoingCourseCard';
+import OngoingCourseCard from '../../components/OngoingCourseCard';
 import {styles} from './styles';
 import {screenWidth} from '../../config/globalStyles';
 import {CartIcon, WarningIcon} from '../../assets/svg';
@@ -37,11 +37,14 @@ function OnGoingCourses(props) {
   const renderCarouselItem = ({item, index}) => {
     return (
       // <Text>Hello</Text>
-      <OgoingCourseCard
+      <OngoingCourseCard
+        courseId={item.courseId}
         courseImage={item.coverImageUrl}
         creatorName={item.owner.name}
         creatorUrl={item.owner.profileUrl}
         programName={item.courseTitle}
+        // {...item}
+        {...props}
       />
     );
   };
@@ -118,10 +121,10 @@ function Home(props) {
     <ScrollView style={styles.container}>
       <TopRow cartLength={cart.length} firstName={displayName} {...props} />
       <ScrollView contentContainerStyle={{flex: 1, paddingTop: 40}}>
-        <OfferCard />
+        <OfferCard {...props} />
         <Text style={styles.labelText}>Ongoing Course</Text>
         <View style={{flex: 1}}>
-          <OnGoingCourses subscribedCourses={subscribedCourses} />
+          <OnGoingCourses subscribedCourses={subscribedCourses} {...props} />
           <View>
             <RenderRecommended recommended={allCourses} {...props} />
           </View>
