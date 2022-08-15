@@ -28,9 +28,10 @@ function RenderCourses(props) {
   return (
     <View style={styles.flatList}>
       <FlatList
+        contentContainerStyle={styles.mainContainer}
         data={course}
         extraData={course}
-        keyExtractor={item => item.id}
+        keyExtractor={item => item.courseId}
         ListEmptyComponent={renderEmpty}
         numColumns={2}
         renderItem={({item}) => (
@@ -129,15 +130,17 @@ const styles = StyleSheet.create({
   searchCategory: {
     marginHorizontal: 15,
     marginTop: 30,
-    // marginBottom: 20,
     backgroundColor: colors.white,
     ...getShadow(5),
+  },
+  mainContainer: {
+    flexGrow: 1,
+    paddingRight: 12,
   },
   renderCourse: {
     flexGrow: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    marginTop: 10,
   },
   loader: {
     justifyContent: 'center',
@@ -151,7 +154,7 @@ const styles = StyleSheet.create({
     borderBottomLeftRadius: 30,
   },
   flatList: {
-    flexGrow: 1,
+    flex: 1,
     width: '100%',
   },
   searchBar: {

@@ -156,7 +156,7 @@ function MainScreen(props: any) {
   const loadData = async () => {
     await getDescriptions({courseId, offset: 0, limit: 20});
     getSections({courseId, offset: 0, limit: 20});
-    readReviews({courseId, offset: 0, limit: 20});
+    readReviews({courseId, offSet: 0, limit: 20});
     readFAQ({courseId, offSet: 0, limit: 20});
     readMessages({courseId, offSet: 0, limit: 10});
     if (videoDuration) {

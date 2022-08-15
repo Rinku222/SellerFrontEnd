@@ -6,8 +6,10 @@ import {BlueTickIcon} from '../../../assets/svg';
 import TopHeader from '../../../components/TopHeader';
 import {colors} from '../../../config/colors';
 import {getShadow} from '../../../utils';
-import Payment from '../../../components/Payment';
+import payment from '../../../components/Payment';
 import Price from '../../../components/Price';
+
+import usePaymentServices from '../../../services/Payment';
 
 function OrderSummary(props) {
   const {cart, subTotal, discount, total} = props;
@@ -82,11 +84,15 @@ function Step2(props) {
   const {navigation} = props;
   const {cart} = useSelector(s => s.home);
 
+  const {addPayment} = usePaymentServices();
+
   const discount = 0;
 
   const subTotal = cart.reduce((sum: number, currentValue) => (sum += currentValue.amount), 0);
 
   const total = subTotal - discount;
+
+  const courseList = cart.map(data => data.courseId);
 
   return (
     <View style={{position: 'relative', flex: 1}}>
@@ -117,7 +123,7 @@ function Step2(props) {
           paddingVertical: 5,
           borderRadius: 8,
         }}
-        onPress={() => Payment(navigation, total)}>
+        onPress={() => payment(navigation, total, courseList, addPayment)}>
         Continue to pay {Price(total)}
       </Button>
     </View>

@@ -8,16 +8,16 @@ import DateConvertor from '../../utils/DateConvertor';
 function Review(props) {
   const {review} = props;
 
-  const {reviewDescription, creationTS, courseId, mentorName} = review || {};
+  const {reviewDescription, creationTS, courseId, menteeName, profileUrl} = review || {};
 
   return (
     <View style={styles.mainContainer}>
       <View style={styles.subContainer}>
         <View style={styles.userImage}>
-          <Image source={UserImage} style={styles.image} />
+          <Image source={{uri: profileUrl}} style={styles.image} />
         </View>
         <View style={styles.mentorName}>
-          <Text>{mentorName}</Text>
+          <Text>{menteeName}</Text>
           <Text>{DateConvertor(creationTS)}</Text>
         </View>
       </View>

@@ -1,6 +1,7 @@
 import React, {useRef, useEffect} from 'react';
 import {View, Text, TouchableOpacity, ScrollView, Image} from 'react-native';
 import {useSelector} from 'react-redux';
+import TransactionFailure from '../../components/TransactionFailed';
 
 function Failed(props) {
   const {navigation} = props;
@@ -8,7 +9,7 @@ function Failed(props) {
 
   return (
     <View style={{position: 'relative', flexGrow: 1}}>
-      <Text>Failed</Text>
+      <TransactionFailure {...props} />
     </View>
   );
 }

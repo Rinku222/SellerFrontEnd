@@ -52,9 +52,10 @@ function Video(props) {
           <Text style={styles.headerText}>Video Screen</Text>
         </View>
       ) : null}
+      {console.log('----->subscribedCourses', subscribedCourses.length)}
 
       <FlatList
-        contentContainerStyle={styles.mainContainer}
+        contentContainerStyle={styles.flatList}
         data={subscribedCourses}
         extraData={subscribedCourses}
         keyExtractor={item => item._id}
@@ -72,12 +73,15 @@ function Video(props) {
 const styles = StyleSheet.create({
   mainContainer: {
     flexGrow: 1,
-    // marginBottom: 50,
+    marginBottom: 50,
+  },
+  flatList: {
+    flexGrow: 1,
   },
   header: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-around',
+    justifyContent: 'center',
     marginVertical: 10,
   },
   headerText: {

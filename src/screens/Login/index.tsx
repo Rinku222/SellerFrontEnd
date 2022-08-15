@@ -2,6 +2,7 @@ import React, {useState, useRef} from 'react';
 import {View, Animated, Easing, Text, Image, TouchableOpacity, ScrollView} from 'react-native';
 import {SvgXml} from 'react-native-svg';
 import {Auth} from 'aws-amplify';
+import {Snackbar} from 'react-native-paper';
 import {styles} from './styles';
 import Button from '../../components/Button';
 import SplashSvgXml from '../../assets/svg/SplashSvg';
@@ -80,7 +81,7 @@ function Login(props) {
   };
 
   const onEmailPhoneChangeForLogin = (text: string) => {
-    setEmailPhoneForLogin(text);
+    setEmailPhoneForLogin(text.toLocaleLowerCase());
     const reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
 
     if (text.length > 2) {
@@ -105,7 +106,7 @@ function Login(props) {
   };
 
   const onEmailPhoneChangeForSignUp = (text: string) => {
-    if (text !== ' ') setEmailPhoneForSignUp(text);
+    if (text !== ' ') setEmailPhoneForSignUp(text.toLocaleLowerCase());
     const reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
 
     if (text.length > 2) {
@@ -166,6 +167,7 @@ function Login(props) {
         });
       } catch (error) {
         console.log('----->error in signup', error);
+        console.log('----->error in signup', error.UserNotFoundException);
         setLoading(false);
         if (error.name === 'UserNotConfirmedException') {
           navigation.navigate('mail_verification', {
@@ -278,7 +280,7 @@ function Login(props) {
     };
 
     return (
-      <>
+      <View>
         <Text style={styles.headerLabelTextSignUp}>Sign Up</Text>
         <InputBox placeHolder="Name" value={nameForSignUp} onChangeText={onNameChangeForSignUp} />
         <InputBox
@@ -294,7 +296,6 @@ function Login(props) {
           value={emailPhoneForSignUp}
           onChangeText={onEmailPhoneChangeForSignUp}
         />
-        {console.log('----->emailPhoneForSignUp', emailPhoneForSignUp)}
         <InputBox
           secureTextEntry
           errorText={passwordForSignUpError}
@@ -328,7 +329,7 @@ function Login(props) {
             </Text>
           </Text>
         </View>
-      </>
+      </View>
     );
   };
 

@@ -7,7 +7,9 @@ import {colors} from '../../config/colors';
 import {fontSizes} from '../../config/globalStyles';
 
 function TransactionSuccess(props) {
-  const {navigation} = props;
+  const {navigation, route} = props;
+  const {params} = route;
+  const {id} = params;
   const {cart} = useSelector(s => s.home);
 
   return (
@@ -20,7 +22,7 @@ function TransactionSuccess(props) {
           Transaction Successful
         </Text>
         <Text style={{color: colors.black, marginVertical: 5, fontWeight: 'bold'}}>
-          Transaction Id: 45h6778g
+          Transaction Id: {id}
         </Text>
         <Text style={{color: colors.black, marginVertical: 5, fontWeight: 'bold'}}>
           Thanks for your purchase

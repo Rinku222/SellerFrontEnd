@@ -1,3 +1,4 @@
+/* eslint-disable no-underscore-dangle */
 import React, {useState} from 'react';
 import {View, StyleSheet, TouchableOpacity, Image, TextInput, ScrollView} from 'react-native';
 import {Divider} from 'react-native-paper';
@@ -10,16 +11,27 @@ import {StarFilledIcon, StarIcon} from '../../../../assets/svg';
 
 const data = [1, 2, 3, 4, 5];
 
+interface ReviewProps {
+  _id: string;
+  courseId: string;
+  createdBy: string;
+  creationTS: number;
+  menteeName: string;
+  profileUrl: string;
+  rating: number;
+  reviewDescription: string;
+}
+
 function Reviews(props: any) {
   const {courseId, readReviews, addReview, reviewed} = props;
 
   const [comment, setComment] = useState('');
-  const [rating, setRating] = useState(0);
+  const [rating, setRating] = useState(5);
 
   const {reviews} = useSelector(s => s.main);
 
   const handlePress = async () => {
-    await addReview({reviewDescription: comment, courseId});
+    await addReview({reviewDescription: comment, courseId, rating});
     await readReviews({courseId, offSet: 0, limit: 20});
     setComment('');
   };
@@ -35,7 +47,7 @@ function Reviews(props: any) {
                 {data.map((item, index) => {
                   return (
                     <TouchableOpacity
-                      key={index}
+                      key={item}
                       style={styles.starIcon}
                       onPress={() => setRating(index + 1)}>
                       {index < rating ? (
@@ -65,8 +77,8 @@ function Reviews(props: any) {
       )}
 
       {reviews &&
-        reviews.map((item, index) => {
-          return <Review key={index} review={item} />;
+        reviews.map((item: ReviewProps) => {
+          return <Review key={item._id} review={item} />;
         })}
     </ScrollView>
   );

@@ -7,6 +7,7 @@ export const colors = {
   placeholderGray: '#888888',
   themeShadow: '#00000029',
   borderGray: '#FFF7F2',
+  failure: '#EB463C',
 
   primaryButtonBackground: '#91358F',
   themeBlackText: '#787878',

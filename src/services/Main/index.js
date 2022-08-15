@@ -48,8 +48,8 @@ export default function useMainServices() {
       return readService(`/review?courseId=${courseId}&offset=${offSet}&limit=${limit}`);
     },
     addReview: data => {
-      const {courseId, reviewDescription} = data;
-      return createService(`/review`, {reviewDescription, courseId});
+      const {courseId, reviewDescription, rating} = data;
+      return createService(`/review`, {reviewDescription, courseId, rating});
     },
     readFAQ: data => {
       const {courseId, offSet, limit} = data;
@@ -57,7 +57,6 @@ export default function useMainServices() {
     },
     setVideoTime: data => {
       const {courseId, sectionId, videoId, duration} = data;
-      // const sectionId = '62b43d5009b03c0009d4bb1e';
       return createService(`/video/history`, {courseId, videoId, duration, sectionId});
     },
     readAssessment: data => {
