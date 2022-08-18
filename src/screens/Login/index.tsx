@@ -30,6 +30,8 @@ function Login(props) {
   const [confirmPasswordForSignUpError, setConfirmPasswordForSignUpError] = useState('');
   const [passwordForSignUpError, setPasswordForSignUpError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [visible, setVisible] = useState(false);
+  const [snackbarError, setSnackbarError] = useState('');
 
   const [emailPhoneForLogin, setEmailPhoneForLogin] = useState('');
   const [passwordForLogin, setPasswordForLogin] = useState('');
@@ -167,7 +169,7 @@ function Login(props) {
         });
       } catch (error) {
         console.log('----->error in signup', error);
-        console.log('----->error in signup', error.UserNotFoundException);
+        console.log('----->error in signup', error.name);
         setLoading(false);
         if (error.name === 'UserNotConfirmedException') {
           navigation.navigate('mail_verification', {
@@ -175,13 +177,25 @@ function Login(props) {
           });
         }
         if (error.name === 'NotAuthorizedException') {
-          setIncorrectPasswordError('Incorrect username or password');
+          setVisible(true);
+          setSnackbarError('Incorrect username or password');
+        }
+        if (error.name === 'UserNotFoundException') {
+          setVisible(true);
+          setSnackbarError('User does not exist.');
         }
       }
     }
 
     return (
       <>
+        <Snackbar
+          duration={4000}
+          style={{zIndex: 10, backgroundColor: 'red'}}
+          visible={visible}
+          onDismiss={() => setVisible(false)}>
+          {snackbarError}
+        </Snackbar>
         <Text style={styles.headerLabelText}>Login</Text>
         <InputBox
           errorText={validationLogIn}
@@ -264,6 +278,7 @@ function Login(props) {
           }
           setLoading(false);
         } catch (error) {
+          console.log('----->error in signup', error);
           setLoading(false);
           if (error.message === 'User already exists') {
             navigation.navigate('mail_verification', {
@@ -274,13 +289,21 @@ function Login(props) {
             });
           }
           // console.log('error signing up:', JSON.stringify(error));
-          console.log('error error up:', error.message);
+          console.log('error error up:', error);
         }
       }
     };
 
     return (
       <View>
+        <Snackbar
+          duration={4000}
+          style={{zIndex: 10, backgroundColor: 'red'}}
+          visible={visible}
+          onDismiss={() => setVisible(false)}>
+          {snackbarError}
+        </Snackbar>
+
         <Text style={styles.headerLabelTextSignUp}>Sign Up</Text>
         <InputBox placeHolder="Name" value={nameForSignUp} onChangeText={onNameChangeForSignUp} />
         <InputBox
@@ -325,6 +348,12 @@ function Login(props) {
           <Text>
             {'Already have an account? '}
             <Text style={{color: colors.skyBlue}} onPress={() => setMode('login')}>
+              {/* <Text
+              style={{color: colors.skyBlue}}
+              onPress={() => {
+                setVisible(true);
+                setSnackbarError('pressed');
+              }}> */}
               Login
             </Text>
           </Text>
@@ -335,9 +364,9 @@ function Login(props) {
 
   // console.log('----->loading', loading);
 
-  // if (loading) {
-  //   return <Loader />;
-  // }
+  if (loading) {
+    return <Loader />;
+  }
 
   return (
     <View style={styles.container}>

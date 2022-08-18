@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {
   View,
   StyleSheet,
@@ -13,6 +13,7 @@ import VideoPlayer from 'react-native-video-controls';
 import {useSelector} from 'react-redux';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {ActivityIndicator} from 'react-native-paper';
+import Orientation from 'react-native-orientation-locker';
 import {colors} from '../../config/colors';
 import {getShadow} from '../../config/globalStyles';
 import Layout from '../../utils/Layout';
@@ -141,6 +142,7 @@ function MainScreen(props: any) {
   const [sectionId, setSectionId] = useState();
   const [paused, setPaused] = useState(true);
   const [addToCartLoader, setAddToCartLoader] = useState(false);
+  const [fullScreen, setFullScreen] = useState(false);
 
   const courseBought = subscribed || false;
 
@@ -163,6 +165,14 @@ function MainScreen(props: any) {
       videoRef?.current?.seekTo?.(videoDuration / 1000);
     }
   };
+
+  useEffect(() => {
+    if (!fullScreen) {
+      Orientation.lockToPortrait();
+    } else {
+      Orientation.lockToLandscape();
+    }
+  }, [fullScreen]);
 
   useEffect(() => {
     loadData();
@@ -244,9 +254,13 @@ function MainScreen(props: any) {
     }
   };
 
+  const toggleFullScreen = () => {
+    setFullScreen(v => !v);
+  };
+
   return (
     <View style={styles.mainContainer1}>
-      <View style={styles.videoContainer}>
+      <View style={[styles.videoContainer, {height: fullScreen ? '95%' : 'auto'}]}>
         <VideoPlayer
           navigator={navigation}
           paused={paused}
@@ -258,7 +272,9 @@ function MainScreen(props: any) {
           style={styles.videos}
           onBuffer={buffer => console.log('----->buffer', buffer)}
           onEnd={() => setPaused(true)}
+          onEnterFullscreen={toggleFullScreen}
           onError={err => console.log('----->err', err)}
+          onExitFullscreen={toggleFullScreen}
           onPause={() => setPaused(true)}
           onPlay={() => setPaused(false)}
           onProgress={e => {
@@ -354,6 +370,11 @@ const styles = StyleSheet.create({
     backgroundColor: colors.white,
     paddingHorizontal: 10,
   },
+  fullscreenVideo: {
+    backgroundColor: 'black',
+    ...StyleSheet.absoluteFill,
+    elevation: 1,
+  },
   header: {
     fontWeight: 'bold',
     fontSize: 16,
@@ -389,7 +410,11 @@ const styles = StyleSheet.create({
     position: 'relative',
     top: 0,
     bottom: 0,
+    // ...StyleSheet.absoluteFill,
+    // elevation: 1,
     paddingBottom: 0,
+    // ...StyleSheet.absoluteFill,
+    height: '95%',
   },
   tabbar: {
     flexDirection: 'row',

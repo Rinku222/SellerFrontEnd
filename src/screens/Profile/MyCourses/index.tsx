@@ -1,5 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {View, StyleSheet, ScrollView, FlatList} from 'react-native';
+import {useSelector} from 'react-redux';
 import TopHeader from '../../../components/TopHeader';
 import {CourseIcon} from '../../../assets/svg';
 import CourseCard from '../../../components/CourseCard';
@@ -8,24 +9,18 @@ import {createService, readService, Authorization} from '../../../services/HttpS
 const DATA = [1, 2, 4, 5, 3];
 
 function MyCourses(props) {
-  const [courses, setCourses] = useState();
+  const {subscribedCourses} = useSelector(s => s.home);
 
-  const loadData = async () => {
-    const result = await readService(`/course?offset=${0}&limit=${10}`, {headers: {Authorization}});
-    setCourses(result?.data.course);
-  };
-
-  useEffect(() => {
-    loadData();
-  }, []);
+  console.log('----->subscribedCourses', subscribedCourses[0]);
 
   return (
     <View style={styles.container}>
       <View>
         <TopHeader icon={<CourseIcon />} title="My Courses" {...props} />
         <FlatList
-          data={courses}
-          keyExtractor={item => item.toString()}
+          data={subscribedCourses}
+          // eslint-disable-next-line no-underscore-dangle
+          keyExtractor={item => item._id}
           numColumns={2}
           renderItem={({item}) => <CourseCard course data={item} {...props} />}
         />

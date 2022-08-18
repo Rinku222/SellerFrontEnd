@@ -196,7 +196,7 @@ function DropDownList(props: any) {
   const {sectionTitle, credits, _id} = item;
 
   const [expanded, setExpanded] = useState(selectedSection === index);
-  const selector = useSelector(s => s.main.assessment);
+  const {assessment} = useSelector(s => s.main);
 
   const [loader, setLoader] = useState(false);
 
@@ -241,7 +241,7 @@ function DropDownList(props: any) {
           })
         )}
 
-        <AssignmentSection {...props} />
+        {assessment ? <AssignmentSection {...props} /> : null}
       </List.Accordion>
     </View>
   );

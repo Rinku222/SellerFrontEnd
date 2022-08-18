@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, Text, TouchableOpacity, Image, StyleSheet} from 'react-native';
+import {View, Text, TouchableOpacity, Image, StyleSheet, Share} from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import UserImage from '../../../assets/images/laps.png';
@@ -24,16 +24,38 @@ const List = [
     icon: <CourseIcon width={15} />,
     path: 'MyCourses',
   },
-  {name: 'Share the App', icon: <ShareIcon width={15} />, path: 'Quiz'},
+  {name: 'Share the App', icon: <ShareIcon width={15} />, path: ''},
   {name: 'About', icon: <AboutIcon width={15} />, path: 'About'},
 ];
+
+const onShare = async () => {
+  try {
+    const result = await Share.share({
+      message: 'React Native | A framework for building native apps using React',
+    });
+    if (result.action === Share.sharedAction) {
+      if (result.activityType) {
+        // shared with activity type of result.activityType
+      } else {
+        // shared
+      }
+    } else if (result.action === Share.dismissedAction) {
+      // dismissed
+    }
+  } catch (error) {
+    // alert(error.message);
+    console.log('----->error in sharing', error);
+  }
+};
 
 function RenderRow(props: any) {
   const {data, navigation} = props;
   const {name, icon, path} = data;
 
   return (
-    <TouchableOpacity style={styles.rowContainer} onPress={() => navigation.navigate(path)}>
+    <TouchableOpacity
+      style={styles.rowContainer}
+      onPress={() => (path ? navigation.navigate(path) : onShare())}>
       <View style={styles.rowView}>
         <View style={styles.listStyle}>{icon}</View>
         <Text>{name}</Text>

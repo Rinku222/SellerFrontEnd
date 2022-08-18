@@ -27,11 +27,9 @@ function App() {
   return (
     <StoreProvider store={store}>
       <PaperProvider>
-        {/* <AlertProvider> */}
         <Suspense fallback={<Loader />}>
           <AppNavigator />
         </Suspense>
-        {/* </AlertProvider> */}
       </PaperProvider>
     </StoreProvider>
   );

@@ -102,7 +102,7 @@ function Search(props) {
       </View>
       <SearchBar
         options={filteredOptions}
-        placeholder="Search Here"
+        placeholder="Search Stream"
         searchQuery={searchText}
         selected={selected}
         style={styles.searchCategory}

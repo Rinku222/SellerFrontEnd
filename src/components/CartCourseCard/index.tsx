@@ -81,8 +81,12 @@ function CartCourseCard(props) {
             )}
           </View>
           <View style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
-            <Text style={{marginRight: 10}}>{duration}</Text>
-            <Text>{totalLession} Lessons</Text>
+            <Text ellipsizeMode="tail" numberOfLines={1} style={{marginRight: 10, flex: 1}}>
+              {duration}
+            </Text>
+            <Text ellipsizeMode="tail" numberOfLines={1} style={{flex: 1}}>
+              {totalLession} Lessons
+            </Text>
           </View>
         </View>
       </View>
