@@ -103,6 +103,33 @@ export const styles = StyleSheet.create({
   renderLoginTextBox: {
     marginBottom: 26,
   },
+  newPasswordText: {
+    fontSize: 24,
+    textAlign: 'center',
+    color: colors.black,
+    marginTop: 20,
+  },
+  errorText: {
+    color: colors.failure,
+    marginLeft: 10,
+    fontSize: 12,
+  },
+  forgotPassword: {
+    fontWeight: '500',
+    fontSize: 24,
+    color: colors.black,
+    textAlign: 'center',
+    marginBottom: 10,
+  },
+  forgotPasswordView: {
+    alignItems: 'flex-end',
+    marginTop: 10,
+    marginBottom: 30,
+  },
+  forgotPasswordText: {
+    color: colors.primary,
+    fontWeight: 'bold',
+  },
   renderLoginButton: {
     marginBottom: 25,
     alignSelf: 'center',

@@ -2,7 +2,7 @@ import React, {useState, useRef} from 'react';
 import {View, Animated, Easing, Text, Image, TouchableOpacity, ScrollView} from 'react-native';
 import {SvgXml} from 'react-native-svg';
 import {Auth} from 'aws-amplify';
-import {Snackbar} from 'react-native-paper';
+import {Snackbar, TextInput} from 'react-native-paper';
 import {styles} from './styles';
 import Button from '../../components/Button';
 import SplashSvgXml from '../../assets/svg/SplashSvg';
@@ -12,6 +12,7 @@ import {colors} from '../../config/colors';
 import {createService, Authorization} from '../../services/HttpService/HttpService';
 import useUserActions from '../../redux/actions/userActions';
 import {Loader} from '../../../App';
+import Forgot from '../ForgotPassword';
 // import
 
 const ANIMATION_DURATION = 500;
@@ -38,6 +39,8 @@ function Login(props) {
   const [validationSignUp, setValidationSignUp] = useState<string | boolean>(false);
   const [phoneForSignUp, setPhoneForSignUp] = useState('');
   const [validationLogIn, setValidationLogIn] = useState<string | boolean>(false);
+
+  const [forgotPasswordScreen, setForgotPasswordScreen] = useState(false);
 
   const {getUserDetails} = useUserActions();
 
@@ -188,53 +191,74 @@ function Login(props) {
     }
 
     return (
-      <>
-        <Snackbar
-          duration={4000}
-          style={{zIndex: 10, backgroundColor: 'red'}}
-          visible={visible}
-          onDismiss={() => setVisible(false)}>
-          {snackbarError}
-        </Snackbar>
-        <Text style={styles.headerLabelText}>Login</Text>
-        <InputBox
-          errorText={validationLogIn}
-          placeHolder="Email"
-          style={styles.renderLoginTextBox}
-          value={emailPhoneForLogin}
-          onChangeText={onEmailPhoneChangeForLogin}
-        />
-        <InputBox
-          secureTextEntry
-          placeHolder="Password"
-          style={styles.renderLoginTextBox}
-          value={passwordForLogin}
-          onChangeText={onPasswordChangeForLogin}
-        />
-        {incorrectPasswordError ? (
-          <View style={styles.incorrectContainer}>
-            <Text style={styles.incorrectContainerText}>{incorrectPasswordError}</Text>
-          </View>
-        ) : null}
+      <View>
+        {/* {true?:} */}
+        <>
+          {forgotPasswordScreen ? (
+            <View>
+              <Forgot {...props} />
+            </View>
+          ) : (
+            <View>
+              <Snackbar
+                duration={4000}
+                style={{zIndex: 10, backgroundColor: colors.failure}}
+                visible={visible}
+                onDismiss={() => setVisible(false)}>
+                {snackbarError}
+              </Snackbar>
+              <Text style={styles.headerLabelText}>Login</Text>
+              <InputBox
+                errorText={validationLogIn}
+                placeHolder="Email"
+                style={styles.renderLoginTextBox}
+                value={emailPhoneForLogin}
+                onChangeText={onEmailPhoneChangeForLogin}
+              />
+              <InputBox
+                secureTextEntry
+                placeHolder="Password"
+                value={passwordForLogin}
+                onChangeText={onPasswordChangeForLogin}
+              />
+              <TouchableOpacity
+                style={styles.forgotPasswordView}
+                onPress={() => setForgotPasswordScreen(true)}>
+                <Text style={styles.forgotPasswordText}> Forgot password?</Text>
+              </TouchableOpacity>
+              {incorrectPasswordError ? (
+                <View style={styles.incorrectContainer}>
+                  <Text style={styles.incorrectContainerText}>{incorrectPasswordError}</Text>
+                </View>
+              ) : null}
 
-        <Button style={styles.renderLoginButton} text="Login" variant="primary" onPress={signIn} />
-        <View style={styles.imageContainer}>
-          <TouchableOpacity>
-            <Image source={require('../../assets/images/google.png')} style={styles.socialIcon} />
-          </TouchableOpacity>
-          <TouchableOpacity>
-            <Image source={require('../../assets/images/FB.png')} style={styles.socialIcon} />
-          </TouchableOpacity>
-        </View>
-        <View style={styles.signUp}>
-          <Text>
-            {"Don't have an account? "}
-            <Text style={{color: colors.skyBlue}} onPress={() => setMode('signUp')}>
-              Sign Up
+              <Button
+                style={styles.renderLoginButton}
+                text="Login"
+                variant="primary"
+                onPress={signIn}
+              />
+            </View>
+          )}
+
+          <View style={styles.imageContainer}>
+            <TouchableOpacity>
+              <Image source={require('../../assets/images/google.png')} style={styles.socialIcon} />
+            </TouchableOpacity>
+            <TouchableOpacity>
+              <Image source={require('../../assets/images/FB.png')} style={styles.socialIcon} />
+            </TouchableOpacity>
+          </View>
+          <View style={styles.signUp}>
+            <Text>
+              {"Don't have an account? "}
+              <Text style={{color: colors.skyBlue}} onPress={() => setMode('signUp')}>
+                Sign Up
+              </Text>
             </Text>
-          </Text>
-        </View>
-      </>
+          </View>
+        </>
+      </View>
     );
   };
 
@@ -281,14 +305,15 @@ function Login(props) {
           console.log('----->error in signup', error);
           setLoading(false);
           if (error.message === 'User already exists') {
-            navigation.navigate('mail_verification', {
-              emailPhoneForSignUp,
-              passwordForSignUp,
-              displayName: nameForSignUp,
-              phone: phoneForSignUp,
-            });
+            setVisible(true);
+            setSnackbarError('User already exist.');
+            // navigation.navigate('mail_verification', {
+            //   emailPhoneForSignUp,
+            //   passwordForSignUp,
+            //   displayName: nameForSignUp,
+            //   phone: phoneForSignUp,
+            // });
           }
-          // console.log('error signing up:', JSON.stringify(error));
           console.log('error error up:', error);
         }
       }
@@ -298,7 +323,7 @@ function Login(props) {
       <View>
         <Snackbar
           duration={4000}
-          style={{zIndex: 10, backgroundColor: 'red'}}
+          style={{zIndex: 10, backgroundColor: colors.failure}}
           visible={visible}
           onDismiss={() => setVisible(false)}>
           {snackbarError}
@@ -348,12 +373,6 @@ function Login(props) {
           <Text>
             {'Already have an account? '}
             <Text style={{color: colors.skyBlue}} onPress={() => setMode('login')}>
-              {/* <Text
-              style={{color: colors.skyBlue}}
-              onPress={() => {
-                setVisible(true);
-                setSnackbarError('pressed');
-              }}> */}
               Login
             </Text>
           </Text>
