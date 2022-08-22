@@ -26,6 +26,7 @@ import EmptyCart from './emptyCart.svg';
 import BlueTick from './blue-tick.svg';
 import BigLock from './bigLock.svg';
 import Send from './sendIcon.svg';
+import Logout from './logout.svg';
 
 export interface ISVGProps {
   color?: string;
@@ -110,4 +111,7 @@ export function BigLockIcon(props: ISVGProps) {
 }
 export function SendIcon(props: ISVGProps) {
   return <Send {...props} name="sendIcon" />;
+}
+export function LogoutIcon(props: ISVGProps) {
+  return <Logout {...props} name="logoutIcon" />;
 }

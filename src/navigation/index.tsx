@@ -47,7 +47,6 @@ function AuthScreens() {
         name="new-password"
         options={{gestureEnabled: false}}
       />
-
       <AuthStack.Screen
         component={VerificationMail}
         name="mail_verification"

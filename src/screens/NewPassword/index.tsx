@@ -59,6 +59,7 @@ function NewPassword(props) {
               onChangeText={handleChange('otp')}
             />
             <InputBox
+              showEye
               errorText={errors.password}
               name="password"
               placeHolder="Enter New Password"
@@ -67,6 +68,7 @@ function NewPassword(props) {
               onChangeText={handleChange('password')}
             />
             <InputBox
+              showEye
               errorText={errors.confirmPassword}
               name="confirmPassword"
               placeHolder="Re-Enter New Password"

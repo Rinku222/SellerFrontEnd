@@ -32,6 +32,7 @@ function Login(props) {
   const [passwordForSignUpError, setPasswordForSignUpError] = useState('');
   const [loading, setLoading] = useState(false);
   const [visible, setVisible] = useState(false);
+  const [showLoginPassword, setShowLoginPassword] = useState(false);
   const [snackbarError, setSnackbarError] = useState('');
 
   const [emailPhoneForLogin, setEmailPhoneForLogin] = useState('');
@@ -166,13 +167,13 @@ function Login(props) {
         await getUserDetails({emailPhoneForLogin, passwordForLogin});
         const Authorization1 = user.signInUserSession.idToken.jwtToken;
         setLoading(false);
+        setEmailPhoneForLogin('');
+        setPasswordForLogin('');
 
         navigation.navigate('App', {
           Authorization1,
         });
       } catch (error) {
-        console.log('----->error in signup', error);
-        console.log('----->error in signup', error.name);
         setLoading(false);
         if (error.name === 'UserNotConfirmedException') {
           navigation.navigate('mail_verification', {
@@ -217,6 +218,7 @@ function Login(props) {
               />
               <InputBox
                 secureTextEntry
+                showEye
                 placeHolder="Password"
                 value={passwordForLogin}
                 onChangeText={onPasswordChangeForLogin}
@@ -333,30 +335,31 @@ function Login(props) {
         <InputBox placeHolder="Name" value={nameForSignUp} onChangeText={onNameChangeForSignUp} />
         <InputBox
           placeHolder="Phone No"
-          style={styles.bottomText}
+          // style={styles.bottomText}
           value={phoneForSignUp}
           onChangeText={onPhoneChangeForSignUp}
         />
         <InputBox
           errorText={validationSignUp}
           placeHolder="Email Id"
-          style={styles.bottomText}
+          // style={styles.bottomText}
           value={emailPhoneForSignUp}
           onChangeText={onEmailPhoneChangeForSignUp}
         />
         <InputBox
           secureTextEntry
+          showEye
           errorText={passwordForSignUpError}
           placeHolder="Password"
-          style={styles.bottomText}
           value={passwordForSignUp}
           onChangeText={onPasswordChangeForSignUp}
         />
         <InputBox
           secureTextEntry
+          showEye
           errorText={confirmPasswordForSignUpError}
           placeHolder="Re-enter Password"
-          style={styles.bottomText}
+          // style={styles.bottomText}
           value={confirmPasswordForSignUp}
           onChangeText={onConfirmPasswordChangeForSignUp}
         />

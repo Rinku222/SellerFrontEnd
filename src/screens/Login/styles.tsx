@@ -101,7 +101,7 @@ export const styles = StyleSheet.create({
     backgroundColor: 'red',
   },
   renderLoginTextBox: {
-    marginBottom: 26,
+    // marginBottom: 26,
   },
   newPasswordText: {
     fontSize: 24,

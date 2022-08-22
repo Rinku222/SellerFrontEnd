@@ -2,8 +2,16 @@ import React from 'react';
 import {View, Text, TouchableOpacity, Image, StyleSheet, Share} from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
+import {Auth} from 'aws-amplify';
 import UserImage from '../../../assets/images/laps.png';
-import {UserIcon, CertificateIcon, ShareIcon, AboutIcon, CourseIcon} from '../../../assets/svg';
+import {
+  UserIcon,
+  CertificateIcon,
+  ShareIcon,
+  AboutIcon,
+  CourseIcon,
+  LogoutIcon,
+} from '../../../assets/svg';
 import {colors} from '../../../config/colors';
 import loadingVariable from '../../../redux/selector';
 import {Loader} from '../../../../App';
@@ -24,8 +32,9 @@ const List = [
     icon: <CourseIcon width={15} />,
     path: 'MyCourses',
   },
-  {name: 'Share the App', icon: <ShareIcon width={15} />, path: ''},
+  {name: 'Share the App', icon: <ShareIcon width={15} />, path: 'Share'},
   {name: 'About', icon: <AboutIcon width={15} />, path: 'About'},
+  {name: 'Log Out', icon: <LogoutIcon width={15} />, path: 'Logout'},
 ];
 
 const onShare = async () => {
@@ -48,6 +57,27 @@ const onShare = async () => {
   }
 };
 
+async function signOut(navigation) {
+  try {
+    await Auth.signOut();
+    navigation.navigate('Login');
+  } catch (error) {
+    console.log('error signing out: ', error);
+  }
+}
+
+const handlePress = async (path: string, navigation: any) => {
+  if (path === 'Logout') {
+    signOut(navigation);
+  }
+  if (path === 'Share') {
+    onShare();
+  }
+  if (path !== 'Share' && path !== 'Logout') {
+    navigation.navigate(path);
+  }
+};
+
 function RenderRow(props: any) {
   const {data, navigation} = props;
   const {name, icon, path} = data;
@@ -55,7 +85,8 @@ function RenderRow(props: any) {
   return (
     <TouchableOpacity
       style={styles.rowContainer}
-      onPress={() => (path ? navigation.navigate(path) : onShare())}>
+      // onPress={() => (path ? navigation.navigate(path) : onShare())}>
+      onPress={() => handlePress(path, navigation)}>
       <View style={styles.rowView}>
         <View style={styles.listStyle}>{icon}</View>
         <Text>{name}</Text>
@@ -89,7 +120,7 @@ function HomeProfile(props: any) {
 const styles = StyleSheet.create({
   profileImage: {
     width: '100%',
-    height: '60%',
+    height: '55%',
   },
   curve: {
     marginTop: -50,
@@ -101,7 +132,7 @@ const styles = StyleSheet.create({
     bottom: 0,
     left: 0,
     right: 0,
-    top: '60%',
+    top: '55%',
     alignItems: 'center',
     backgroundColor: colors.white,
   },
