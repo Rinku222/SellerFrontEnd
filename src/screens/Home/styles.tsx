@@ -24,6 +24,7 @@ export const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
     marginVertical: 16,
+    color: colors.black,
   },
   ongoingCourses: {
     marginHorizontal: 5,

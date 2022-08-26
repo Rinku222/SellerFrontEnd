@@ -1,4 +1,5 @@
 import React, {useRef, useEffect} from 'react';
+import {useFocusEffect} from '@react-navigation/native';
 import {View, Text, TouchableOpacity, ScrollView} from 'react-native';
 import Carousel from 'react-native-snap-carousel';
 import {useSelector} from 'react-redux';
@@ -122,10 +123,11 @@ function Home(props) {
       <TopRow cartLength={cart.length} firstName={displayName} {...props} />
       <ScrollView contentContainerStyle={{flex: 1, paddingTop: 40}}>
         <OfferCard {...props} />
-        <Text style={styles.labelText}>Ongoing Course</Text>
+        <Text style={styles.labelText}>Ongoing Courses</Text>
         <View style={{flex: 1}}>
           <OnGoingCourses subscribedCourses={subscribedCourses} {...props} />
           <View>
+            <Text style={styles.labelText}>Recommended Courses</Text>
             <RenderRecommended recommended={allCourses} {...props} />
           </View>
         </View>

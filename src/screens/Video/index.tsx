@@ -52,8 +52,6 @@ function Video(props) {
           <Text style={styles.headerText}>Video Screen</Text>
         </View>
       ) : null}
-      {console.log('----->subscribedCourses', subscribedCourses.length)}
-
       <FlatList
         contentContainerStyle={styles.flatList}
         data={subscribedCourses}
@@ -61,7 +59,7 @@ function Video(props) {
         keyExtractor={item => item._id}
         ListEmptyComponent={() => <RenderEmpty navigation={navigation} />}
         renderItem={({item}) => (
-          <View style={{marginRight: 10}}>
+          <View style={{marginRight: 10, paddingHorizontal: 10}}>
             <CourseCard course myCourse data={item} {...props} />
           </View>
         )}

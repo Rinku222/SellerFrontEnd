@@ -3,6 +3,7 @@ import {View, Text, TouchableOpacity, Image, StyleSheet, Share} from 'react-nati
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import {Auth} from 'aws-amplify';
+import {useSelector} from 'react-redux';
 import UserImage from '../../../assets/images/laps.png';
 import {
   UserIcon,

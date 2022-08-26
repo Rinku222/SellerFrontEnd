@@ -183,7 +183,7 @@ function ParaGraphHeader(props: ParaGraphIconProps) {
 }
 
 function Notes(props) {
-  const {videoId} = props;
+  const {videoId, courseBought} = props;
   const [showAddNote, setShowAddNote] = useState(false);
   const [noteId, setNoteId] = useState('');
 
@@ -224,14 +224,17 @@ function Notes(props) {
           />
         ) : (
           <ScrollView style={{marginBottom: 50}}>
-            <View style={styles.addNewNoteContainer}>
-              <TouchableOpacity
-                style={styles.addNewNoteSubContainer}
-                onPress={() => setShowAddNote(true)}>
-                <MaterialIcons color={colors.white} name="add" size={20} />
-                <Text style={styles.buttonText}>Add New Note</Text>
-              </TouchableOpacity>
-            </View>
+            {courseBought ? (
+              <View style={styles.addNewNoteContainer}>
+                <TouchableOpacity
+                  style={styles.addNewNoteSubContainer}
+                  onPress={() => setShowAddNote(true)}>
+                  <MaterialIcons color={colors.white} name="add" size={20} />
+                  <Text style={styles.buttonText}>Add New Note</Text>
+                </TouchableOpacity>
+              </View>
+            ) : null}
+
             {notes.map((item, i) => {
               return (
                 <RenderNote
@@ -257,7 +260,7 @@ function Notes(props) {
               updateNote={updateNote}
               {...props}
             />
-          ) : (
+          ) : courseBought ? (
             <View style={styles.emptyMinContainer}>
               <View style={styles.emptySubContainer}>
                 <Text style={styles.emptyText}>Click below button to add new notes</Text>
@@ -271,7 +274,7 @@ function Notes(props) {
                 </View>
               </View>
             </View>
-          )}
+          ) : null}
         </View>
       )}
     </View>

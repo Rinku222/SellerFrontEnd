@@ -8,6 +8,7 @@ import {useSelector} from 'react-redux';
 import {TextInput} from 'react-native-paper';
 import {Formik} from 'formik';
 import * as Yup from 'yup';
+import {Auth} from 'aws-amplify';
 import {AboutIcon, EmailIcon, LockIcon, PhoneIcon, UserIcon} from '../../../assets/svg';
 import TopHeader from '../../../components/TopHeader';
 import {colors} from '../../../config/colors';
@@ -28,6 +29,33 @@ function Edit(name) {
 function Row(props: any) {
   const {data, navigation} = props;
   const {icon, value, path, border, edit} = data;
+  const {username} = useSelector(s => s.user.userData);
+
+  const forgotPassword = (email: string) => {
+    Auth.forgotPassword(email)
+      .then(() => {
+        navigation.navigate('new-password', {
+          userName: email,
+        });
+      })
+      .catch(error => {
+        console.log('error', error);
+      });
+  };
+
+  const handlePress = async () => {
+    if (path === 'change_password') {
+      forgotPassword(username);
+    }
+    if (path === 'change_phone') {
+      const user1 = await Auth.currentAuthenticatedUser();
+
+      const result1 = await Auth.updateUserAttributes(user1, {
+        phone_number: '+917016515465',
+      });
+      console.log('----->change phone called', result1);
+    }
+  };
 
   return (
     // eslint-disable-next-line react-native/no-inline-styles
@@ -40,7 +68,7 @@ function Row(props: any) {
       outlineColor="black"
       right={
         border && !edit ? (
-          <TextInput.Icon name={() => Edit()} onPress={() => navigation.navigate(path)} />
+          <TextInput.Icon name={() => Edit()} onPress={() => handlePress()} />
         ) : null
       }
       selectionColor="red"
@@ -87,18 +115,23 @@ function PersonalInfo(props: any) {
   const [editName, setEditName] = useState(true);
 
   const loadData = async () => {
-    await getUserData();
+    getUserData();
   };
 
   useEffect(() => {
+    toggleEditName();
+    // setEditName(!editName);
     // loadData();
     // console.log('----->api call');
     // updateUserData({profileUrl: ''});
   }, []);
 
+  const toggleEditName = () => setEditName(v => !v);
+
   const handleUserSave = async (name: string) => {
     console.log('----->handleUserSave');
-    setEditName(!editName);
+    // setEditName(!editName);
+    toggleEditName();
     if (displayName !== name) {
       await updateUserData({displayName: name});
       await getUserData();
@@ -202,7 +235,6 @@ function PersonalInfo(props: any) {
             setFieldValue,
           }) => (
             <View>
-              {console.log('----->editName', editName)}
               <TextInput
                 activeOutlineColor="#707070"
                 activeUnderlineColor="transparent"
@@ -215,7 +247,7 @@ function PersonalInfo(props: any) {
                 right={
                   <TextInput.Icon
                     name={() => Edit(editName ? 'Save' : 'Edit')}
-                    onPress={() => (editName ? handleSubmit() : setEditName(!editName))}
+                    onPress={() => (editName ? handleSubmit() : toggleEditName())}
                   />
                 }
                 style={{

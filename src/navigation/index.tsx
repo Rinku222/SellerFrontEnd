@@ -39,7 +39,7 @@ const Tab = createBottomTabNavigator();
 function AuthScreens() {
   return (
     <AuthStack.Navigator initialRouteName="Splash" screenOptions={{headerShown: false}}>
-      <AuthStack.Screen component={Splash} name="Splash" options={{gestureEnabled: false}} />
+      {/* <AuthStack.Screen component={Splash} name="Splash" options={{gestureEnabled: false}} /> */}
       <AuthStack.Screen component={Login} name="Login" options={{gestureEnabled: false}} />
       <AuthStack.Screen component={Forgot} name="forgot" options={{gestureEnabled: false}} />
       <AuthStack.Screen

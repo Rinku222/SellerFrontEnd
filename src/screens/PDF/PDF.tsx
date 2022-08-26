@@ -1,26 +1,14 @@
-/**
- * Copyright (c) 2017-present, Wonday (@wonday.org)
- * All rights reserved.
- *
- * This source code is licensed under the MIT-style license found in the
- * LICENSE file in the root directory of this source tree.
- */
-
 import React from 'react';
 import {StyleSheet, Dimensions, View, Text, TouchableOpacity} from 'react-native';
 import Pdf from 'react-native-pdf';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
 export function PDFExample(props) {
-  const {navigation} = props;
-  const source = {uri: 'http://samples.leanpub.com/thereactnativebook-sample.pdf', cache: true};
+  const {navigation, route} = props;
 
-  //   const source = require('./test.pdf');  // ios only
-  //   const source = {uri:'bundle-assets://test.pdf' };
-  //   const source = {uri:'file:///sdcard/test.pdf'};
-  //   const source = {uri:"data:application/pdf;base64,JVBERi0xLjcKJc..."};
-  //   const source = {uri:"content://com.example.blobs/xxxxxxxx-...?offset=0&size=xxx"};
-  //   const source = {uri:"blob:xxxxxxxx-...?offset=0&size=xxx"};
+  const {url} = route.params;
+
+  const source = {uri: url, cache: true};
 
   return (
     <View style={styles.container}>

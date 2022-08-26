@@ -113,16 +113,18 @@ function CourseCard(props) {
   const {name, profileUrl} = owner || {};
 
   const handleWishlistPress = async () => {
+    console.log('----->wishListId', wishListId);
+    console.log('----->wishListed', wishListed);
     if (wishListed) {
       setWishlistLoader(true);
-      await deleteWishlist({courseId: _id});
+      await deleteWishlist({wishlistId: wishListId});
       setWishlistLoader(false);
     } else {
       setWishlistLoader(true);
       await addWishlist({courseId: _id});
       setWishlistLoader(false);
     }
-    getWishlist();
+    // getWishlist();
     getHomeCourses({offset: 0, limit: 10});
     getAllSearchedCourses({
       offset: 0,

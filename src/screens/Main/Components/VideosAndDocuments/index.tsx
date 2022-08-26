@@ -9,8 +9,11 @@ import {DownArrowIcon, PlayVideoIcon, UpArrowIcon} from '../../../../assets/svg'
 import useMainScreenActions from '../../../../redux/actions/mainScreenActions';
 
 function Tabs(props: any) {
-  const {description, transcript} = props;
+  const {documentUrl, transcript, navigation} = props;
   const [selected, setSelected] = useState(1);
+
+  console.log('----->props', props);
+  console.log('----->documentUrl', documentUrl);
 
   return (
     <View>
@@ -40,11 +43,14 @@ function Tabs(props: any) {
       </View>
       {selected === 1 ? (
         <View>
-          <Text>{description}</Text>
+          <Text style={styles.tabContainerText}>{transcript}</Text>
         </View>
       ) : (
         <View>
-          <Text style={styles.tabContainerText}>{transcript}</Text>
+          {/* PDFScreen */}
+          <TouchableOpacity onPress={() => navigation.navigate('PDFScreen', {url: documentUrl})}>
+            <Text style={styles.tabContainerText}>Documnet</Text>
+          </TouchableOpacity>
         </View>
       )}
     </View>
@@ -54,10 +60,7 @@ function Tabs(props: any) {
 function AssignmentSection(props: any) {
   const {navigation} = props;
   const {assessment} = useSelector(s => s.main);
-  console.log('----->assessment', assessment);
   const {assessmentTitle, attendStatus} = assessment || {};
-
-  console.log('----->attendedStatus', attendStatus);
 
   const {attendedCount, totalMarks, totalQuestions} = attendStatus || {};
 
@@ -86,10 +89,19 @@ function AssignmentSection(props: any) {
 function DropDownSection(props: any) {
   const completed = '20%';
 
-  const {item, setVideo, setVideoId, addRecentVideo, setSectionId} = props;
+  const {item, setVideo, setVideoId, addRecentVideo, setSectionId, navigation} = props;
 
-  const {_id, courseId, description, sectionId, thumbnailUrl, transcript, videoTitle, videoUrl} =
-    item;
+  const {
+    _id,
+    courseId,
+    description,
+    sectionId,
+    thumbnailUrl,
+    transcript,
+    videoTitle,
+    videoUrl,
+    documentUrl,
+  } = item;
 
   const [show, setShow] = useState(false);
 
@@ -143,16 +155,34 @@ function DropDownSection(props: any) {
         </TouchableOpacity>
       </View>
 
-      <View>{show ? <Tabs description={description} transcript={transcript} /> : null}</View>
+      <View>
+        {show ? (
+          <Tabs
+            description={description}
+            documentUrl={documentUrl}
+            navigation={navigation}
+            transcript={transcript}
+          />
+        ) : null}
+      </View>
     </View>
   );
 }
 
-const renderTitle = (item, setVideo, setVideoId, addRecentVideo, courseId, setSectionId) => (
+const renderTitle = (
+  item,
+  setVideo,
+  setVideoId,
+  addRecentVideo,
+  courseId,
+  setSectionId,
+  navigation,
+) => (
   <DropDownSection
     addRecentVideo={addRecentVideo}
     courseId={courseId}
     item={item}
+    navigation={navigation}
     setSectionId={setSectionId}
     setVideo={setVideo}
     setVideoId={setVideoId}
@@ -191,6 +221,8 @@ function DropDownList(props: any) {
     selectedSection,
     setSelectedSection,
     index,
+    navigation,
+    document,
   } = props;
 
   const {sectionTitle, credits, _id} = item;
@@ -234,7 +266,16 @@ function DropDownList(props: any) {
                 key={index}
                 style={styles.title}
                 title={() =>
-                  renderTitle(item, setVideo, setVideoId, addRecentVideo, courseId, setSectionId)
+                  renderTitle(
+                    item,
+                    setVideo,
+                    setVideoId,
+                    addRecentVideo,
+                    courseId,
+                    setSectionId,
+                    navigation,
+                    document,
+                  )
                 }
               />
             );
@@ -262,8 +303,8 @@ function DocumentsAndVideos(props: any) {
       {sections?.map((item, index) => {
         return (
           <DropDownList
-            condition={index < 1 ? true : courseBought}
-            courseBought={index < 2 ? true : courseBought}
+            condition={index < 0 ? true : courseBought}
+            courseBought={index < 0 ? true : courseBought}
             item={item}
             key={index}
             {...props}

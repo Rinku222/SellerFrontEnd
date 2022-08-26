@@ -2,7 +2,14 @@ import RazorpayCheckout, {CheckoutOptions} from 'react-native-razorpay';
 import {colors} from '../../config/colors';
 import usePaymentServices from '../../services/Payment';
 
-async function payment(navigation: any, total: number, courseList, addPayment) {
+async function payment(
+  navigation: any,
+  total: number,
+  courseList,
+  addPayment,
+  getAllSubscribedCourses,
+  getCart,
+) {
   console.log('----->button pressed');
 
   // >err {"code": 0, "description": "{\"error\":{\"code\":\"BAD_REQUEST_ERROR\",\"description\":\"Payment processing cancelled by user\",\"source\":\"customer\",\"step\":\"payment_authentication\",\"reason\":\"payment_cancelled\"}}", "error": {"code": "BAD_REQUEST_ERROR", "description": "Payment processing cancelled by user", "reason": "payment_cancelled", "source": "customer", "step": "payment_authentication"}}
@@ -32,6 +39,8 @@ async function payment(navigation: any, total: number, courseList, addPayment) {
       navigation.navigate('Transaction_Success', {
         id: razorpay_payment_id,
       });
+      getAllSubscribedCourses();
+      getCart();
     },
     err => {
       console.log('----->err', err);

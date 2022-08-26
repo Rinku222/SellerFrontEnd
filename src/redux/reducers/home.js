@@ -22,7 +22,7 @@ const reducer = (state = initialState, action = {}) => {
     case `${GET_HOME_COURSES}_PENDING`:
       return {
         ...state,
-        homeLoading: true,
+        // homeLoading: true,
       };
     case `${GET_HOME_COURSES}_FULFILLED`: {
       return {
@@ -52,7 +52,7 @@ const reducer = (state = initialState, action = {}) => {
     case `${DELETE_CART_COURSE}_REJECTED`:
       return {
         ...state,
-        // homeLoading: false,
+        homeLoading: false,
         errorMessage: payload,
       };
 
@@ -90,7 +90,7 @@ const reducer = (state = initialState, action = {}) => {
     case `${GET_CART}_REJECTED`:
       return {
         ...state,
-        // mainLoading: false,
+        homeLoading: false,
         errorMessage: payload,
       };
     default:

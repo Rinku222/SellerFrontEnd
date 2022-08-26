@@ -23,7 +23,7 @@ interface ReviewProps {
 }
 
 function Reviews(props: any) {
-  const {courseId, readReviews, addReview, reviewed} = props;
+  const {courseId, readReviews, addReview, reviewed, courseBought} = props;
 
   const [comment, setComment] = useState('');
   const [rating, setRating] = useState(5);
@@ -38,7 +38,7 @@ function Reviews(props: any) {
 
   return (
     <ScrollView contentContainerStyle={styles.container} showsVerticalScrollIndicator={false}>
-      {!reviewed && (
+      {courseBought && !reviewed && (
         <View>
           <View style={styles.subContainer}>
             <Image source={UserImage} style={styles.image} />

@@ -123,6 +123,7 @@ function MainScreen(props: any) {
     subscribed,
     whishListId,
     insideCart,
+    amount,
   } = descriptions || {};
 
   const {videoUrl, _id} = recentVideo || {};
@@ -156,7 +157,7 @@ function MainScreen(props: any) {
   };
 
   const loadData = async () => {
-    await getDescriptions({courseId, offset: 0, limit: 20});
+    getDescriptions({courseId, offset: 0, limit: 20});
     getSections({courseId, offset: 0, limit: 20});
     readReviews({courseId, offSet: 0, limit: 20});
     readFAQ({courseId, offSet: 0, limit: 20});
@@ -261,6 +262,7 @@ function MainScreen(props: any) {
   return (
     <View style={styles.mainContainer1}>
       <View style={[styles.videoContainer, {height: fullScreen ? '95%' : 'auto'}]}>
+        {console.log('----->video', video)}
         <VideoPlayer
           navigator={navigation}
           paused={paused}
@@ -343,7 +345,7 @@ function MainScreen(props: any) {
             </View>
           </View>
           {!subscribed ? (
-            <Text style={{paddingHorizontal: 5, marginBottom: 12}}>{Price(700)}</Text>
+            <Text style={{paddingHorizontal: 5, marginBottom: 12}}>{Price(amount)}</Text>
           ) : null}
           <View style={styles.mainContainer}>
             <TabView

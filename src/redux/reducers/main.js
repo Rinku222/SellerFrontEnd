@@ -85,6 +85,7 @@ const reducer = (state = initialState, action = {}) => {
       return {
         ...state,
         videoLoading: false,
+        mainLoading: false,
         errorMessage: payload,
       };
     case `${GET_DESCRIPTIONS}_PENDING`:
@@ -120,7 +121,7 @@ const reducer = (state = initialState, action = {}) => {
     case `${READ_NOTES}_REJECTED`:
       return {
         ...state,
-        // mainLoading: false,
+        mainLoading: false,
         errorMessage: payload,
       };
     case `${READ_REVIEWS}_PENDING`:
@@ -138,7 +139,7 @@ const reducer = (state = initialState, action = {}) => {
     case `${READ_REVIEWS}_REJECTED`:
       return {
         ...state,
-        // mainLoading: false,
+        mainLoading: false,
         errorMessage: payload,
       };
     case `${READ_ASSESSMENT}_PENDING`:
@@ -156,7 +157,7 @@ const reducer = (state = initialState, action = {}) => {
     case `${READ_ASSESSMENT}_REJECTED`:
       return {
         ...state,
-        // mainLoading: false,
+        mainLoading: false,
         errorMessage: payload,
       };
     case `${SUBMIT_ASSESSMENT}_PENDING`:
@@ -210,7 +211,7 @@ const reducer = (state = initialState, action = {}) => {
     case `${READ_FAQ}_REJECTED`:
       return {
         ...state,
-        // mainLoading: false,
+        mainLoading: false,
         errorMessage: payload,
       };
     case `${ADD_MESSAGES}_PENDING`:
@@ -229,7 +230,7 @@ const reducer = (state = initialState, action = {}) => {
     case `${ADD_MESSAGES}_REJECTED`:
       return {
         ...state,
-        // mainLoading: false,
+        mainLoading: false,
         errorMessage: payload,
       };
     case `${READ_MESSAGES}_PENDING`:
@@ -249,7 +250,7 @@ const reducer = (state = initialState, action = {}) => {
     case `${READ_MESSAGES}_REJECTED`:
       return {
         ...state,
-        // mainLoading: false,
+        mainLoading: false,
         errorMessage: payload,
       };
     case `${ADD_NOTE}_PENDING`:

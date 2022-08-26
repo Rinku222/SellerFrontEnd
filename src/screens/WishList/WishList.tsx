@@ -97,7 +97,7 @@ function WishList() {
           />
         </View>
       ) : (
-        <View>
+        <View style={{flexGrow: 1}}>
           <View style={styles.heading}>
             <Text style={styles.colorBlack}>All Saved Program</Text>
           </View>
@@ -118,7 +118,8 @@ const styles = StyleSheet.create({
     flexGrow: 1,
   },
   scrollView: {
-    marginBottom: 50,
+    // marginBottom: 50,
+    flex: 1,
   },
   heading: {
     display: 'flex',

@@ -8,6 +8,7 @@ import {colors} from '../../../config/colors';
 import {getShadow} from '../../../utils';
 import payment from '../../../components/Payment';
 import Price from '../../../components/Price';
+import homeActions from '../../../redux/actions/homeActions';
 
 import usePaymentServices from '../../../services/Payment';
 
@@ -85,6 +86,7 @@ function Step2(props) {
   const {cart} = useSelector(s => s.home);
 
   const {addPayment} = usePaymentServices();
+  const {getAllSubscribedCourses, getCart} = homeActions();
 
   const discount = 0;
 
@@ -123,7 +125,9 @@ function Step2(props) {
           paddingVertical: 5,
           borderRadius: 8,
         }}
-        onPress={() => payment(navigation, total, courseList, addPayment)}>
+        onPress={() =>
+          payment(navigation, total, courseList, addPayment, getAllSubscribedCourses, getCart)
+        }>
         Continue to pay {Price(total)}
       </Button>
     </View>

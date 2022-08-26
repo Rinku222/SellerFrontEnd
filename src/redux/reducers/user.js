@@ -69,7 +69,7 @@ const reducer = (state = initialState, action = {}) => {
     case `${UPDATE_USER_DATA}_REJECTED`:
       return {
         ...state,
-        // userLoading: false,
+        userLoading: false,
         errorMessage: payload,
       };
     case `${GET_USER_DATA}_PENDING`:
@@ -87,7 +87,7 @@ const reducer = (state = initialState, action = {}) => {
     case `${GET_USER_DATA}_REJECTED`:
       return {
         ...state,
-        // userLoading: false,
+        userLoading: false,
         errorMessage: payload,
       };
 
