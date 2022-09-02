@@ -101,8 +101,8 @@ function Login(props) {
     inputRange: [0, 1],
     outputRange: [0, 1],
   });
-  const onButtonPress = mode => {
-    setMode(mode);
+  const onButtonPress = (type: string) => {
+    setMode(type);
     animateHeight();
   };
 
@@ -337,6 +337,12 @@ function Login(props) {
               displayName: nameForSignUp,
               phone: phoneForSignUp,
             });
+            onButtonPress('login');
+            setNameForSignUp('');
+            setEmailPhoneForSignUp('');
+            setPhoneForSignUp('');
+            setConfirmPasswordForSignUpError('');
+            setPasswordForSignUpError('');
           }
           setLoading(false);
         } catch (error) {
