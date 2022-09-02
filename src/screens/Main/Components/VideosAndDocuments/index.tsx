@@ -12,9 +12,6 @@ function Tabs(props: any) {
   const {documentUrl, transcript, navigation} = props;
   const [selected, setSelected] = useState(1);
 
-  console.log('----->props', props);
-  console.log('----->documentUrl', documentUrl);
-
   return (
     <View>
       <View style={styles.tabContainer}>

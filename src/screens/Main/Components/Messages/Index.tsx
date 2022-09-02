@@ -35,7 +35,6 @@ function Messages(props: any) {
   }, []);
 
   const onSubmit = async () => {
-    console.log('----->onSubmit called', message);
     await addMessage({courseId, message});
     await readMessages({courseId, offSet: 0});
     setOffset(0);
@@ -54,7 +53,6 @@ function Messages(props: any) {
       showsVerticalScrollIndicator={false}
       onScroll={async ({nativeEvent}) => {
         if (isCloseToBottom(nativeEvent) && !loader && offSet + 10 < count) {
-          console.log('----->function call on bottom');
           setLoader(true);
           await readMessages({courseId, offSet: offSet + 10});
           setLoader(false);

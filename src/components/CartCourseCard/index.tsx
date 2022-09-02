@@ -1,14 +1,18 @@
 import React, {useState} from 'react';
 import {TouchableOpacity, View, Image, Text, StyleSheet} from 'react-native';
 import {ActivityIndicator} from 'react-native-paper';
+import {useSelector} from 'react-redux';
 import {colors} from '../../config/colors';
 import {getShadow} from '../../utils';
 import homeActions from '../../redux/actions/homeActions';
 import {DeleteIcon} from '../../assets/svg';
 import Price from '../Price';
+import useMainScreenActions from '../../redux/actions/mainScreenActions';
 
 function CartCourseCard(props) {
   const {course} = props;
+
+  const mainCourseId = useSelector(s => s.main.courseId);
 
   const {
     _id,
@@ -22,6 +26,8 @@ function CartCourseCard(props) {
     totalLession,
   } = course || {};
 
+  const {getDescriptions} = useMainScreenActions();
+
   const {getCart, deleteCartCourse} = homeActions();
   const [loader, setLoader] = useState(false);
 
@@ -30,6 +36,9 @@ function CartCourseCard(props) {
     await deleteCartCourse({userCartId: _id});
     await getCart();
     setLoader(false);
+    if (courseId === mainCourseId) {
+      await getDescriptions({courseId: mainCourseId, offset: 0, limit: 20});
+    }
   };
 
   return (

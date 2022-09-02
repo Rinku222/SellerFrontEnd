@@ -96,8 +96,6 @@ const renderTabBar = (props: SceneRendererProps & {navigationState: State}) => (
 function MainScreen(props: any) {
   const {route, navigation} = props;
 
-  // const {courseId} = params;
-
   const {courseId} = useSelector(s => s.main);
 
   const {setVideoTime, addToCart} = useMainServices();
@@ -262,7 +260,6 @@ function MainScreen(props: any) {
   return (
     <View style={styles.mainContainer1}>
       <View style={[styles.videoContainer, {height: fullScreen ? '95%' : 'auto'}]}>
-        {console.log('----->video', video)}
         <VideoPlayer
           navigator={navigation}
           paused={paused}

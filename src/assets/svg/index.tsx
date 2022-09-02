@@ -27,6 +27,7 @@ import BlueTick from './blue-tick.svg';
 import BigLock from './bigLock.svg';
 import Send from './sendIcon.svg';
 import Logout from './logout.svg';
+import Download from './download.svg';
 
 export interface ISVGProps {
   color?: string;
@@ -114,4 +115,7 @@ export function SendIcon(props: ISVGProps) {
 }
 export function LogoutIcon(props: ISVGProps) {
   return <Logout {...props} name="logoutIcon" />;
+}
+export function DownloadIcon(props: ISVGProps) {
+  return <Download {...props} name="logoutIcon" />;
 }

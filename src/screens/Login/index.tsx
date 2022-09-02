@@ -1,8 +1,19 @@
 import React, {useState, useRef} from 'react';
-import {View, Animated, Easing, Text, Image, TouchableOpacity, ScrollView} from 'react-native';
+import {
+  View,
+  Animated,
+  Easing,
+  Text,
+  Image,
+  TouchableOpacity,
+  ScrollView,
+  Alert,
+} from 'react-native';
 import {SvgXml} from 'react-native-svg';
 import {Auth} from 'aws-amplify';
 import {Snackbar, TextInput} from 'react-native-paper';
+import {Formik} from 'formik';
+import * as Yup from 'yup';
 import {styles} from './styles';
 import Button from '../../components/Button';
 import SplashSvgXml from '../../assets/svg/SplashSvg';
@@ -13,9 +24,18 @@ import {createService, Authorization} from '../../services/HttpService/HttpServi
 import useUserActions from '../../redux/actions/userActions';
 import {Loader} from '../../../App';
 import Forgot from '../ForgotPassword';
+import {downloadPdf} from '../../components/Download';
+
 // import
 
 const ANIMATION_DURATION = 500;
+
+const LoginSchema = Yup.object().shape({
+  email: Yup.string().email('Invalid email').required('Email is Required'),
+  password: Yup.string()
+    .required('Password is Required')
+    .matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/, 'Password too weak'),
+});
 
 function Login(props) {
   const initialBottomDrawerHeight = screenHeight > 650 ? 330 : 230;
@@ -108,7 +128,7 @@ function Login(props) {
     if (text !== ' ') setPhoneForSignUp(text);
   };
   const onNameChangeForSignUp = (text: string) => {
-    if (text !== ' ') setNameForSignUp(text);
+    if (text !== ' ' && text.length <= 15) setNameForSignUp(text);
   };
 
   const onEmailPhoneChangeForSignUp = (text: string) => {
@@ -157,90 +177,106 @@ function Login(props) {
   };
 
   const renderLogin = () => {
-    async function signIn() {
+    async function signIn(data: {email: string; password: string}) {
+      const {email, password} = data;
+      // await downloadPdf('https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf');
       try {
         setLoading(true);
+        const user = await Auth.signIn(email, password);
+        await getUserDetails({email, password});
 
-        const user = await Auth.signIn(emailPhoneForLogin, passwordForLogin);
-        console.log('----->user in signup', user);
-
-        await getUserDetails({emailPhoneForLogin, passwordForLogin});
+        console.log('----->user', user.signInUserSession.idToken);
         const Authorization1 = user.signInUserSession.idToken.jwtToken;
         setLoading(false);
-        setEmailPhoneForLogin('');
-        setPasswordForLogin('');
 
-        navigation.navigate('App', {
-          Authorization1,
-        });
-      } catch (error) {
-        setLoading(false);
-        if (error.name === 'UserNotConfirmedException') {
+        if (!user.signInUserSession.idToken.payload.email_verified) {
+          await Auth.resendSignUp(email);
+
           navigation.navigate('mail_verification', {
-            emailPhoneForSignUp: emailPhoneForLogin,
+            emailPhoneForSignUp: email,
+          });
+        } else {
+          navigation.navigate('App', {
+            Authorization1,
           });
         }
-        if (error.name === 'NotAuthorizedException') {
+      } catch (error) {
+        setLoading(false);
+        console.log('----->error', error);
+        if (error.name === 'UserNotConfirmedException') {
+          navigation.navigate('mail_verification', {
+            emailPhoneForSignUp: email,
+          });
+        } else {
           setVisible(true);
-          setSnackbarError('Incorrect username or password');
-        }
-        if (error.name === 'UserNotFoundException') {
-          setVisible(true);
-          setSnackbarError('User does not exist.');
+          setSnackbarError(error.message);
         }
       }
     }
 
     return (
       <View>
-        {/* {true?:} */}
         <>
           {forgotPasswordScreen ? (
             <View>
               <Forgot {...props} />
             </View>
           ) : (
-            <View>
-              <Snackbar
-                duration={4000}
-                style={{zIndex: 10, backgroundColor: colors.failure}}
-                visible={visible}
-                onDismiss={() => setVisible(false)}>
-                {snackbarError}
-              </Snackbar>
-              <Text style={styles.headerLabelText}>Login</Text>
-              <InputBox
-                errorText={validationLogIn}
-                placeHolder="Email"
-                style={styles.renderLoginTextBox}
-                value={emailPhoneForLogin}
-                onChangeText={onEmailPhoneChangeForLogin}
-              />
-              <InputBox
-                secureTextEntry
-                showEye
-                placeHolder="Password"
-                value={passwordForLogin}
-                onChangeText={onPasswordChangeForLogin}
-              />
-              <TouchableOpacity
-                style={styles.forgotPasswordView}
-                onPress={() => setForgotPasswordScreen(true)}>
-                <Text style={styles.forgotPasswordText}> Forgot password?</Text>
-              </TouchableOpacity>
-              {incorrectPasswordError ? (
-                <View style={styles.incorrectContainer}>
-                  <Text style={styles.incorrectContainerText}>{incorrectPasswordError}</Text>
-                </View>
-              ) : null}
+            <Formik
+              initialValues={{email: '', password: ''}}
+              validateOnBlur={false}
+              validateOnChange={false}
+              validationSchema={LoginSchema}
+              onSubmit={values => {
+                signIn({email: values.email, password: values.password});
+              }}>
+              {({values, errors, handleChange, handleSubmit}) => (
+                <View>
+                  <Snackbar
+                    duration={4000}
+                    style={{zIndex: 10, backgroundColor: colors.failure}}
+                    visible={visible}
+                    onDismiss={() => setVisible(false)}>
+                    {snackbarError}
+                  </Snackbar>
+                  <Text style={styles.headerLabelText}>Login</Text>
+                  <InputBox
+                    errorText={errors.email}
+                    name="email"
+                    placeHolder="Email"
+                    style={styles.renderLoginTextBox}
+                    value={values.email}
+                    onChangeText={handleChange('email')}
+                  />
+                  <InputBox
+                    secureTextEntry
+                    showEye
+                    errorText={errors.password}
+                    name="password"
+                    placeHolder="Password"
+                    value={values.password}
+                    onChangeText={handleChange('password')}
+                  />
+                  <TouchableOpacity
+                    style={styles.forgotPasswordView}
+                    onPress={() => setForgotPasswordScreen(true)}>
+                    <Text style={styles.forgotPasswordText}> Forgot password?</Text>
+                  </TouchableOpacity>
+                  {incorrectPasswordError ? (
+                    <View style={styles.incorrectContainer}>
+                      <Text style={styles.incorrectContainerText}>{incorrectPasswordError}</Text>
+                    </View>
+                  ) : null}
 
-              <Button
-                style={styles.renderLoginButton}
-                text="Login"
-                variant="primary"
-                onPress={signIn}
-              />
-            </View>
+                  <Button
+                    style={styles.renderLoginButton}
+                    text="Login"
+                    variant="primary"
+                    onPress={handleSubmit}
+                  />
+                </View>
+              )}
+            </Formik>
           )}
 
           <View style={styles.imageContainer}>
@@ -305,18 +341,12 @@ function Login(props) {
           setLoading(false);
         } catch (error) {
           console.log('----->error in signup', error);
+
           setLoading(false);
           if (error.message === 'User already exists') {
             setVisible(true);
             setSnackbarError('User already exist.');
-            // navigation.navigate('mail_verification', {
-            //   emailPhoneForSignUp,
-            //   passwordForSignUp,
-            //   displayName: nameForSignUp,
-            //   phone: phoneForSignUp,
-            // });
           }
-          console.log('error error up:', error);
         }
       }
     };

@@ -16,7 +16,7 @@ const EmailSchema = Yup.object().shape({
 
 function NewPassword(props) {
   const {route, navigation} = props;
-  const {userName} = route.params;
+  const {userName, navigate} = route.params;
 
   const [snackbarError, setSnackbarError] = useState('');
   const [visible, setVisible] = useState(false);
@@ -24,7 +24,7 @@ function NewPassword(props) {
   const forgotPassword = (otp: string, newPassword: string) => {
     Auth.forgotPasswordSubmit(userName, otp, newPassword)
       .then(value => {
-        navigation.navigate('Login');
+        navigation.navigate(navigate);
       })
       .catch(error => {
         if (error.name === 'CodeMismatchException') {

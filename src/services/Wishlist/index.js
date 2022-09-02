@@ -9,7 +9,7 @@ export default function useWishlistServices() {
       return createService(`/wishlist?courseId=${params.courseId}`);
     },
     deleteWishlist: params => {
-      return deleteService(`/wishlist?wishlistId=${params.wishlistId}`);
+      return deleteService(`/wishlist?courseId=${params.courseId}`);
     },
   };
 }

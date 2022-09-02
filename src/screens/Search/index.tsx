@@ -8,6 +8,7 @@ import SearchBar from '../../components/SearchBar';
 import {colors} from '../../config/colors';
 import searchActions from '../../redux/actions/searchActions';
 import {getShadow} from '../../utils';
+import homeServices from '../../services/Home';
 
 function renderEmpty() {
   return (
@@ -22,8 +23,23 @@ function renderEmpty() {
   );
 }
 
+function BottomComponent(loading: boolean) {
+  return (
+    <View>
+      {loading ? (
+        <ActivityIndicator
+          animating
+          color={colors.primary}
+          size="small"
+          style={{marginBottom: 20}}
+        />
+      ) : null}
+    </View>
+  );
+}
+
 function RenderCourses(props) {
-  const {course} = props;
+  const {course, EndReached, bottomLoader, wishlistClick} = props;
 
   return (
     <View style={styles.flatList}>
@@ -33,12 +49,14 @@ function RenderCourses(props) {
         extraData={course}
         keyExtractor={item => item.courseId}
         ListEmptyComponent={renderEmpty}
+        ListFooterComponent={() => BottomComponent(bottomLoader)}
         numColumns={2}
         renderItem={({item}) => (
           <View style={{margin: 5, width: '47%'}}>
-            <CourseCard data={item} {...props} />
+            <CourseCard data={item} {...props} wishlistClick={wishlistClick} />
           </View>
         )}
+        onEndReached={() => EndReached()}
       />
     </View>
   );
@@ -46,30 +64,69 @@ function RenderCourses(props) {
 
 function Search(props) {
   const {getAllCourseCategories, getAllSearchedCourses} = searchActions();
+  const {getAllCourses} = homeServices();
 
   const [searchText, setSearchText] = useState('');
   const [searchName, setSearchName] = useState('');
   const [selected, setSelected] = useState('');
+  const [offset, setOffset] = useState(0);
+  const [total, setTotal] = useState(0);
+  const [searchedCourses, setSearchedCourses] = useState([]);
+  const [bottomLoader, setBottomLoader] = useState(false);
 
   const {courseCatagory, searchLoading} = useSelector(s => s.search);
-  const {course} = useSelector(s => s.search.searchedCourses);
+  // const {course} = useSelector(s => s.search.searchedCourses);
 
   useEffect(() => {
     loadData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+  console.log('----->searchedCourses', searchedCourses[3]);
 
-  useEffect(() => {
-    getAllSearchedCourses({
-      offset: 0,
-      limit: 10,
+  // 63074d22fe58c10009dbd329
+
+  const wishlistClick = id => {
+    console.log('----->searchedCourses', searchedCourses[0]);
+    const index = searchedCourses.map(object => object._id).indexOf(id);
+    const some_array = [...searchedCourses];
+    some_array[index] = {...some_array[index], wishListed: !some_array[index].wishListed};
+    // this.setState({some_array:some_array})
+    setSearchedCourses(some_array);
+  };
+
+  const loadCourses = async (value: number) => {
+    setBottomLoader(true);
+    const response = await getAllCourses({
       searchText: searchName,
       streamId: selected,
+      limit: 10,
+      offset: value,
     });
+    const {data} = response;
+    const {count, course} = data;
+    console.log('----->count', count);
+    if (total !== data.count) {
+      console.log('----->inside if');
+      setTotal(count);
+    }
+    setSearchedCourses([...searchedCourses, ...course]);
+    setBottomLoader(false);
+    // setLoading(false);
+  };
+
+  useEffect(() => {
+    loadCourses(0);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchName, selected]);
 
-  const loadData = async () => getAllCourseCategories({offSet: 0, limit: 10});
+  const EndReached = () => {
+    if (offset + 10 < total) {
+      loadCourses(offset + 10);
+      setOffset(offset + 10);
+    }
+  };
+
+  const loadData = async () => getAllCourseCategories({offSet: 0, limit: 50});
 
   const handleChange = async v => {
     setSearchName(v);
@@ -119,7 +176,13 @@ function Search(props) {
         </View>
       ) : (
         <View style={styles.renderCourse}>
-          <RenderCourses course={course} {...props} />
+          <RenderCourses
+            bottomLoader={bottomLoader}
+            course={searchedCourses}
+            EndReached={EndReached}
+            wishlistClick={wishlistClick}
+            {...props}
+          />
         </View>
       )}
     </View>

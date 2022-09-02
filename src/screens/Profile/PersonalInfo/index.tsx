@@ -19,23 +19,26 @@ import {fileUploadService} from '../../../services/HttpService/HttpService';
 const schema = Yup.object().shape({
   name: Yup.string()
     .required('First Name name is required')
-    .matches(/^[aA-zZ\s]+$/, 'Enter a valid name'),
+    .matches(/^[aA-zZ\s]+$/, 'Enter a valid name')
+    .max(15, 'Must be less than 15 characters'),
 });
 
-function Edit(name) {
+function Edit(name: string) {
   return <Text style={{color: colors.primary}}>{name || 'Edit'}</Text>;
 }
 
 function Row(props: any) {
-  const {data, navigation} = props;
+  const {data, navigation, email} = props;
   const {icon, value, path, border, edit} = data;
-  const {username} = useSelector(s => s.user.userData);
+  // const {username} = useSelector(s => s.user.userData);
+  const userData = useSelector(s => s.user.user.email);
 
-  const forgotPassword = (email: string) => {
-    Auth.forgotPassword(email)
+  const forgotPassword = () => {
+    Auth.forgotPassword(userData)
       .then(() => {
         navigation.navigate('new-password', {
-          userName: email,
+          userName: value,
+          navigate: 'profile',
         });
       })
       .catch(error => {
@@ -45,7 +48,7 @@ function Row(props: any) {
 
   const handlePress = async () => {
     if (path === 'change_password') {
-      forgotPassword(username);
+      forgotPassword();
     }
     if (path === 'change_phone') {
       const user1 = await Auth.currentAuthenticatedUser();
@@ -119,7 +122,7 @@ function PersonalInfo(props: any) {
   };
 
   useEffect(() => {
-    toggleEditName();
+    // toggleEditName();
     // setEditName(!editName);
     // loadData();
     // console.log('----->api call');
@@ -129,8 +132,6 @@ function PersonalInfo(props: any) {
   const toggleEditName = () => setEditName(v => !v);
 
   const handleUserSave = async (name: string) => {
-    console.log('----->handleUserSave');
-    // setEditName(!editName);
     toggleEditName();
     if (displayName !== name) {
       await updateUserData({displayName: name});
@@ -217,6 +218,7 @@ function PersonalInfo(props: any) {
             </TouchableOpacity>
           </View>
         </View>
+        {console.log('----->editName', editName)}
         <View style={styles.header}>
           <Text style={{color: colors.themeYellow}}>Personal Info</Text>
         </View>
@@ -239,6 +241,7 @@ function PersonalInfo(props: any) {
                 activeOutlineColor="#707070"
                 activeUnderlineColor="transparent"
                 editable={editName}
+                // disabled={!editName}
                 left={
                   <TextInput.Icon name={() => <AntDesign color="black" name="user" size={18} />} />
                 }
@@ -266,7 +269,9 @@ function PersonalInfo(props: any) {
                 underlineColor="transparent"
                 underlineColorAndroid="transparent"
                 value={values.name}
-                onChangeText={text => setFieldValue('name', text)}
+                onChangeText={text => {
+                  setFieldValue('name', text);
+                }}
               />
               {errors.name && (
                 <Text style={{color: 'red', marginHorizontal: 20}}>{errors.name}</Text>
@@ -276,7 +281,7 @@ function PersonalInfo(props: any) {
         </Formik>
         <View style={styles.list}>
           {LIST.map(item => {
-            return <Row data={item} key={item.path} {...props} />;
+            return <Row data={item} email={email} key={item.path} {...props} />;
           })}
         </View>
       </View>

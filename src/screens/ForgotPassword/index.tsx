@@ -19,6 +19,7 @@ function Forgot(props: any) {
       .then(() => {
         navigation.navigate('new-password', {
           userName: email,
+          navigate: 'Login',
         });
       })
       .catch(error => {
@@ -29,6 +30,8 @@ function Forgot(props: any) {
   return (
     <Formik
       initialValues={{email: ''}}
+      validateOnBlur={false}
+      validateOnChange={false}
       validationSchema={EmailSchema}
       onSubmit={values => {
         forgotPassword(values.email);

@@ -1,33 +1,39 @@
 import React, {useEffect, useState} from 'react';
 import {View, Text, Image, StyleSheet, ScrollView, TouchableOpacity} from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import {Button, Paragraph, Dialog, Portal, Provider, ActivityIndicator} from 'react-native-paper';
+import {ActivityIndicator} from 'react-native-paper';
 import {useSelector} from 'react-redux';
 import {colors} from '../../config/colors';
-import UserImage from '../../assets/images/laps.png';
 import useWishlistActions from '../../redux/actions/wishlistActions';
-import {Loader} from '../../../App';
-import loadingVariable from '../../redux/selector';
 import Price from '../../components/Price';
+import useMainScreenActions from '../../redux/actions/mainScreenActions';
 
 function RenderRow(props) {
-  const {data} = props;
+  const {data, navigation} = props;
 
   const {_id, amount, courseId, courseTitle, coverImageUrl, duration, totalLession} = data;
+
+  console.log('----->data', data);
 
   const [loader, setLoader] = useState(false);
 
   const {deleteWishlist, getWishlist} = useWishlistActions();
+  const {setCourseId} = useMainScreenActions();
 
   const handleDeleteWishlist = async () => {
     setLoader(true);
-    await deleteWishlist({wishlistId: _id});
+    await deleteWishlist({courseId});
     await getWishlist();
     setLoader(false);
   };
 
   return (
-    <TouchableOpacity style={styles.container}>
+    <TouchableOpacity
+      style={styles.container}
+      onPress={async () => {
+        await setCourseId({courseId});
+        navigation.navigate('VideosScreen');
+      }}>
       <Image
         source={{
           uri: coverImageUrl,
@@ -63,10 +69,9 @@ function RenderRow(props) {
   );
 }
 
-function WishList() {
+function WishList(props) {
   const {wishlist} = useSelector(s => s.wishlist);
 
-  // const loading = loadingVariable();
   const [loader, setLoader] = useState(false);
 
   const {getWishlist} = useWishlistActions();
@@ -81,20 +86,11 @@ function WishList() {
     loadData();
   }, []);
 
-  // if (loading) {
-  //   return <Loader />;
-  // }
-
   return (
     <View style={styles.mainContainer}>
       {loader ? (
         <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
-          <ActivityIndicator
-            animating
-            color={colors.primary}
-            size="small"
-            // style={styles.wishlistIcon}
-          />
+          <ActivityIndicator animating color={colors.primary} size="small" />
         </View>
       ) : (
         <View style={{flexGrow: 1}}>
@@ -103,7 +99,7 @@ function WishList() {
           </View>
           <ScrollView showsVerticalScrollIndicator={false} style={styles.scrollView}>
             {wishlist.map((item, i) => {
-              return <RenderRow data={item} key={i} />;
+              return <RenderRow data={item} key={i} {...props} />;
             })}
           </ScrollView>
         </View>
@@ -118,7 +114,6 @@ const styles = StyleSheet.create({
     flexGrow: 1,
   },
   scrollView: {
-    // marginBottom: 50,
     flex: 1,
   },
   heading: {

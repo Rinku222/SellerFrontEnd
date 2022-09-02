@@ -10,23 +10,23 @@ import useWishlistActions from '../../redux/actions/wishlistActions';
 import homeActions from '../../redux/actions/homeActions';
 import useSearchActions from '../../redux/actions/searchActions';
 import useMainScreenActions from '../../redux/actions/mainScreenActions';
-import Price from '../Price';
-
-// cards-heart
 
 function SingleCertificateBar(props) {
-  const {icon, text, background} = props;
+  const {icon, text, background, navigation, certificateUrl} = props;
 
   return (
-    <View style={[styles.singleBarContainer, {backgroundColor: background}]}>
+    <TouchableOpacity
+      style={[styles.singleBarContainer, {backgroundColor: background}]}
+      onPress={() => navigation.navigate('PDFScreen', {url: certificateUrl})}>
       {icon}
       <Text style={styles.singleBarText}>{text}</Text>
-    </View>
+    </TouchableOpacity>
   );
 }
 
 function RenderCertificateBar(props) {
-  const {type = 'pending'} = props;
+  const {type = 'view', certificateUrl} = props;
+
   switch (type) {
     case 'pending':
       return (
@@ -34,16 +34,21 @@ function RenderCertificateBar(props) {
           background={colors.primary}
           icon={<AboutIcon color={colors.white} width={20} />}
           text="Pending"
+          {...props}
         />
       );
     case 'get':
-      return <SingleCertificateBar background={colors.themeSkyBlue} text="Get Certificate" />;
+      return (
+        <SingleCertificateBar background={colors.themeSkyBlue} text="Get Certificate" {...props} />
+      );
     case 'view':
       return (
         <SingleCertificateBar
           background={colors.themeYellow}
+          certificateUrl={certificateUrl}
           icon={<AchievementIcon color={colors.white} width={20} />}
           text="View Certificate"
+          {...props}
         />
       );
     default:
@@ -81,17 +86,8 @@ function RenderCourseBar(props) {
   );
 }
 
-function CourseCard(props) {
-  const {
-    course,
-    data,
-    myCourse,
-    searchName = '',
-    selected = '',
-    navigation,
-    price,
-    wishlistClick,
-  } = props;
+function CertificateCard(props) {
+  const {course, data, myCourse, searchName = '', selected = '', navigation, price} = props;
 
   const [wishlistLoader, setWishlistLoader] = useState(false);
 
@@ -103,56 +99,21 @@ function CourseCard(props) {
 
   const {
     _id,
-    amount,
-    categoryId,
+    menteeId,
+    courseId,
+    certificateUrl,
     courseTitle,
     coverImageUrl,
-    createdBy,
-    creationTS,
-    courseId,
-    description,
-    duration,
     owner,
     totalLession,
-    wishListed,
-    wishListId,
-    progressValue,
+    amount,
+    duration,
   } = data || {};
 
   const {name, profileUrl} = owner || {};
 
-  const handleWishlistPress = async () => {
-    if (wishlistClick) {
-      wishlistClick(_id);
-    }
-    if (wishListed) {
-      setWishlistLoader(true);
-      await deleteWishlist({courseId: _id});
-    } else {
-      setWishlistLoader(true);
-      await addWishlist({courseId: _id});
-    }
-    getWishlist();
-    await getHomeCourses({offset: 0, limit: 10});
-    if (!wishlistClick) {
-      await getAllSearchedCourses({
-        offset: 0,
-        limit: 10,
-        searchText: searchName,
-        streamId: selected,
-      });
-    }
-
-    setWishlistLoader(false);
-  };
-
   return (
-    <TouchableOpacity
-      style={styles.cardMainContainer}
-      onPress={async () => {
-        await setCourseId({courseId});
-        navigation.navigate('VideosScreen');
-      }}>
+    <TouchableOpacity style={styles.cardMainContainer}>
       <View style={styles.topImageView}>
         <Image
           source={{
@@ -160,26 +121,6 @@ function CourseCard(props) {
           }}
           style={styles.profileImage}
         />
-        {myCourse ? (
-          <View style={styles.videoIcon}>
-            <PlayVideoIcon height={30} width={30} />
-          </View>
-        ) : wishlistLoader ? (
-          <ActivityIndicator
-            animating
-            color={colors.primary}
-            size="small"
-            style={styles.wishlistIcon}
-          />
-        ) : (
-          <TouchableOpacity style={styles.wishlistIcon} onPress={() => handleWishlistPress()}>
-            {wishListed ? (
-              <MaterialCommunityIcons color={colors.primary} name="cards-heart" size={20} />
-            ) : (
-              <MaterialCommunityIcons name="cards-heart-outline" size={20} />
-            )}
-          </TouchableOpacity>
-        )}
       </View>
       <View style={styles.content}>
         <View style={{flexDirection: 'column', justifyContent: 'space-between', flexWrap: 'wrap'}}>
@@ -187,37 +128,30 @@ function CourseCard(props) {
             {courseTitle}
           </Text>
         </View>
-
-        {!myCourse && (
-          <View
-            style={{
-              alignItems: 'flex-end',
-              justifyContent: 'space-between',
-              flexDirection: 'row',
-            }}>
-            <View style={styles.subheading}>
-              <Image source={{uri: profileUrl}} style={styles.image} />
-              <Text>{name}</Text>
-            </View>
-            {!price ? (
-              <Text style={{fontWeight: 'bold', marginBottom: 10}}>{Price(amount)}</Text>
-            ) : null}
+        <View
+          style={{
+            alignItems: 'flex-end',
+            justifyContent: 'space-between',
+            flexDirection: 'row',
+          }}>
+          <View style={styles.subheading}>
+            <Image source={{uri: profileUrl}} style={styles.image} />
+            <Text>{name}</Text>
           </View>
-        )}
+        </View>
         <View style={styles.bottomRow}>
           <Text style={styles.fontSize}>{duration}</Text>
           <Text style={styles.fontSize}>{totalLession} Lessons</Text>
         </View>
       </View>
-      {myCourse &&
-        (course ? <RenderCourseBar progressValue={progressValue} /> : <RenderCertificateBar />)}
+      <RenderCertificateBar {...props} certificateUrl={certificateUrl} />
     </TouchableOpacity>
   );
 }
 
 const styles = StyleSheet.create({
   profileImage: {
-    // width: '100%',
+    width: '100%',
     height: 100,
     borderRadius: 10,
   },
@@ -226,32 +160,15 @@ const styles = StyleSheet.create({
   },
   cardMainContainer: {
     padding: 8,
-    width: '100%',
     backgroundColor: colors.white,
-    margin: 5,
+    margin: 4,
     borderRadius: 10,
     flex: 0.5,
     ...getShadow(10),
   },
-  videoIcon: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  wishlistIcon: {
-    position: 'absolute',
-    right: 10,
-    bottom: 10,
-    backgroundColor: colors.white,
-  },
   heading: {
     fontWeight: 'bold',
     color: colors.black,
-    marginBottom: 20,
     marginTop: 12,
     width: 140,
     flex: 1,
@@ -322,4 +239,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default CourseCard;
+export default CertificateCard;

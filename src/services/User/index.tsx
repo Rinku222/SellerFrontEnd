@@ -14,9 +14,6 @@ export default function useUserServices() {
     },
     updateProfileImage: (data: any) => {
       const {path, file, extension} = data;
-      console.log('----->path', path);
-      console.log('----->file', file);
-      console.log('----->extension', extension);
       return fileUpdateService(path, file, extension);
     },
     getUserData: () => {
@@ -28,6 +25,10 @@ export default function useUserServices() {
     addMentee: (data: any) => {
       const {displayName, email, phone, profileUrl} = data;
       return createService(`/mentee`, data);
+    },
+    getMyCertificates: (data: any) => {
+      const {offSet} = data;
+      return readService(`/certificate?offset=${offSet}&limit=10`, data);
     },
   };
 }

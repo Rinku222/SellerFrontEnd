@@ -22,7 +22,7 @@ function MyCourses(props) {
           // eslint-disable-next-line no-underscore-dangle
           keyExtractor={item => item._id}
           numColumns={2}
-          renderItem={({item}) => <CourseCard course data={item} {...props} />}
+          renderItem={({item}) => <CourseCard course data={item} {...props} price />}
         />
       </View>
     </View>

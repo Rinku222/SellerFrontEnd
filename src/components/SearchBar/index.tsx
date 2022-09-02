@@ -36,7 +36,7 @@ function SearchDropdown(props: any) {
             nestedScrollEnabled
             contentContainerStyle={styles.scrollContainer}
             keyboardShouldPersistTaps="handled">
-            {options.map(({label, index: number}) => {
+            {options.map(({label}, index: number) => {
               return (
                 <TouchableOpacity
                   key={index}

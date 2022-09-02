@@ -44,7 +44,7 @@ const reducer = (state = initialState, action = {}) => {
     case `${GET_ALL_SEARCHED_COURSES}_FULFILLED`: {
       return {
         ...state,
-        // searchLoading: false,
+        searchLoading: false,
         searchedCourses: payload,
         count: payload.count,
       };
@@ -52,7 +52,7 @@ const reducer = (state = initialState, action = {}) => {
     case `${GET_ALL_SEARCHED_COURSES}_REJECTED`:
       return {
         ...state,
-        // searchLoading: false,
+        searchLoading: false,
         errorMessage: payload,
       };
 

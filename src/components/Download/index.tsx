@@ -1,5 +1,5 @@
 import {Platform} from 'react-native';
-import RNFetchBlob from 'react-native-blob-util';
+import RNFetchBlob, {ReactNativeBlobUtilConfig} from 'react-native-blob-util';
 import RNFS from 'react-native-fs';
 import * as mime from 'react-native-mime-types';
 import {store} from '../../redux/store';
@@ -45,11 +45,12 @@ export async function downloadFile(params) {
   if (downloaded) {
     await RNFS.unlink(path);
   }
-  const options = {
+  const options: ReactNativeBlobUtilConfig = {
     fileCache: true,
     path,
     addAndroidDownloads: {
       path,
+      mime: 'application/pdf',
       description: 'downloading file...',
       notification: true,
       // useDownloadManager works with Android only
@@ -74,10 +75,8 @@ export async function downloadFile(params) {
       throw error;
     });
 }
-export async function downloadPdf(data, fileUrl, getBase64) {
-  const path = `${DIR}/vshwan_document_${new Date().getTime()}.pdf`;
-  const {token} = store.getState().user;
-  const Authorization = `Bearer ${token}`;
+export async function downloadPdf(fileUrl) {
+  const path = `${DIR}/medical_learning_${new Date().getTime()}.pdf`;
   const options = {
     fileCache: true,
     path,
@@ -90,12 +89,11 @@ export async function downloadPdf(data, fileUrl, getBase64) {
     },
   };
   return RNFetchBlob.config(options)
-    .fetch('POST', fileUrl, {Authorization}, data)
+    .fetch('GET', fileUrl)
     .then(async res => {
       console.log('-------->res', res);
     })
     .catch(async error => {
       console.log('-----> error', error);
-      throw error;
     });
 }
