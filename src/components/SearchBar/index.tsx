@@ -12,7 +12,7 @@ function SearchDropdown(props: any) {
   const {t} = useTranslation();
   const [isFocused, setFocused] = useState(false);
   //   const showOptions = !Number.isFinite(selected) && isFocused && options?.length > 0;
-  const showOptions = !selected && isFocused && options?.length > 0;
+  const showOptions = !selected && isFocused && options?.length > 0 && searchQuery.length;
 
   return (
     <>

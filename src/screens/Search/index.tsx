@@ -104,14 +104,15 @@ function Search(props) {
     });
     const {data} = response;
     const {count, course} = data;
-    console.log('----->count', count);
     if (total !== data.count) {
-      console.log('----->inside if');
       setTotal(count);
     }
-    setSearchedCourses([...searchedCourses, ...course]);
+    if(value===0){
+      setSearchedCourses(course)
+    }else{
+      setSearchedCourses([...searchedCourses, ...course]);
+    }
     setBottomLoader(false);
-    // setLoading(false);
   };
 
   useEffect(() => {

@@ -12,14 +12,14 @@ const EmailSchema = Yup.object().shape({
 });
 
 function Forgot(props: any) {
-  const {navigation} = props;
+  const {navigation,navigate} = props;
 
   const forgotPassword = (email: string) => {
     Auth.forgotPassword(email)
       .then(() => {
         navigation.navigate('new-password', {
           userName: email,
-          navigate: 'Login',
+          navigate,
         });
       })
       .catch(error => {

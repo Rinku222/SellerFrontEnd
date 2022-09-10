@@ -1,4 +1,4 @@
-import React, {useState, useRef} from 'react';
+import React, {useState, useRef, useEffect} from 'react';
 import {
   View,
   Animated,
@@ -54,6 +54,7 @@ function Login(props) {
   const [visible, setVisible] = useState(false);
   const [showLoginPassword, setShowLoginPassword] = useState(false);
   const [snackbarError, setSnackbarError] = useState('');
+  const [dummy, setDummy] = useState('');
 
   const [emailPhoneForLogin, setEmailPhoneForLogin] = useState('');
   const [passwordForLogin, setPasswordForLogin] = useState('');
@@ -120,6 +121,7 @@ function Login(props) {
       }
     }
   };
+
   const onPasswordChangeForLogin = (text: string) => {
     setPasswordForLogin(text);
   };
@@ -219,7 +221,7 @@ function Login(props) {
         <>
           {forgotPasswordScreen ? (
             <View>
-              <Forgot {...props} />
+              <Forgot {...props} navigate="Login" />
             </View>
           ) : (
             <Formik
@@ -279,14 +281,14 @@ function Login(props) {
             </Formik>
           )}
 
-          <View style={styles.imageContainer}>
+          {/* <View style={styles.imageContainer}>
             <TouchableOpacity>
               <Image source={require('../../assets/images/google.png')} style={styles.socialIcon} />
             </TouchableOpacity>
             <TouchableOpacity>
               <Image source={require('../../assets/images/FB.png')} style={styles.socialIcon} />
             </TouchableOpacity>
-          </View>
+          </View> */}
           <View style={styles.signUp}>
             <Text>
               {"Don't have an account? "}
@@ -371,14 +373,12 @@ function Login(props) {
         <InputBox placeHolder="Name" value={nameForSignUp} onChangeText={onNameChangeForSignUp} />
         <InputBox
           placeHolder="Phone No"
-          // style={styles.bottomText}
           value={phoneForSignUp}
           onChangeText={onPhoneChangeForSignUp}
         />
         <InputBox
           errorText={validationSignUp}
           placeHolder="Email Id"
-          // style={styles.bottomText}
           value={emailPhoneForSignUp}
           onChangeText={onEmailPhoneChangeForSignUp}
         />
@@ -395,19 +395,18 @@ function Login(props) {
           showEye
           errorText={confirmPasswordForSignUpError}
           placeHolder="Re-enter Password"
-          // style={styles.bottomText}
           value={confirmPasswordForSignUp}
           onChangeText={onConfirmPasswordChangeForSignUp}
         />
         <Button style={styles.signUpButton} text="Sign Up" variant="primary" onPress={signUp} />
-        <View style={styles.imageContainer}>
+        {/* <View style={styles.imageContainer}>
           <TouchableOpacity>
             <Image source={require('../../assets/images/google.png')} style={styles.socialIcon} />
           </TouchableOpacity>
           <TouchableOpacity>
             <Image source={require('../../assets/images/FB.png')} style={styles.socialIcon} />
           </TouchableOpacity>
-        </View>
+        </View> */}
         <View style={styles.loginContainer}>
           <Text>
             {'Already have an account? '}
@@ -415,12 +414,10 @@ function Login(props) {
               Login
             </Text>
           </Text>
-        </View>
+        </View>        
       </View>
     );
   };
-
-  // console.log('----->loading', loading);
 
   if (loading) {
     return <Loader />;

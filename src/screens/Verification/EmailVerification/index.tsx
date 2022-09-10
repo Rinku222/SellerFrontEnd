@@ -1,11 +1,13 @@
 import React, {useState, useRef} from 'react';
 import {View, Text, Image, TextInput} from 'react-native';
 import {Auth} from 'aws-amplify';
+import {Snackbar} from 'react-native-paper';
 import {styles} from './style';
 import Button from '../../../components/Button/index';
 import TopHeader from '../../../components/TopHeader';
 import Email from '../../../assets/images/Change_email.png';
 import useUserActions from '../../../redux/actions/userActions';
+import { colors } from '../../../config/colors';
 
 function VerificationMail(props) {
   const [otp, setOtp] = useState({1: '', 2: '', 3: '', 4: '', 5: '', 6: ''});
@@ -15,6 +17,9 @@ function VerificationMail(props) {
   console.log('----->emailPhoneForSignUp in verification', emailPhoneForSignUp);
 
   const {getUserDetails, addMentee} = useUserActions();
+
+  const [visible,setVisible]=useState(false)
+  const [errorMessage,setErrorMessage]=useState("")
 
   const inputOne = useRef();
   const inputTwo = useRef();
@@ -75,11 +80,21 @@ function VerificationMail(props) {
       }
     } catch (error) {
       console.log('error confirming sign up', error);
+      setErrorMessage(error.message);
+      setVisible(true);
     }
   }
 
   return (
     <View style={styles.verificationContainer}>
+       <Snackbar
+          duration={4000}
+          style={{zIndex: 10, backgroundColor: colors.failure}}
+          visible={visible}
+          // onDismiss={() => setVisible(false)}>
+          onDismiss={() => setVisible(false)}>
+          {errorMessage}
+        </Snackbar>
       <TopHeader navigation={navigation} title="Email verification" />
       <View style={styles.verifyContainer}>
         <Image source={Email} />
