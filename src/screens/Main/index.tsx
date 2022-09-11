@@ -98,7 +98,7 @@ function MainScreen(props: any) {
 
   const {courseId} = useSelector(s => s.main);
 
-  const {setVideoTime, addToCart} = useMainServices();
+  const {setVideoTime, addToCart, getUpcomingVideo} = useMainServices();
 
   const {descriptions} = useSelector(s => s.main);
 
@@ -127,7 +127,7 @@ function MainScreen(props: any) {
   const {videoUrl, _id} = recentVideo || {};
 
   const videoDuration = recentVideo?.duration;
-  const _sectionId = recentVideo?.sectionId || '';
+  const {sectionId: _sectionId = ''} = recentVideo || {};
   const videoRef = useRef(videoDuration);
 
   const {getSections, getDescriptions, readReviews, addReview, readFAQ, readMessages} =
@@ -137,8 +137,8 @@ function MainScreen(props: any) {
 
   const [selectedTab, setSelectedTab] = useState(0);
   const [video, setVideo] = useState(videoUrl || '');
-  const [videoId, setVideoId] = useState('');
-  const [sectionId, setSectionId] = useState();
+  const [videoId, setVideoId] = useState(_id || '');
+  const [sectionId, setSectionId] = useState(_sectionId || '');
   const [paused, setPaused] = useState(true);
   const [addToCartLoader, setAddToCartLoader] = useState(false);
   const [fullScreen, setFullScreen] = useState(false);
@@ -185,18 +185,18 @@ function MainScreen(props: any) {
   }, [_id, videoId]);
 
   useEffect(() => {
-    if (paused && currentTime.current !== 0) {
-      setVideoTime({courseId, sectionId, videoId, duration: currentTime.current * 1000});
+    if (paused) {
+      if (currentTime.current !== 0) {
+        setVideoTime({courseId, sectionId, videoId, duration: currentTime.current * 1000});
+      } else {
+        loadUpcomingVideos();
+      }
     }
   }, [courseId, paused, videoId]);
 
-  const handleVideoId = id => {
-    setVideoId(id);
-  };
+  const handleVideoId = id => setVideoId(id);
 
-  const handleSectionId = id => {
-    setSectionId(id);
-  };
+  const handleSectionId = id => setSectionId(id);
 
   const handleAddToCart = async () => {
     if (insideCart) {
@@ -208,6 +208,11 @@ function MainScreen(props: any) {
       setAddToCartLoader(false);
       getCart();
     }
+  };
+
+  const loadUpcomingVideos = async () => {
+    const data = await getUpcomingVideo({videoId, courseId, sectionId});
+    console.log('----->data ', data);
   };
 
   const renderScene = ({
@@ -253,9 +258,7 @@ function MainScreen(props: any) {
     }
   };
 
-  const toggleFullScreen = () => {
-    setFullScreen(v => !v);
-  };
+  const toggleFullScreen = () => setFullScreen(v => !v);
 
   return (
     <View style={styles.mainContainer1}>

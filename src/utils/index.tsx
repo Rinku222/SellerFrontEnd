@@ -24,7 +24,6 @@ const s3Bucket = 'medical-learning-development';
 
 export const generatedProfileUrl = (identityId, key) => {
   const audioUrl = `${s3BaseUrl + s3Bucket}/private/${identityId}/${key}`;
-  console.log('----->audioUrl', audioUrl);
   return audioUrl;
 };
 

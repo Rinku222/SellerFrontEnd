@@ -81,16 +81,12 @@ function Search(props) {
     loadData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-  console.log('----->searchedCourses', searchedCourses[3]);
 
-  // 63074d22fe58c10009dbd329
 
   const wishlistClick = id => {
-    console.log('----->searchedCourses', searchedCourses[0]);
     const index = searchedCourses.map(object => object._id).indexOf(id);
     const some_array = [...searchedCourses];
     some_array[index] = {...some_array[index], wishListed: !some_array[index].wishListed};
-    // this.setState({some_array:some_array})
     setSearchedCourses(some_array);
   };
 

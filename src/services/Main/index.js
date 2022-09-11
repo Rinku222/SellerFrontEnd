@@ -23,6 +23,10 @@ export default function useMainServices() {
       const {limit, courseId, offset} = data;
       return readService(`/course?offset=${offset}&limit=${limit}&courseId=${courseId}`);
     },
+    getUpcomingVideo: data => {
+      const {sectionId, courseId, videoId} = data;
+      return readService(`/video/upcoming?courseId=${courseId}&sectionId=${sectionId}&videoId=${videoId}`);
+    },
     addNote: data => {
       const {stickyTitle, description, videoId} = data;
       return createService(`/stickynote`, {stickyTitle, description, videoId});

@@ -98,7 +98,10 @@ function DropDownSection(props: any) {
     videoTitle,
     videoUrl,
     documentUrl,
+    percentage,
+    duration
   } = item;
+
 
   const [show, setShow] = useState(false);
 
@@ -139,7 +142,7 @@ function DropDownSection(props: any) {
               // eslint-disable-next-line react-native/no-inline-styles
               style={{
                 height: 8,
-                width: completed,
+                width: percentage,
                 backgroundColor: colors.themeYellow,
                 position: 'absolute',
                 borderRadius: 10,
@@ -147,7 +150,7 @@ function DropDownSection(props: any) {
             />
           </View>
           <View>
-            <Text>5% completed</Text>
+            <Text>{percentage} completed</Text>
           </View>
         </TouchableOpacity>
       </View>
@@ -295,9 +298,10 @@ function DocumentsAndVideos(props: any) {
 
   const {videos} = useSelector(s => s.main);
 
+
   return (
     <ScrollView showsVerticalScrollIndicator={false} style={styles.container}>
-      {sections?.map((item, index) => {
+      {sections?.map((item, index:number) => {
         return (
           <DropDownList
             condition={index < 0 ? true : courseBought}

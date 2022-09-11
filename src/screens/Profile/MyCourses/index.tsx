@@ -11,8 +11,6 @@ const DATA = [1, 2, 4, 5, 3];
 function MyCourses(props) {
   const {subscribedCourses} = useSelector(s => s.home);
 
-  console.log('----->subscribedCourses', subscribedCourses[0]);
-
   return (
     <View style={styles.container}>
       <View>
