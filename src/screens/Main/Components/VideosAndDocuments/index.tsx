@@ -99,7 +99,8 @@ function DropDownSection(props: any) {
     videoUrl,
     documentUrl,
     percentage,
-    duration
+    duration,
+    stringDuration
   } = item;
 
 
@@ -135,7 +136,7 @@ function DropDownSection(props: any) {
             {show ? <UpArrowIcon /> : <DownArrowIcon />}
           </View>
           <View>
-            <Text>1hr 30min</Text>
+            <Text>{stringDuration}</Text>
           </View>
           <View style={styles.videoStatusBar}>
             <View

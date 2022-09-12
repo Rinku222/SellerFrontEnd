@@ -142,6 +142,7 @@ function MainScreen(props: any) {
   const [addToCartLoader, setAddToCartLoader] = useState(false);
   const [fullScreen, setFullScreen] = useState(false);
   const [completed, setCompleted] = useState(false);
+  const [selectRecentVideoId,setSelectRecentVideoId]=useState(true)
 
   const videoRef = useRef(videoDuration);
 
@@ -181,7 +182,7 @@ function MainScreen(props: any) {
   }, [courseId]);
 
   useEffect(() => {
-    if (_id && _id !== videoId) {
+    if (_id && _id !== videoId && selectRecentVideoId) {
       setVideoId(_id);
       setSectionId(_sectionId);
     }
@@ -189,7 +190,7 @@ function MainScreen(props: any) {
 
   useEffect(() => {
     if (paused && currentTime.current !== 0) {
-      setVideoTime({courseId, sectionId, videoId, duration: currentTime.current * 1000});
+      setVideoTime({courseId, sectionId, videoId, duration: currentTime.current});
     }
   }, [courseId, paused, videoId]);
 
@@ -197,6 +198,7 @@ function MainScreen(props: any) {
     const {data} = await getUpcomingVideo({videoId, courseId, sectionId});
     setVideo(data.videoUrl);
     setSectionId(data.sectionId);
+    setSelectRecentVideoId(false);
     setVideoId(data._id);
     setCompleted(false);
   }
