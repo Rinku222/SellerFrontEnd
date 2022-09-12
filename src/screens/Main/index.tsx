@@ -128,7 +128,6 @@ function MainScreen(props: any) {
 
   const videoDuration = recentVideo?.duration;
   const {sectionId: _sectionId = ''} = recentVideo || {};
-  const videoRef = useRef(videoDuration);
 
   const {getSections, getDescriptions, readReviews, addReview, readFAQ, readMessages} =
     useMainScreenActions();
@@ -142,6 +141,10 @@ function MainScreen(props: any) {
   const [paused, setPaused] = useState(true);
   const [addToCartLoader, setAddToCartLoader] = useState(false);
   const [fullScreen, setFullScreen] = useState(false);
+  const [completed, setCompleted] = useState(false);
+
+  const videoRef = useRef(videoDuration);
+
 
   const courseBought = subscribed || false;
 
@@ -185,14 +188,31 @@ function MainScreen(props: any) {
   }, [_id, videoId]);
 
   useEffect(() => {
-    if (paused) {
-      if (currentTime.current !== 0) {
-        setVideoTime({courseId, sectionId, videoId, duration: currentTime.current * 1000});
-      } else {
-        loadUpcomingVideos();
-      }
+    if (paused && currentTime.current !== 0) {
+      setVideoTime({courseId, sectionId, videoId, duration: currentTime.current * 1000});
     }
   }, [courseId, paused, videoId]);
+
+  const UpComingVideo=async()=>{
+    const {data} = await getUpcomingVideo({videoId, courseId, sectionId});
+    setVideo(data.videoUrl);
+    setSectionId(data.sectionId);
+    setVideoId(data._id);
+    setCompleted(false);
+  }
+
+  useEffect(()=>{
+    if(completed){
+      UpComingVideo()
+    }
+  },[completed])
+
+  // useEffect(()=>{
+  //   setVideo(recentVideo?.videoUrl);
+  //   setSectionId(recentVideo?.sectionId);
+  //   setVideoId(recentVideo?._id);
+  //   // setVideoDuration(recentVideo?.duration)
+  // },[recentVideo])
 
   const handleVideoId = id => setVideoId(id);
 
@@ -210,10 +230,7 @@ function MainScreen(props: any) {
     }
   };
 
-  const loadUpcomingVideos = async () => {
-    const data = await getUpcomingVideo({videoId, courseId, sectionId});
-    console.log('----->data ', data);
-  };
+  const toggleFullScreen = () => setFullScreen(v => !v);
 
   const renderScene = ({
     route: {key},
@@ -258,8 +275,6 @@ function MainScreen(props: any) {
     }
   };
 
-  const toggleFullScreen = () => setFullScreen(v => !v);
-
   return (
     <View style={styles.mainContainer1}>
       <View style={[styles.videoContainer, {height: fullScreen ? '95%' : 'auto'}]}>
@@ -273,7 +288,7 @@ function MainScreen(props: any) {
           }}
           style={styles.videos}
           onBuffer={buffer => console.log('----->buffer', buffer)}
-          onEnd={() => setPaused(true)}
+          onEnd={()=>{setCompleted(true)}}
           onEnterFullscreen={toggleFullScreen}
           onError={err => console.log('----->err', err)}
           onExitFullscreen={toggleFullScreen}

@@ -10,10 +10,6 @@ async function payment(
   getAllSubscribedCourses,
   getCart,
 ) {
-  console.log('----->button pressed');
-
-  // >err {"code": 0, "description": "{\"error\":{\"code\":\"BAD_REQUEST_ERROR\",\"description\":\"Payment processing cancelled by user\",\"source\":\"customer\",\"step\":\"payment_authentication\",\"reason\":\"payment_cancelled\"}}", "error": {"code": "BAD_REQUEST_ERROR", "description": "Payment processing cancelled by user", "reason": "payment_cancelled", "source": "customer", "step": "payment_authentication"}}
-
   const amount = total * 100;
   const options: CheckoutOptions = {
     description: 'Credits towards consultation',
@@ -33,12 +29,12 @@ async function payment(
   };
   const result = await RazorpayCheckout.open(
     options,
-    data => {
+    async data => {
       const {razorpay_payment_id} = data;
-      addPayment({courseList, razorPaymentId: razorpay_payment_id, paymentStatus: 'success'});
       navigation.navigate('Transaction_Success', {
         id: razorpay_payment_id,
       });
+      await addPayment({courseList, razorPaymentId: razorpay_payment_id, paymentStatus: 'success'});
       getAllSubscribedCourses();
       getCart();
     },
