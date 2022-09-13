@@ -86,7 +86,7 @@ function AssignmentSection(props: any) {
 function DropDownSection(props: any) {
   const completed = '20%';
 
-  const {item, setVideo, setVideoId, addRecentVideo, setSectionId, navigation} = props;
+  const {item, setVideo, setVideoId, addRecentVideo, setSectionId, navigation,setPercentage} = props;
 
   const {
     _id,
@@ -116,8 +116,10 @@ function DropDownSection(props: any) {
             if (_id) {
               setVideoId(_id);
               setSectionId(sectionId);
+              setPercentage(percentage);
             }
             await addRecentVideo({courseId, videoId: _id});
+            
           }}>
           <Image
             source={{
@@ -178,12 +180,14 @@ const renderTitle = (
   courseId,
   setSectionId,
   navigation,
+  setPercentage
 ) => (
   <DropDownSection
     addRecentVideo={addRecentVideo}
     courseId={courseId}
     item={item}
     navigation={navigation}
+    setPercentage={setPercentage}
     setSectionId={setSectionId}
     setVideo={setVideo}
     setVideoId={setVideoId}
@@ -224,6 +228,7 @@ function DropDownList(props: any) {
     index,
     navigation,
     document,
+    setPercentage
   } = props;
 
   const {sectionTitle, credits, _id} = item;
@@ -275,7 +280,7 @@ function DropDownList(props: any) {
                     courseId,
                     setSectionId,
                     navigation,
-                    document,
+                    setPercentage
                   )
                 }
               />
@@ -318,6 +323,7 @@ function DocumentsAndVideos(props: any) {
             setSelectedSection={setSelectedSection}
             videoLoading={videoLoading}
             videos={videos}
+            
           />
         );
       })}

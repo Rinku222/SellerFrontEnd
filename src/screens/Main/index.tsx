@@ -142,10 +142,10 @@ function MainScreen(props: any) {
   const [addToCartLoader, setAddToCartLoader] = useState(false);
   const [fullScreen, setFullScreen] = useState(false);
   const [completed, setCompleted] = useState(false);
+  const [percentage, setPercentage] = useState("0%");
   const [selectRecentVideoId,setSelectRecentVideoId]=useState(true)
 
   const videoRef = useRef(videoDuration);
-
 
   const courseBought = subscribed || false;
 
@@ -189,7 +189,9 @@ function MainScreen(props: any) {
   }, [_id, videoId]);
 
   useEffect(() => {
-    if (paused && currentTime.current !== 0) {
+      console.log('-----> outside if', )
+    if (paused && currentTime.current !== 0 && percentage!=="100%") {
+      console.log('-----> inside if', )
       setVideoTime({courseId, sectionId, videoId, duration: currentTime.current});
     }
   }, [courseId, paused, videoId]);
@@ -203,9 +205,14 @@ function MainScreen(props: any) {
     setCompleted(false);
   }
 
+  const videoEnd=async()=>{
+    await setVideoTime({courseId, sectionId, videoId, duration: currentTime.current});
+    UpComingVideo();
+  }
+
   useEffect(()=>{
     if(completed){
-      UpComingVideo()
+      videoEnd();
     }
   },[completed])
 
@@ -248,6 +255,7 @@ function MainScreen(props: any) {
             {...props}
             courseBought={courseBought}
             courseId={courseId}
+            setPercentage={setPercentage}
             setSectionId={handleSectionId}
             setVideo={setVideo}
             setVideoId={handleVideoId}
