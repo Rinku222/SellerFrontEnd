@@ -26,8 +26,6 @@ import {Loader} from '../../../App';
 import Forgot from '../ForgotPassword';
 import {downloadPdf} from '../../components/Download';
 
-// import
-
 const ANIMATION_DURATION = 500;
 
 const LoginSchema = Yup.object().shape({
@@ -129,6 +127,7 @@ function Login(props) {
   const onPhoneChangeForSignUp = (text: string) => {
     if (text !== ' ') setPhoneForSignUp(text);
   };
+
   const onNameChangeForSignUp = (text: string) => {
     if (text !== ' ' && text.length <= 15) setNameForSignUp(text);
   };
@@ -163,6 +162,7 @@ function Login(props) {
       }
     }
   };
+
   const onConfirmPasswordChangeForSignUp = (text: string) => {
     if (text !== ' ') setConfirmPasswordForSignUp(text);
     if (text.length > passwordForSignUp.length) {
@@ -455,7 +455,10 @@ function Login(props) {
             <Button
               disabled={drawerHeight === finalBottomDrawerHeight}
               text="SignUp"
-              onPress={() => onButtonPress('signUp')}
+              onPress={async() => {
+                await onButtonPress('login');
+                onButtonPress('signUp');
+              }}
             />
           </Animated.View>
         ) : null}

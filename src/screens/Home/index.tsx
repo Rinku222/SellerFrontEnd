@@ -1,6 +1,6 @@
-import React, {useRef, useEffect} from 'react';
+import React, {useRef, useEffect, useState} from 'react';
 import {useFocusEffect} from '@react-navigation/native';
-import {View, Text, TouchableOpacity, ScrollView} from 'react-native';
+import {View, Text, TouchableOpacity, ScrollView, FlatList} from 'react-native';
 import Carousel from 'react-native-snap-carousel';
 import {useSelector} from 'react-redux';
 import {colors} from '../../config/colors';
@@ -14,6 +14,7 @@ import homeActions from '../../redux/actions/homeActions';
 import {Loader} from '../../../App';
 import loadingVariable from '../../redux/selector';
 import useUserActions from '../../redux/actions/userActions';
+import useHomeServices from '../../services/Home';
 
 function TopRow({firstName, cartLength, navigation}) {
   return (
@@ -76,18 +77,57 @@ function OnGoingCourses(props) {
 }
 
 function RenderRecommended(props) {
-  const {recommended} = props;
+  // const {recommended} = props;
+
+  const [courses,setCourses]=useState([]);
+  const [offSet,setOffset]=useState(0);
+  const [total,setTotal]=useState(0);
+
+  const {getAllCourses}=  useHomeServices()
+
+  const loadCourses = async (value: number) => {
+    // setBottomLoader(true);
+    const response = await getAllCourses({
+      limit: 10,
+      offset: value,
+    });
+    const {data} = response;
+    const {count, course} = data;
+    if (total !== data.count) {
+      setTotal(count);
+    }
+    if(value===0){
+      setCourses(course)
+    }else{
+      setCourses([...courses, ...course]);
+    }
+  };
+
+  useEffect(() => {
+    loadCourses(0);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const EndReached = () => {
+    if (offSet + 10 < total) {
+      loadCourses(offSet + 10);
+      setOffset(offSet + 10);
+    }
+  };
 
   return (
-    <ScrollView horizontal style={{marginTop: 10}}>
-      <View style={{flexDirection: 'row'}}>
-        {recommended?.map((item, index) => (
-          <View key={index} style={{width: 200, margin: 5}}>
+    <FlatList
+        horizontal
+        data={courses}
+        keyExtractor={item => item._id}
+        ListEmptyComponent={() => <View><Text>Empty container of flatlist</Text></View>}
+        renderItem={({item}) => (
+          <View style={{width: 200, margin: 5}}>
             <CourseCard data={item} {...props} />
           </View>
-        ))}
-      </View>
-    </ScrollView>
+        )}
+        onEndReached={()=>EndReached()}
+      />
   );
 }
 
@@ -104,7 +144,7 @@ function Home(props) {
   const {getUserData} = useUserActions();
 
   const loadData = async () => {
-    getHomeCourses({offset: 0, limit: 10});
+    // getHomeCourses({offset: 0, limit: 10});
     getAllSubscribedCourses();
     getUserData();
     getCart();

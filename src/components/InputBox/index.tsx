@@ -18,6 +18,8 @@ function InputBox(props) {
     showEye,
   } = props;
 
+  const width = screenWidth - margin * 2;
+
   const [password, setPassword] = useState(!showEye);
 
   return (
@@ -28,8 +30,8 @@ function InputBox(props) {
           placeholder={placeHolder}
           placeholderTextColor={colors.placeholderGray}
           secureTextEntry={password ? false : secureTextEntry}
-          style={[styles.box, {width: screenWidth - margin * 2}, style]}
-          value={value}
+          style={[styles.box, {width}, style]}
+          value={value ?? ''}
           onChangeText={onChangeText}
           onSubmitEditing={onSubmitEditing}
         />

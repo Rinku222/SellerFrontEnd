@@ -132,7 +132,6 @@ function CourseCard(props) {
       setWishlistLoader(true);
       await addWishlist({courseId: _id});
     }
-    getWishlist();
     await getHomeCourses({offset: 0, limit: 10});
     if (!wishlistClick) {
       await getAllSearchedCourses({
@@ -141,6 +140,7 @@ function CourseCard(props) {
         searchText: searchName,
         streamId: selected,
       });
+      await getWishlist();
     }
 
     setWishlistLoader(false);

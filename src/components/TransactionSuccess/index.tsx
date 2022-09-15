@@ -37,7 +37,7 @@ function TransactionSuccess(props) {
             paddingVertical: 5,
             borderRadius: 8,
           }}
-          onPress={() => navigation.navigate('App')}>
+          onPress={() => navigation.navigate('home')}>
           Go to Home
         </Button>
       </View>

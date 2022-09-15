@@ -135,7 +135,7 @@ function MainScreen(props: any) {
   const {getCart} = homeActions();
 
   const [selectedTab, setSelectedTab] = useState(0);
-  const [video, setVideo] = useState(videoUrl || '');
+  const [video, setVideo] = useState(recentVideo?.videoUrl || '');
   const [videoId, setVideoId] = useState(_id || '');
   const [sectionId, setSectionId] = useState(_sectionId || '');
   const [paused, setPaused] = useState(true);
@@ -144,6 +144,8 @@ function MainScreen(props: any) {
   const [completed, setCompleted] = useState(false);
   const [percentage, setPercentage] = useState("0%");
   const [selectRecentVideoId,setSelectRecentVideoId]=useState(true)
+
+  console.log('-----> video',video )
 
   const videoRef = useRef(videoDuration);
 
@@ -159,13 +161,15 @@ function MainScreen(props: any) {
   };
 
   const loadData = async () => {
-    getDescriptions({courseId, offset: 0, limit: 20});
+    await getDescriptions({courseId, offset: 0, limit: 20});
     getSections({courseId, offset: 0, limit: 20});
     readReviews({courseId, offSet: 0, limit: 20});
     readFAQ({courseId, offSet: 0, limit: 20});
     readMessages({courseId, offSet: 0, limit: 10});
+    console.log('----->videoDuration ',videoDuration )
     if (videoDuration) {
-      videoRef?.current?.seekTo?.(videoDuration / 1000);
+      console.log('----->videoDuration ',videoDuration )
+      videoRef?.current?.seekTo?.(videoDuration );
     }
   };
 
@@ -216,12 +220,12 @@ function MainScreen(props: any) {
     }
   },[completed])
 
-  // useEffect(()=>{
-  //   setVideo(recentVideo?.videoUrl);
-  //   setSectionId(recentVideo?.sectionId);
-  //   setVideoId(recentVideo?._id);
-  //   // setVideoDuration(recentVideo?.duration)
-  // },[recentVideo])
+  useEffect(()=>{
+    setVideo(recentVideo?.videoUrl);
+    setSectionId(recentVideo?.sectionId);
+    setVideoId(recentVideo?._id);
+    // setVideoDuration(recentVideo?.duration)
+  },[recentVideo])
 
   const handleVideoId = id => setVideoId(id);
 
