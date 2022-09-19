@@ -8,6 +8,7 @@ export const GET_USER_DATA = 'GET_USER_DATA';
 export const UPDATE_USER_DATA = 'UPDATE_USER_DATA';
 export const ADD_MENTEE = 'ADD_MENTEE';
 export const SAVE_PASSWORD = 'SAVE_PASSWORD';
+export const CLEAN_USER_DATA = 'CLEAN_USER_DATA';
 
 // For Home Screen
 

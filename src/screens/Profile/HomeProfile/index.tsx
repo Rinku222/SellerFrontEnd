@@ -16,6 +16,7 @@ import {
 import {colors} from '../../../config/colors';
 import loadingVariable from '../../../redux/selector';
 import {Loader} from '../../../../App';
+import useUserActions from '../../../redux/actions/userActions';
 
 const List = [
   {
@@ -61,14 +62,15 @@ const onShare = async () => {
 async function signOut(navigation) {
   try {
     await Auth.signOut();
-    navigation.navigate('Login');
+    navigation.navigate('Login', {logout: true});
   } catch (error) {
     console.log('error signing out: ', error);
   }
 }
 
-const handlePress = async (path: string, navigation: any) => {
+const handlePress = async (path: string, navigation: any, cleanUserData: any) => {
   if (path === 'Logout') {
+    cleanUserData();
     signOut(navigation);
   }
   if (path === 'Share') {
@@ -80,14 +82,14 @@ const handlePress = async (path: string, navigation: any) => {
 };
 
 function RenderRow(props: any) {
-  const {data, navigation} = props;
+  const {data, navigation, cleanUserData} = props;
   const {name, icon, path} = data;
 
   return (
     <TouchableOpacity
       style={styles.rowContainer}
       // onPress={() => (path ? navigation.navigate(path) : onShare())}>
-      onPress={() => handlePress(path, navigation)}>
+      onPress={() => handlePress(path, navigation, cleanUserData)}>
       <View style={styles.rowView}>
         <View style={styles.listStyle}>{icon}</View>
         <Text>{name}</Text>
@@ -100,6 +102,7 @@ function RenderRow(props: any) {
 
 function HomeProfile(props: any) {
   const loading = loadingVariable();
+  const {cleanUserData} = useUserActions();
 
   if (loading) {
     return <Loader />;
@@ -111,7 +114,7 @@ function HomeProfile(props: any) {
       <View style={styles.curve} />
       <View>
         {List.map((item, index) => {
-          return <RenderRow {...props} data={item} key={index} />;
+          return <RenderRow {...props} cleanUserData={cleanUserData} data={item} key={index} />;
         })}
       </View>
     </View>

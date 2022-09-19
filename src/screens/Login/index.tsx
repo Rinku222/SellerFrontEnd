@@ -38,7 +38,6 @@ const LoginSchema = Yup.object().shape({
 
 function Login(props) {
   const persistedPassword = useSelector(s => s.user.password);
-  console.log('-----> persistedPassword', persistedPassword);
   const initialBottomDrawerHeight = screenHeight > 650 ? 330 : 230;
   const finalBottomDrawerHeight = screenHeight - 100;
   const AnimatedHeight = useRef(new Animated.Value(0)).current;
@@ -53,7 +52,6 @@ function Login(props) {
   const [passwordForSignUpError, setPasswordForSignUpError] = useState('');
   const [loading, setLoading] = useState(false);
   const [visible, setVisible] = useState(false);
-  const [showLoginPassword, setShowLoginPassword] = useState(false);
   const [snackbarError, setSnackbarError] = useState('');
   const [dummy, setDummy] = useState('');
 
@@ -191,7 +189,6 @@ function Login(props) {
         await getUserDetails({email, password});
         await savePassword({password});
 
-        console.log('----->user', user.signInUserSession.idToken);
         const Authorization1 = user.signInUserSession.idToken.jwtToken;
         setLoading(false);
 
@@ -426,31 +423,33 @@ function Login(props) {
   const loadData = useCallback(async () => {
     setLoading(true);
 
-    const data = await Auth.currentAuthenticatedUser();
-
-    const {email} = data.attributes;
-
     try {
+      const data = await Auth.currentAuthenticatedUser();
+      const {email} = data.attributes;
       const user = await Auth.signIn(email, persistedPassword);
       const Authorization1 = user.signInUserSession.idToken.jwtToken;
-      setLoading(false);
       if (!user.signInUserSession.idToken.payload.email_verified) {
         await Auth.resendSignUp(email);
         navigation.navigate('mail_verification', {
           emailPhoneForSignUp: email,
         });
       } else {
-        navigation.navigate('App', {
-          Authorization1,
-        });
+        setLoading(false);
+        navigation.navigate('App');
       }
     } catch (error) {
+      if (
+        error.message !== 'Custom auth lambda trigger is not configured for the user pool.' ||
+        props.route.params
+      ) {
+        setLoading(false);
+      }
       console.log('-----> error', error);
     }
   }, [navigation, persistedPassword]);
 
   useEffect(() => {
-
+    setMode('landing');
     loadData();
   }, [loadData]);
 

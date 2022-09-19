@@ -8,6 +8,7 @@ import {
   UPDATE_IMAGE,
   ADD_MENTEE,
   SAVE_PASSWORD,
+  CLEAN_USER_DATA,
 } from '../actions/actionTypes';
 
 const persistConfig = {
@@ -21,7 +22,7 @@ const initialState = {
   userData: {},
   errorMessage: undefined,
   user: {},
-  password:""
+  password: '',
 };
 
 const reducer = (state = initialState, action = {}) => {
@@ -31,10 +32,15 @@ const reducer = (state = initialState, action = {}) => {
     // RESET data on project change
 
     case `${SAVE_PASSWORD}`:
-      console.log('-----> payload', payload)
       return {
         ...state,
-        password:payload,
+        password: payload,
+      };
+    case `${CLEAN_USER_DATA}`:
+      return {
+        ...state,
+        userData: {},
+        user: {},
       };
     case `${GET_USER_DETAILS}_PENDING`:
       return {

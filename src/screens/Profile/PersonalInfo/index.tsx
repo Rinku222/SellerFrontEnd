@@ -218,7 +218,6 @@ function PersonalInfo(props: any) {
             </TouchableOpacity>
           </View>
         </View>
-        {console.log('----->editName', editName)}
         <View style={styles.header}>
           <Text style={{color: colors.themeYellow}}>Personal Info</Text>
         </View>

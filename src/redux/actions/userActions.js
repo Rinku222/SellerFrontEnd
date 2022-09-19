@@ -40,6 +40,10 @@ export default function useUserActions() {
         type: types.SAVE_PASSWORD,
         payload: params.password,
       }),
+    cleanUserData: () =>
+      dispatch({
+        type: types.CLEAN_USER_DATA,
+      }),
     uploadProfileImage: params =>
       dispatch({
         type: types.UPLOAD_IMAGE,
