@@ -1,4 +1,4 @@
-import React, {useState, useRef, useEffect} from 'react';
+import React, {useState, useRef, useEffect, useCallback} from 'react';
 import {
   View,
   Animated,
@@ -14,6 +14,7 @@ import {Auth} from 'aws-amplify';
 import {Snackbar, TextInput} from 'react-native-paper';
 import {Formik} from 'formik';
 import * as Yup from 'yup';
+import {useSelector} from 'react-redux';
 import {styles} from './styles';
 import Button from '../../components/Button';
 import SplashSvgXml from '../../assets/svg/SplashSvg';
@@ -36,6 +37,8 @@ const LoginSchema = Yup.object().shape({
 });
 
 function Login(props) {
+  const persistedPassword = useSelector(s => s.user.password);
+  console.log('-----> persistedPassword', persistedPassword);
   const initialBottomDrawerHeight = screenHeight > 650 ? 330 : 230;
   const finalBottomDrawerHeight = screenHeight - 100;
   const AnimatedHeight = useRef(new Animated.Value(0)).current;
@@ -62,7 +65,7 @@ function Login(props) {
 
   const [forgotPasswordScreen, setForgotPasswordScreen] = useState(false);
 
-  const {getUserDetails} = useUserActions();
+  const {getUserDetails, savePassword} = useUserActions();
 
   const {navigation} = props;
 
@@ -186,6 +189,7 @@ function Login(props) {
         setLoading(true);
         const user = await Auth.signIn(email, password);
         await getUserDetails({email, password});
+        await savePassword({password});
 
         console.log('----->user', user.signInUserSession.idToken);
         const Authorization1 = user.signInUserSession.idToken.jwtToken;
@@ -414,10 +418,41 @@ function Login(props) {
               Login
             </Text>
           </Text>
-        </View>        
+        </View>
       </View>
     );
   };
+
+  const loadData = useCallback(async () => {
+    setLoading(true);
+
+    const data = await Auth.currentAuthenticatedUser();
+
+    const {email} = data.attributes;
+
+    try {
+      const user = await Auth.signIn(email, persistedPassword);
+      const Authorization1 = user.signInUserSession.idToken.jwtToken;
+      setLoading(false);
+      if (!user.signInUserSession.idToken.payload.email_verified) {
+        await Auth.resendSignUp(email);
+        navigation.navigate('mail_verification', {
+          emailPhoneForSignUp: email,
+        });
+      } else {
+        navigation.navigate('App', {
+          Authorization1,
+        });
+      }
+    } catch (error) {
+      console.log('-----> error', error);
+    }
+  }, [navigation, persistedPassword]);
+
+  useEffect(() => {
+
+    loadData();
+  }, [loadData]);
 
   if (loading) {
     return <Loader />;
@@ -455,7 +490,7 @@ function Login(props) {
             <Button
               disabled={drawerHeight === finalBottomDrawerHeight}
               text="SignUp"
-              onPress={async() => {
+              onPress={async () => {
                 await onButtonPress('login');
                 onButtonPress('signUp');
               }}

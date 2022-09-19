@@ -35,6 +35,11 @@ export default function useUserActions() {
           }
         },
       }),
+    savePassword: params =>
+      dispatch({
+        type: types.SAVE_PASSWORD,
+        payload: params.password,
+      }),
     uploadProfileImage: params =>
       dispatch({
         type: types.UPLOAD_IMAGE,
