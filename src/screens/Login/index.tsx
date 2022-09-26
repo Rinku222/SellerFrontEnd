@@ -430,20 +430,22 @@ function Login(props) {
       const Authorization1 = user.signInUserSession.idToken.jwtToken;
       if (!user.signInUserSession.idToken.payload.email_verified) {
         await Auth.resendSignUp(email);
-        navigation.navigate('mail_verification', {
+        await navigation.navigate('mail_verification', {
           emailPhoneForSignUp: email,
         });
       } else {
-        setLoading(false);
         navigation.navigate('App');
+        setLoading(false);
       }
     } catch (error) {
+      console.log('----->error before if ', error);
       if (
         error.message !== 'Custom auth lambda trigger is not configured for the user pool.' ||
         props.route.params
       ) {
         setLoading(false);
       }
+      setLoading(false);
       console.log('-----> error', error);
     }
   }, [navigation, persistedPassword]);

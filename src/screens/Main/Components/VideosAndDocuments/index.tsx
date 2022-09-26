@@ -46,7 +46,7 @@ function Tabs(props: any) {
         <View>
           {/* PDFScreen */}
           <TouchableOpacity onPress={() => navigation.navigate('PDFScreen', {url: documentUrl})}>
-            <Text style={styles.tabContainerText}>Documnet</Text>
+            <Text style={styles.tabContainerText}>View Document</Text>
           </TouchableOpacity>
         </View>
       )}
@@ -86,7 +86,8 @@ function AssignmentSection(props: any) {
 function DropDownSection(props: any) {
   const completed = '20%';
 
-  const {item, setVideo, setVideoId, addRecentVideo, setSectionId, navigation,setPercentage} = props;
+  const {item, setVideo, setVideoId, addRecentVideo, setSectionId, navigation, setPercentage} =
+    props;
 
   const {
     _id,
@@ -100,9 +101,8 @@ function DropDownSection(props: any) {
     documentUrl,
     percentage,
     duration,
-    stringDuration
+    stringDuration,
   } = item;
-
 
   const [show, setShow] = useState(false);
 
@@ -119,7 +119,6 @@ function DropDownSection(props: any) {
               setPercentage(percentage);
             }
             await addRecentVideo({courseId, videoId: _id});
-            
           }}>
           <Image
             source={{
@@ -180,7 +179,7 @@ const renderTitle = (
   courseId,
   setSectionId,
   navigation,
-  setPercentage
+  setPercentage,
 ) => (
   <DropDownSection
     addRecentVideo={addRecentVideo}
@@ -228,7 +227,7 @@ function DropDownList(props: any) {
     index,
     navigation,
     document,
-    setPercentage
+    setPercentage,
   } = props;
 
   const {sectionTitle, credits, _id} = item;
@@ -280,7 +279,7 @@ function DropDownList(props: any) {
                     courseId,
                     setSectionId,
                     navigation,
-                    setPercentage
+                    setPercentage,
                   )
                 }
               />
@@ -304,10 +303,9 @@ function DocumentsAndVideos(props: any) {
 
   const {videos} = useSelector(s => s.main);
 
-
   return (
     <ScrollView showsVerticalScrollIndicator={false} style={styles.container}>
-      {sections?.map((item, index:number) => {
+      {sections?.map((item, index: number) => {
         return (
           <DropDownList
             condition={index < 0 ? true : courseBought}
@@ -323,7 +321,6 @@ function DocumentsAndVideos(props: any) {
             setSelectedSection={setSelectedSection}
             videoLoading={videoLoading}
             videos={videos}
-            
           />
         );
       })}

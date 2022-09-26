@@ -126,7 +126,7 @@ function MainScreen(props: any) {
 
   const {videoUrl, _id} = recentVideo || {};
 
-  const videoDuration = recentVideo?.duration;
+  const videoDuration = recentVideo?.duration || 0;
   const {sectionId: _sectionId = ''} = recentVideo || {};
 
   const {getSections, getDescriptions, readReviews, addReview, readFAQ, readMessages} =
@@ -138,14 +138,12 @@ function MainScreen(props: any) {
   const [video, setVideo] = useState(recentVideo?.videoUrl || '');
   const [videoId, setVideoId] = useState(_id || '');
   const [sectionId, setSectionId] = useState(_sectionId || '');
-  const [paused, setPaused] = useState(true);
+  const [paused, setPaused] = useState(false);
   const [addToCartLoader, setAddToCartLoader] = useState(false);
   const [fullScreen, setFullScreen] = useState(false);
   const [completed, setCompleted] = useState(false);
-  const [percentage, setPercentage] = useState("0%");
-  const [selectRecentVideoId,setSelectRecentVideoId]=useState(true)
-
-  console.log('-----> video',video )
+  const [percentage, setPercentage] = useState('0%');
+  const [selectRecentVideoId, setSelectRecentVideoId] = useState(true);
 
   const videoRef = useRef(videoDuration);
 
@@ -160,18 +158,16 @@ function MainScreen(props: any) {
     getDescriptions({courseId, offset: 0, limit: 20});
   };
 
-  const loadData = async () => {
-    await getDescriptions({courseId, offset: 0, limit: 20});
-    getSections({courseId, offset: 0, limit: 20});
-    readReviews({courseId, offSet: 0, limit: 20});
-    readFAQ({courseId, offSet: 0, limit: 20});
-    readMessages({courseId, offSet: 0, limit: 10});
-    console.log('----->videoDuration ',videoDuration )
-    if (videoDuration) {
-      console.log('----->videoDuration ',videoDuration )
-      videoRef?.current?.seekTo?.(videoDuration );
+  const loadData = useCallback(async () => {
+    if (courseId) {
+      await getDescriptions({courseId, offset: 0, limit: 20});
+      getSections({courseId, offset: 0, limit: 20});
+      readReviews({courseId, offSet: 0, limit: 20});
+      readFAQ({courseId, offSet: 0, limit: 20});
+      readMessages({courseId, offSet: 0, limit: 10});
     }
-  };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [courseId]);
 
   useEffect(() => {
     if (!fullScreen) {
@@ -179,53 +175,63 @@ function MainScreen(props: any) {
     } else {
       Orientation.lockToLandscape();
     }
+
+    return () => {
+      Orientation.lockToPortrait();
+    };
   }, [fullScreen]);
 
   useEffect(() => {
     loadData();
-  }, [courseId]);
+  }, [courseId, loadData]);
 
   useEffect(() => {
     if (_id && _id !== videoId && selectRecentVideoId) {
       setVideoId(_id);
       setSectionId(_sectionId);
     }
-  }, [_id, videoId]);
+  }, [_id, _sectionId, selectRecentVideoId, videoId]);
 
   useEffect(() => {
-      console.log('-----> outside if', )
-    if (paused && currentTime.current !== 0 && percentage!=="100%") {
-      console.log('-----> inside if', )
+    if (paused && currentTime.current !== 0 && percentage !== '100%') {
       setVideoTime({courseId, sectionId, videoId, duration: currentTime.current});
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [courseId, paused, videoId]);
 
-  const UpComingVideo=async()=>{
+  const UpComingVideo = useCallback(async () => {
     const {data} = await getUpcomingVideo({videoId, courseId, sectionId});
     setVideo(data.videoUrl);
     setSectionId(data.sectionId);
     setSelectRecentVideoId(false);
     setVideoId(data._id);
     setCompleted(false);
-  }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [courseId, sectionId, videoId]);
 
-  const videoEnd=async()=>{
+  const videoEnd = useCallback(async () => {
     await setVideoTime({courseId, sectionId, videoId, duration: currentTime.current});
     UpComingVideo();
-  }
+  }, [UpComingVideo, courseId, sectionId, setVideoTime, videoId]);
 
-  useEffect(()=>{
-    if(completed){
+  useEffect(() => {
+    if (completed) {
       videoEnd();
     }
-  },[completed])
+  }, [completed, videoEnd]);
 
-  useEffect(()=>{
+  useEffect(() => {
     setVideo(recentVideo?.videoUrl);
     setSectionId(recentVideo?.sectionId);
     setVideoId(recentVideo?._id);
     // setVideoDuration(recentVideo?.duration)
-  },[recentVideo])
+  }, [recentVideo]);
+
+  const seekToLastPlay = () => {
+    if (videoDuration) {
+      videoRef?.current?.seekTo?.(videoDuration);
+    }
+  };
 
   const handleVideoId = id => setVideoId(id);
 
@@ -302,10 +308,11 @@ function MainScreen(props: any) {
           }}
           style={styles.videos}
           onBuffer={buffer => console.log('----->buffer', buffer)}
-          onEnd={()=>{setCompleted(true)}}
+          onEnd={() => setCompleted(true)}
           onEnterFullscreen={toggleFullScreen}
           onError={err => console.log('----->err', err)}
           onExitFullscreen={toggleFullScreen}
+          onLoad={seekToLastPlay}
           onPause={() => setPaused(true)}
           onPlay={() => setPaused(false)}
           onProgress={e => {
@@ -401,11 +408,6 @@ const styles = StyleSheet.create({
     backgroundColor: colors.white,
     paddingHorizontal: 10,
   },
-  fullscreenVideo: {
-    backgroundColor: 'black',
-    ...StyleSheet.absoluteFill,
-    elevation: 1,
-  },
   header: {
     fontWeight: 'bold',
     fontSize: 16,
@@ -441,10 +443,7 @@ const styles = StyleSheet.create({
     position: 'relative',
     top: 0,
     bottom: 0,
-    // ...StyleSheet.absoluteFill,
-    // elevation: 1,
     paddingBottom: 0,
-    // ...StyleSheet.absoluteFill,
     height: '95%',
   },
   tabbar: {

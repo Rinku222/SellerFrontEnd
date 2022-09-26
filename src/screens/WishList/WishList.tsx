@@ -11,7 +11,17 @@ import useMainScreenActions from '../../redux/actions/mainScreenActions';
 function RenderRow(props) {
   const {data, navigation} = props;
 
-  const {_id, amount, courseId, courseTitle, coverImageUrl, duration, totalLession} = data;
+  const {
+    _id,
+    amount,
+    courseId,
+    courseTitle,
+    coverImageUrl,
+    duration,
+    totalLession,
+    overallRating,
+    totalReview,
+  } = data;
 
   console.log('----->data', data);
 
@@ -53,8 +63,8 @@ function RenderRow(props) {
         </View>
         <View style={styles.itemReview}>
           <MaterialCommunityIcons color={colors.primary} name="star" size={20} />
-          <Text style={styles.colorBlack}>4.3 </Text>
-          <Text style={styles.colorBlack}>(2.3k reviews)</Text>
+          <Text style={styles.colorBlack}>{overallRating} </Text>
+          <Text style={styles.colorBlack}>({totalReview} reviews)</Text>
         </View>
         <View style={styles.itemTime}>
           <MaterialCommunityIcons color={colors.themeGray} name="clock-outline" size={20} />
@@ -89,7 +99,7 @@ function WishList(props) {
   return (
     <View style={styles.mainContainer}>
       {loader ? (
-        <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+        <View style={{flex: 1, alignItems: 'center', justifyContent: 'center', flexGrow: 1}}>
           <ActivityIndicator animating color={colors.primary} size="small" />
         </View>
       ) : (

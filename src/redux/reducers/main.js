@@ -296,6 +296,7 @@ const reducer = (state = initialState, action = {}) => {
     case `${ADD_TO_CART}_REJECTED`: {
       return {
         ...state,
+        mainLoading: false,
       };
     }
 

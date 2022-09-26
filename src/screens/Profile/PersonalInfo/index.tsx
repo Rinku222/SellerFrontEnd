@@ -1,5 +1,4 @@
 import React, {useEffect, useState} from 'react';
-
 import {View, StyleSheet, Text, TouchableOpacity, Image} from 'react-native';
 import {launchImageLibrary, ImageLibraryOptions} from 'react-native-image-picker';
 import ObjectID from 'bson-objectid';
@@ -13,8 +12,6 @@ import {AboutIcon, EmailIcon, LockIcon, PhoneIcon, UserIcon} from '../../../asse
 import TopHeader from '../../../components/TopHeader';
 import {colors} from '../../../config/colors';
 import useUserActions from '../../../redux/actions/userActions';
-import {generatedProfileUrl, getIdentityId} from '../../../utils';
-import {fileUploadService} from '../../../services/HttpService/HttpService';
 
 const schema = Yup.object().shape({
   name: Yup.string()
@@ -102,6 +99,8 @@ function PersonalInfo(props: any) {
 
   const {_id, displayName, email, phone, profileUrl, s3Url} = user || {};
 
+  console.log('-----> s3Url', s3Url);
+
   const LIST = [
     {icon: <PhoneIcon />, value: `+91 ${phone}`, path: 'change_phone', border: true},
     {
@@ -156,39 +155,47 @@ function PersonalInfo(props: any) {
           type,
         };
 
-        // const array = s3Url?.split('/');
-        // const entityId = array?.[7];
+        console.log('-----> fileName', fileName);
+        console.log('-----> uri', uri);
+        console.log('-----> type', type);
+        console.log('-----> file', file);
 
-        // if (s3Url && entityId !== 'undefined') {
-        //   console.log('----->inside if');
-        //   console.log('-----> entityId', entityId);
+        const array = s3Url?.split('/');
+        const entityId1 = array?.[7];
 
-        //   const result = await uploadProfileImage({
-        //     directory: 'user-assets',
-        //     entityId: '62dfcef8010384ee4f5c6e89',
-        //     // entityId,
-        //     extension,
-        //     file: uri,
-        //   });
+        console.log('-----> entityId1', entityId1);
+        console.log('-----> array', array);
 
-        //   console.log('----->result', result);
+        if (s3Url && entityId1 !== 'undefined') {
+          console.log('----->inside if');
+          console.log('-----> entityId', entityId1);
 
-        //   const newUrl = generatedProfileUrl(entityId, result?.key);
+          const result = await uploadProfileImage({
+            directory: 'user-assets',
+            // entityId: '62dfcef8010384ee4f5c6e89',
+            entityId1,
+            extension,
+            file: uri,
+          });
 
-        //   // updateUserData({profileUrl: newUrl});
+          console.log('----->result', result);
 
-        //   console.log('----->new url data', newUrl);
-        // } else {
-        const entityId = ObjectID();
-        console.log('----->entityId', entityId);
-        const result = await uploadProfileImage({
-          directory: 'user-assets',
-          entityId,
-          extension,
-          file: uri,
-        });
-        console.log('----->result', result);
-        // }
+          // const newUrl = generatedProfileUrl(entityId, result?.key);
+
+          // updateUserData({profileUrl: newUrl});
+
+          // console.log('----->new url data', newUrl);
+        } else {
+          const entityId = ObjectID();
+          console.log('----->entityId', entityId);
+          const result = await uploadProfileImage({
+            directory: 'user-assets',
+            entityId,
+            extension,
+            file: uri,
+          });
+          console.log('----->result', result);
+        }
         await getUserData();
       }
     });

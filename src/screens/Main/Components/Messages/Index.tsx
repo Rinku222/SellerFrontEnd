@@ -63,27 +63,29 @@ function Messages(props: any) {
         <View>
           <View style={styles.imageContainer}>
             <Image source={UserImage} style={styles.image} />
-            <TextInput
-              // multiline
-              dense
-              activeOutlineColor={colors.black}
-              activeUnderlineColor="transparent"
-              mode="outlined"
-              outlineColor={colors.black}
-              // numberOfLines={3}
-              placeholder="Message"
-              // secureTextEntry={newPassword}
-              right={
-                <TextInput.Icon
-                  name={() => RightIcon(onSubmit)}
-                  // onPress={onSubmit}
-                  // onPress={() => console.log('----->icon pressed')}
-                />
-              }
-              style={styles.input}
-              value={message}
-              onChangeText={v => setMessage(v)}
-            />
+            <View style={{flex: 1}}>
+              <TextInput
+                dense
+                multiline
+                activeOutlineColor={colors.black}
+                activeUnderlineColor="transparent"
+                mode="outlined"
+                numberOfLines={3}
+                outlineColor={colors.black}
+                placeholder="Message"
+                // secureTextEntry={newPassword}
+                right={
+                  <TextInput.Icon
+                    name={() => RightIcon(onSubmit)}
+                    // onPress={onSubmit}
+                    // onPress={() => console.log('----->icon pressed')}
+                  />
+                }
+                style={styles.input}
+                value={message}
+                onChangeText={v => setMessage(v)}
+              />
+            </View>
           </View>
           <Divider style={styles.divider} />
         </View>

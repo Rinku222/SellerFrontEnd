@@ -1,13 +1,11 @@
 import React from 'react';
-import {View, StyleSheet, Text, Image, TouchableOpacity, ScrollView} from 'react-native';
+import {View, StyleSheet, Text, Image, TouchableOpacity, ScrollView, Linking} from 'react-native';
 import {useSelector} from 'react-redux';
 import {colors} from '../../../../config/colors';
 import UserImage from '../../../../assets/images/laps.png';
 import TwitterImage from '../../../../assets/images/twitter.png';
 import FacebookImage from '../../../../assets/images/facebook.png';
 import LinkedInImage from '../../../../assets/images/linkedIn.png';
-
-const ImagesData = [TwitterImage, FacebookImage, LinkedInImage];
 
 function DescriptionText(props) {
   const {description} = props;
@@ -24,7 +22,15 @@ function Description(props) {
 
   const {owner} = descriptions || {};
 
-  const {displayName, profileUrl} = owner || {};
+  const {displayName, profileUrl, socialLinks} = owner || {};
+
+  const {facebook, twitter, linkedin} = socialLinks || {};
+
+  const ImagesData = [
+    {image: TwitterImage, link: twitter},
+    {image: FacebookImage, link: facebook},
+    {image: LinkedInImage, link: linkedin},
+  ];
 
   return (
     <ScrollView showsVerticalScrollIndicator={false} style={styles.container}>
@@ -40,8 +46,13 @@ function Description(props) {
             <View style={styles.imagesDataContainer}>
               {ImagesData.map((item, i) => {
                 return (
-                  <TouchableOpacity key={i}>
-                    <Image source={item} style={styles.images} />
+                  <TouchableOpacity
+                    key={i}
+                    onPress={() => {
+                      console.log('-----> pressed');
+                      Linking.openURL(item.link);
+                    }}>
+                    <Image source={item.image} style={styles.images} />
                   </TouchableOpacity>
                 );
               })}

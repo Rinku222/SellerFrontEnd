@@ -80,10 +80,10 @@ function Quiz(props: any) {
         <View style={styles.contentContainer}>
           <View style={styles.subContainer}>
             <Subheading style={{fontWeight: '700'}}>{active + 1}</Subheading>
-            <ScrollView style={{marginTop: 5}}>
+            <ScrollView style={{marginTop: 5, flex: 1}}>
               <Text style={{lineHeight: 25}}>{currentQuestion.questionText}</Text>
 
-              <View style={{marginTop: 20, paddingHorizontal: 10}}>
+              <ScrollView style={{marginTop: 20, paddingHorizontal: 10, flex: 1}}>
                 {currentQuestion.options.map((item, index) => {
                   const isSelected = currentQuestion.optionId === item.optionId;
 
@@ -107,7 +107,7 @@ function Quiz(props: any) {
                     </TouchableOpacity>
                   );
                 })}
-              </View>
+              </ScrollView>
             </ScrollView>
           </View>
 

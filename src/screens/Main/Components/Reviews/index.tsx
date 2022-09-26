@@ -59,14 +59,17 @@ function Reviews(props: any) {
                   );
                 })}
               </View>
-              <TextInput
-                multiline
-                numberOfLines={2}
-                placeholder="Write your Review here"
-                style={styles.input}
-                value={comment}
-                onChangeText={v => setComment(v)}
-              />
+              <View style={{flex: 1}}>
+                <TextInput
+                  multiline
+                  numberOfLines={2}
+                  placeholder="Write your Review here"
+                  style={styles.input}
+                  value={comment}
+                  onChangeText={v => setComment(v)}
+                />
+              </View>
+
               <View style={styles.button}>
                 <ThemeButton title="Submit" onPress={() => handlePress()} />
               </View>
@@ -101,7 +104,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     padding: 10,
     borderColor: colors.lightGrey,
-    flexGrow: 1,
+    flex: 1,
     borderRadius: 5,
     marginVertical: 10,
   },
@@ -126,6 +129,7 @@ const styles = StyleSheet.create({
   },
   flexGrow: {
     flexGrow: 1,
+    flex: 1,
   },
 });
 

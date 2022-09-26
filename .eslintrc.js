@@ -30,6 +30,7 @@ module.exports = {
     camelcase: 0,
     'import/extensions': 0,
     'import/prefer-default-export': 0,
+    'no-underscore-dangle': 0,
     'react/no-unescaped-entities': 0,
     'no-nested-ternary': 0,
     'default-param-last': 0,

@@ -77,13 +77,11 @@ function OnGoingCourses(props) {
 }
 
 function RenderRecommended(props) {
-  // const {recommended} = props;
+  const [courses, setCourses] = useState([]);
+  const [offSet, setOffset] = useState(0);
+  const [total, setTotal] = useState(0);
 
-  const [courses,setCourses]=useState([]);
-  const [offSet,setOffset]=useState(0);
-  const [total,setTotal]=useState(0);
-
-  const {getAllCourses}=  useHomeServices()
+  const {getAllCourses} = useHomeServices();
 
   const loadCourses = async (value: number) => {
     // setBottomLoader(true);
@@ -96,9 +94,9 @@ function RenderRecommended(props) {
     if (total !== data.count) {
       setTotal(count);
     }
-    if(value===0){
-      setCourses(course)
-    }else{
+    if (value === 0) {
+      setCourses(course);
+    } else {
       setCourses([...courses, ...course]);
     }
   };
@@ -117,17 +115,17 @@ function RenderRecommended(props) {
 
   return (
     <FlatList
-        horizontal
-        data={courses}
-        keyExtractor={item => item._id}
-        ListEmptyComponent={() => <View><Text>Empty container of flatlist</Text></View>}
-        renderItem={({item}) => (
-          <View style={{width: 200, margin: 5}}>
-            <CourseCard data={item} {...props} />
-          </View>
-        )}
-        onEndReached={()=>EndReached()}
-      />
+      horizontal
+      data={courses}
+      keyExtractor={item => item._id}
+      // ListEmptyComponent={() => <View><Text>Empty container of flatlist</Text></View>}
+      renderItem={({item}) => (
+        <View style={{width: 200, margin: 5}}>
+          <CourseCard data={item} {...props} />
+        </View>
+      )}
+      onEndReached={() => EndReached()}
+    />
   );
 }
 

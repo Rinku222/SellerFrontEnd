@@ -4,6 +4,7 @@ import {Provider as StoreProvider} from 'react-redux';
 // import {PersistGate} from 'redux-persist/integration/react';
 import Spinner from 'react-native-loading-spinner-overlay/lib';
 import {Provider as PaperProvider} from 'react-native-paper';
+import Orientation from 'react-native-orientation-locker';
 import AppNavigator from './src/navigation';
 import awsConfig from './src/config/amplifyConfig/awsConfig';
 import {store} from './src/redux/store';
@@ -16,10 +17,6 @@ export function Loader() {
 }
 
 function App() {
-  // useEffect(() => {
-  // loadData()
-  // }, []);
-
   // const loadData=()={
   //   getNewToken();
   // }
