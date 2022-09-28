@@ -49,7 +49,6 @@ function Description(props) {
                   <TouchableOpacity
                     key={i}
                     onPress={() => {
-                      console.log('-----> pressed');
                       Linking.openURL(item.link);
                     }}>
                     <Image source={item.image} style={styles.images} />

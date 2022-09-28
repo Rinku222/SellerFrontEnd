@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="142.757" height="171.1" viewBox="0 0 142.757 171.1">
+  <g id="Group_36184" data-name="Group 36184" transform="translate(-104.553 -184.695)">
+    <ellipse id="Ellipse_394" data-name="Ellipse 394" cx="67" cy="67.5" rx="67" ry="67.5" transform="translate(113 217.093)" fill="#ebebeb"/>
+    <g id="Rectangle_6456" data-name="Rectangle 6456" transform="matrix(0.883, 0.469, -0.469, 0.883, 193.131, 233.416)" fill="#fff" stroke="#707070" stroke-width="2">
+      <rect width="61.362" height="71" rx="5" stroke="none"/>
+      <rect x="1" y="1" width="59.362" height="69" rx="4" fill="none"/>
+    </g>
+    <rect id="Rectangle_6458" data-name="Rectangle 6458" width="52" height="37" rx="5" transform="matrix(0.875, 0.485, -0.485, 0.875, 185.438, 243.808)" fill="#e6eaed"/>
+    <g id="Rectangle_6455" data-name="Rectangle 6455" transform="translate(131 211.093)" fill="#fff" stroke="#707070" stroke-width="2">
+      <rect width="73" height="86" rx="5" stroke="none"/>
+      <rect x="1" y="1" width="71" height="84" rx="4" fill="none"/>
+    </g>
+    <g id="_9cb9aa0ba3c0d66f244cfa4ff5e5ce66" data-name="9cb9aa0ba3c0d66f244cfa4ff5e5ce66" transform="translate(203.231 109.881) rotate(21)">
+      <path id="Path_64762" data-name="Path 64762" d="M31.336,85.74C25.808,72.979,10.1,75.955,10,90.768c-.061,8.557,20.747,21.609,21.37,23.727.571-2.2,21.387-15.318,21.326-23.818C52.589,75.829,36.608,73.485,31.336,85.74Z" fill="#f26a6a" stroke="#000" stroke-width="2"/>
+    </g>
+    <rect id="Rectangle_6457" data-name="Rectangle 6457" width="52" height="37" rx="5" transform="translate(141 227.093)" fill="#e6eaed"/>
+    <line id="Line_140" data-name="Line 140" x2="35" transform="translate(144.5 275.593)" fill="none" stroke="#e6eaed" stroke-linecap="round" stroke-width="5"/>
+    <line id="Line_141" data-name="Line 141" x2="23" transform="translate(144.5 287.593)" fill="none" stroke="#e6eaed" stroke-linecap="round" stroke-width="5"/>
+    <path id="Polygon_3" data-name="Polygon 3" d="M7.5,0,9.487,5.054,15,5.348,10.716,8.764,12.135,14,7.5,11.057,2.865,14,4.284,8.764,0,5.348l5.512-.293Z" transform="matrix(0.883, -0.469, 0.469, 0.883, 206.592, 343.434)" fill="#d7dbde"/>
+    <path id="Polygon_5" data-name="Polygon 5" d="M11.254,0l2.982,6.86,8.272.4L16.08,11.895,18.21,19l-6.956-3.994L4.3,19l2.13-7.105L0,7.257l8.272-.4Z" transform="matrix(0.883, -0.469, 0.469, 0.883, 104.553, 236.757)" fill="#d7dbde"/>
+    <path id="Polygon_4" data-name="Polygon 4" d="M11,0l2.365,8.635L22,11l-8.635,2.365L11,22,8.635,13.365,0,11,8.635,8.635Z" transform="translate(110.948 330.067) rotate(-30)" fill="#d7dbde"/>
+    <line id="Line_142" data-name="Line 142" y1="4" x2="4" transform="translate(224.5 192.593)" fill="none" stroke="#d7dbde" stroke-linecap="round" stroke-width="1"/>
+    <line id="Line_143" data-name="Line 143" y1="6" transform="translate(221.5 189.593)" fill="none" stroke="#d7dbde" stroke-linecap="round" stroke-width="1"/>
+    <line id="Line_144" data-name="Line 144" x2="6" transform="translate(224.5 199.593)" fill="none" stroke="#d7dbde" stroke-linecap="round" stroke-width="1"/>
+  </g>
+</svg>

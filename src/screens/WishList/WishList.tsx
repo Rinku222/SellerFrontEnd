@@ -1,12 +1,49 @@
 import React, {useEffect, useState} from 'react';
 import {View, Text, Image, StyleSheet, ScrollView, TouchableOpacity} from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import {ActivityIndicator} from 'react-native-paper';
+import {ActivityIndicator, Button} from 'react-native-paper';
 import {useSelector} from 'react-redux';
 import {colors} from '../../config/colors';
 import useWishlistActions from '../../redux/actions/wishlistActions';
 import Price from '../../components/Price';
 import useMainScreenActions from '../../redux/actions/mainScreenActions';
+import {EmptyWishlistIcon} from '../../assets/svg';
+
+function renderEmpty(props) {
+  const {navigation} = props;
+
+  return (
+    <View
+      style={{
+        flexGrow: 1,
+        justifyContent: 'space-around',
+        alignItems: 'center',
+      }}>
+      <View>
+        <EmptyWishlistIcon />
+      </View>
+      <View>
+        <Text style={{textAlign: 'center', color: '#285892', fontWeight: 'bold'}}>
+          Your wishlist is Empty!
+        </Text>
+        <Text style={{textAlign: 'center'}}>Explore more and shortlist some courses</Text>
+      </View>
+      <View>
+        <Button
+          color={colors.primary}
+          labelStyle={{color: colors.white}}
+          mode="contained"
+          style={{
+            paddingVertical: 5,
+            borderRadius: 8,
+          }}
+          onPress={() => navigation.navigate('search')}>
+          View Course
+        </Button>
+      </View>
+    </View>
+  );
+}
 
 function RenderRow(props) {
   const {data, navigation} = props;
@@ -22,8 +59,6 @@ function RenderRow(props) {
     overallRating,
     totalReview,
   } = data;
-
-  console.log('----->data', data);
 
   const [loader, setLoader] = useState(false);
 
@@ -102,7 +137,7 @@ function WishList(props) {
         <View style={{flex: 1, alignItems: 'center', justifyContent: 'center', flexGrow: 1}}>
           <ActivityIndicator animating color={colors.primary} size="small" />
         </View>
-      ) : (
+      ) : wishlist ? (
         <View style={{flexGrow: 1}}>
           <View style={styles.heading}>
             <Text style={styles.colorBlack}>All Saved Program</Text>
@@ -113,6 +148,8 @@ function WishList(props) {
             })}
           </ScrollView>
         </View>
+      ) : (
+        renderEmpty({...props})
       )}
     </View>
   );

@@ -28,6 +28,7 @@ import BigLock from './bigLock.svg';
 import Send from './sendIcon.svg';
 import Logout from './logout.svg';
 import Download from './download.svg';
+import EmptyWishlist from './emptyWishlist.svg';
 
 export interface ISVGProps {
   color?: string;
@@ -118,4 +119,7 @@ export function LogoutIcon(props: ISVGProps) {
 }
 export function DownloadIcon(props: ISVGProps) {
   return <Download {...props} name="logoutIcon" />;
+}
+export function EmptyWishlistIcon(props: ISVGProps) {
+  return <EmptyWishlist {...props} name="emptyWishlistIcon" />;
 }

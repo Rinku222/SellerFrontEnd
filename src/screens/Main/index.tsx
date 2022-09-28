@@ -177,6 +177,9 @@ function MainScreen(props: any) {
     }
 
     return () => {
+      if (currentTime.current !== 0 && percentage !== '100%') {
+        setVideoTime({courseId, sectionId, videoId, duration: currentTime.current});
+      }
       Orientation.lockToPortrait();
     };
   }, [fullScreen]);

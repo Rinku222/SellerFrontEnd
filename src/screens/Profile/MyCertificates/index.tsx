@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {View, StyleSheet, ScrollView, Text, FlatList} from 'react-native';
+import {View, StyleSheet, ScrollView, Text, FlatList, Image} from 'react-native';
 import {ActivityIndicator} from 'react-native-paper';
 import TopHeader from '../../../components/TopHeader';
 import {CertificateIcon} from '../../../assets/svg';
@@ -7,8 +7,23 @@ import CourseCard from '../../../components/CourseCard';
 import {colors} from '../../../config/colors';
 import useUserServices from '../../../services/User';
 import CertificateCard from '../../../components/CertificateCard';
+import Award from '../../../assets/images/award.png';
 
-const DATA = [1, 2, 4, 5, 3, 9];
+const DATA = [];
+
+function renderEmpty() {
+  return (
+    <View
+      style={{
+        flexGrow: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+      }}>
+      <Image source={require('../../../assets/images/award.png')} style={styles.emptyImage} />
+      <Text style={styles.emptyText}>You haven’t got certificate yet!</Text>
+    </View>
+  );
+}
 
 function BottomComponent(loading: boolean) {
   return (
@@ -66,9 +81,12 @@ function MyCertificates(props) {
         <TopHeader icon={<CertificateIcon />} title="My Certificate" {...props} />
         <View style={{flexGrow: 1, flex: 1}}>
           <FlatList
-            contentContainerStyle={styles.mainContainer}
+            contentContainerStyle={
+              myCertificates ? styles.mainContainer : styles.emptyMainContainer
+            }
             data={myCertificates}
             keyExtractor={item => item._id}
+            ListEmptyComponent={renderEmpty}
             ListFooterComponent={() => BottomComponent(loading)}
             numColumns={2}
             // renderItem={item => <CertificateCard data={item} {...props} />}
@@ -93,6 +111,13 @@ const styles = StyleSheet.create({
   },
   mainContainer: {
     // flex: 1,
+  },
+  emptyText: {
+    color: '#285892',
+    fontWeight: 'bold',
+  },
+  emptyMainContainer: {
+    flex: 1,
   },
 });
 

@@ -20,7 +20,10 @@ function OngoingCourseCard(props) {
   };
 
   return (
-    <TouchableOpacity style={styles.cardContainer} onPress={() => handlePress()}>
+    <TouchableOpacity
+      activeOpacity={0.7}
+      style={styles.cardContainer}
+      onPress={() => handlePress()}>
       <Image
         source={{
           uri: courseImage,
